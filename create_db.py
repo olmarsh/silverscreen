@@ -11,5 +11,5 @@ conn.execute('''CREATE TABLE Movies (
     Runtime INTEGER,
     Genre TEXT
 );''')
-         
+
 print('Table created successfully')
