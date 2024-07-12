@@ -1,4 +1,5 @@
 # Files
-silverscreen.db
+*.db
 
 # Directories
+/__pycache__
