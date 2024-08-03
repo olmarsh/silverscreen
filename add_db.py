@@ -25,4 +25,4 @@ VALUES (
 
 conn.commit()
 
-print('Operation done sucessfully')
+print('Operation done successfully')
