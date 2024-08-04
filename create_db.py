@@ -6,14 +6,14 @@ print('Connected to database')
 # Create genre lookup table
 conn.execute('''CREATE TABLE Genres (
 GenreID INTEGER PRIMARY KEY,
-Name TEXT,
+Genre TEXT,
 Symbol TEXT
 );''')
 
 # Create age rating lookup table
 conn.execute('''CREATE TABLE AgeRatings (
 AgeRatingID INTEGER PRIMARY KEY,
-Name TEXT,
+AgeRating TEXT,
 MinAge INTEGER,
 Description TEXT
 );''')

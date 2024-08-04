@@ -14,12 +14,12 @@ runtime = int(input('Runtime:      '))
 genre = input('Genre:        ')
 
 # Get genre ID
-cursor.execute(f'SELECT * FROM Genres WHERE Name = \'{genre}\'')
+cursor.execute(f'SELECT * FROM Genres WHERE Genre = \'{genre}\'')
 genreID = cursor.fetchone()[0]
 print(f'Read genre id: {genreID}')
 
 # Get AgeRating ID
-cursor.execute(f'SELECT * FROM AgeRatings WHERE Name = \'{ageRating}\'')
+cursor.execute(f'SELECT * FROM AgeRatings WHERE AgeRating = \'{ageRating}\'')
 ageRatingID = cursor.fetchone()[0]
 print(f'Read age rating id: {ageRatingID}')
 
