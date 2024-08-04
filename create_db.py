@@ -15,8 +15,7 @@ conn.execute('''CREATE TABLE AgeRatings (
 AgeRatingID INTEGER PRIMARY KEY,
 Name TEXT,
 MinAge INTEGER,
-Description TEXT,
-FOREIGN KEY (AgeRatingID) REFERENCES Genres (AgeRatingID)
+Description TEXT
 );''')
 
 # Populate genres table
@@ -26,7 +25,7 @@ VALUES
 ('Animation', '🎞️'),
 ('Comedy', '😂'),
 ('Crime', '🔍'),
-('Fantasy', '🪄');
+('Fantasy', '🪄')
 ''')
 
 # Populate age ratings table
@@ -36,7 +35,7 @@ VALUES
 ('PG', 0, 'Parental Guidance Suggested'),
 ('PG-13', 13, 'Parents Strongly Cautioned'),
 ('R', 17, 'Restricted'),
-('NC-17', 17, 'Adults Only');
+('NC-17', 17, 'Adults Only')
 ''')
 
 # Create movies table
@@ -50,5 +49,7 @@ conn.execute('''CREATE TABLE Movies (
     FOREIGN KEY (AgeRatingID) REFERENCES AgeRatings (AgeRatingID),
     FOREIGN KEY (GenreID) REFERENCES Genres (GenreID)
 );''')
+
+conn.commit()
 
 print('Tables created successfully')

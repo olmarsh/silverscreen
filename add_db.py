@@ -2,6 +2,7 @@ import sqlite3
 
 # Connect to database
 conn = sqlite3.connect('silverscreen.db')
+cursor = conn.cursor()
 print('Connected to database')
 
 # Get user inputs for new movie
@@ -12,15 +13,25 @@ ageRating = input('Age rating:   ')
 runtime = int(input('Runtime:      '))
 genre = input('Genre:        ')
 
+# Get genre ID
+cursor.execute(f'SELECT * FROM Genres WHERE Name = \'{genre}\'')
+genreID = cursor.fetchone()[0]
+print(f'Read genre id: {genreID}')
+
+# Get AgeRating ID
+cursor.execute(f'SELECT * FROM AgeRatings WHERE Name = \'{ageRating}\'')
+ageRatingID = cursor.fetchone()[0]
+print(f'Read age rating id: {ageRatingID}')
+
 conn.execute(f'''INSERT INTO Movies (
-    Title, ReleaseYear, AgeRating, Runtime, Genre
+    Title, ReleaseYear, AgeRatingID, Runtime, GenreID
 )
 VALUES (
     '{title}',
     '{releaseYear}',
-    '{ageRating}',
+    '{ageRatingID}',
     '{runtime}',
-    '{genre}'
+    '{genreID}'
 );''')
 
 conn.commit()
