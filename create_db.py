@@ -19,7 +19,7 @@ Description TEXT
 );''')
 
 # Populate genres table
-conn.execute('''INSERT INTO Genres (Name, Symbol)
+conn.execute('''INSERT INTO Genres (Genre, Symbol)
 VALUES
 ('Action','💣'),
 ('Animation', '🎞️'),
@@ -29,7 +29,7 @@ VALUES
 ''')
 
 # Populate age ratings table
-conn.execute('''INSERT INTO AgeRatings (Name, MinAge, Description)
+conn.execute('''INSERT INTO AgeRatings (AgeRating, MinAge, Description)
 VALUES
 ('G', 0, 'General Audiences'),
 ('PG', 0, 'Parental Guidance Suggested'),
