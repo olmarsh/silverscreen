@@ -1,3 +1,5 @@
+'''Update a specified entry from the movie database'''
+
 import sqlite3
 
 # Connect to database

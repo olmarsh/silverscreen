@@ -1,3 +1,5 @@
+'''Add an entry to a silverscreen database'''
+
 import sqlite3
 
 # Connect to database

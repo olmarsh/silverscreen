@@ -1,3 +1,5 @@
+'''Create the silverscreen database, add main table and lookup tables'''
+
 import sqlite3
 
 conn = sqlite3.connect('silverscreen.db')

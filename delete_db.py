@@ -1,3 +1,5 @@
+'''Delete an entry from a database.'''
+
 import sqlite3
 
 conn = sqlite3.connect("silverscreen.db")

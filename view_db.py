@@ -1,3 +1,5 @@
+'''Print the entire movies database'''
+
 import sqlite3
 
 conn = sqlite3.connect('silverscreen.db')
