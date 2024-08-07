@@ -1,7 +1,13 @@
 '''Command line manager for silverscreen databases.'''
 
 import sqlite3
-from database import *
+import database.db_create
+import database.db_drop
+#import database.db_delete
+#import database.db_insert
+#import database.db_update
+#import database.db_view
+
 
 # Print splash screen
 print('''    ________   ________
@@ -16,8 +22,10 @@ Silverscreen CLI database manager
 Oliver M.     development version
 
 This command line interface is not intended for end user use!
-
 ''')
+
+conn = sqlite3.connect('silverscreen.db')
+print('Connected to database\n')
 
 def help():
     '''Read the help file and print it line by line'''
@@ -40,12 +48,28 @@ while True:
     print('''Choose an action:
 HELP   - read help documentation for CLI
 CREATE - attempt to create all tables in the database
-INSERT - insert an entry into a table
-DELETE - delete an entry from a table
-UPDATE - update an entry in a table
-SEARCH - search the movies database
-VIEW   - print all entries from a table''')
+DROP   - drop a table or multiple tables from the database
+# PPLATE - populate the tables with default values
+# INSERT - insert an entry into a table
+# DELETE - delete an entry from a table
+# UPDATE - update an entry in a table
+# SEARCH - search the movies database
+# VIEW   - print all entries from a table''')
     action = input("What action to take?\n> ").lower()
     print('')
+
     if action == 'help':
         help()
+
+    if action == 'create':
+        print('Create all tables')
+        if database.db_create.create(conn):
+            print('Operation completed successfully')
+
+    if action == 'drop':
+        print('Drop table(s) - type \'ALL\' to drop all tables')
+        table = input('Which table to drop: ').title()
+        if database.db_drop.drop_table(conn, table):
+            print('Operation completed successfully')
+
+    input('Press enter to continue...\n')

@@ -2,4 +2,4 @@
 *.db
 
 # Directories
-/__pycache__
+__pycache__/
