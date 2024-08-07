@@ -1,4 +1,4 @@
-'''Print the entire movies database'''
+'''Print all tables from the database.'''
 
 import sqlite3
 
@@ -9,14 +9,6 @@ for row in conn.execute('''SELECT * FROM Movies
 INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
 INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
 ORDER BY ID ASC'''):
-#    (
-#        ID,
-#        Title,
-#        ReleaseYear,
-#        AgeRating,
-#        Runtime,
-#        Genre,
-#    ) = row
     print(row)
 
 print('Operation done successfully')
