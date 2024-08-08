@@ -3,6 +3,7 @@
 import sqlite3
 import database.db_create
 import database.db_drop
+import database.db_populate
 #import database.db_delete
 #import database.db_insert
 #import database.db_update
@@ -49,7 +50,7 @@ while True:
 HELP   - read help documentation for CLI
 CREATE - attempt to create all tables in the database
 DROP   - drop a table or multiple tables from the database
-# PPLATE - populate the tables with default values
+PPLATE - populate the lookup tables with default values
 # INSERT - insert an entry into a table
 # DELETE - delete an entry from a table
 # UPDATE - update an entry in a table
@@ -62,7 +63,7 @@ DROP   - drop a table or multiple tables from the database
         help()
 
     if action == 'create':
-        print('Create all tables')
+        print('Create all tables if they do not exist')
         if database.db_create.create(conn):
             print('Operation completed successfully')
 
@@ -70,6 +71,12 @@ DROP   - drop a table or multiple tables from the database
         print('Drop table(s) - type \'ALL\' to drop all tables')
         table = input('Which table to drop: ').title()
         if database.db_drop.drop_table(conn, table):
+            print('Operation completed successfully')
+
+    if action == 'pplate':
+        print('Populate the tables with the default values')
+        if database.db_populate.populate(conn):
+            conn.commit()
             print('Operation completed successfully')
 
     input('Press enter to continue...\n')

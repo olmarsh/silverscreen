@@ -15,7 +15,9 @@ def drop_table(conn, table):
 def drop_all_tables(conn):
     '''Drop all tables from the database.'''
 
-    conn.execute('DROP TABLE IF EXISTS AgeRatings, Genres, Movies;')
+    conn.execute('DROP TABLE IF EXISTS AgeRatings')
+    conn.execute('DROP TABLE IF EXISTS Genres')
+    conn.execute('DROP TABLE IF EXISTS Movies')
     return True
 
 if (__name__ == '__main__'):
