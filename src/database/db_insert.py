@@ -66,19 +66,63 @@ def insert(conn, table, **kwargs):
 # If this program is run in terminal, execute its function.
 if __name__ == '__main__':
 
+    def ninput(prompt, returntype=str):
+        '''Normal input function that returns None when a blank string is \
+           input.
+           Return type can also be specified'''
+
+        ret = input(prompt)
+
+        # Return none if the input was blank.
+        if ret == '': return None
+        # Convert to specified type and return.
+        return returntype(ret)
+
     # Connect to database
     conn = sqlite3.connect('silverscreen.db')
     cursor = conn.cursor()
     print('Connected to database')
 
-    # Get user inputs for new movie
-    print('Add new movie to database')
-    title = input('Movie title:  ')
-    releaseYear = int(input('Release year: '))
-    ageRating = input('Age rating:   ')
-    runtime = int(input('Runtime:      '))
-    genre = input('Genre:        ')
-
-    conn.commit()
-
-    print('Operation done successfully')
+# Get user inputs for new entry
+    print('Insert an entry into a table')
+    table = input(
+        'What table to input into? (Movies, Genres, AgeRatings)\n> '
+    ).lower()
+    # Use appropriate column names depending on specified table
+    if table == 'movies':
+        print('Add new movie entry')
+        if insert(
+            conn,
+            'Movies',
+            title = ninput('Movie title:  '),
+            releaseYear = ninput('Release year: ',int),
+            ageRating = ninput('Age rating:   '),
+            runtime = ninput('Runtime:      ', int),
+            genre = ninput('Genre:        ')
+        ):
+            conn.commit()
+            print('Operation completed successfully')
+    elif table == 'genres':
+        print('Add new genre entry')
+        if insert(
+            conn,
+            'Genres',
+            genre = ninput('Genre name:     '),
+            symbol = ninput('Unicode symbol: ')
+        ):
+            conn.commit()
+            print('Operation completed successfully')
+    elif table == 'ageratings' or table == 'age ratings':
+        print('Add new age rating entry')
+        if insert(
+            conn,
+            'AgeRatings',
+            ageRating = ninput('Age Rating:  '),
+            minAge = ninput('Minimum Age: '),
+            description = ninput('Description: ')
+        ):
+            conn.commit()
+            print('Operation completed successfully')
+    else:
+        print('That table does not exist / hasn\'t been implemented \
+                yet')

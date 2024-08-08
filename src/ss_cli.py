@@ -151,7 +151,8 @@ EXIT   - exit the program''')
                     conn.commit()
                     print('Operation completed successfully')
             else:
-                print('That table does not exist / hasn\'t been implemented yet')
+                print('That table does not exist / hasn\'t been implemented \
+                      yet')
         except Exception as error:
             format_error(error)
 
