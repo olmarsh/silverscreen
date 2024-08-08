@@ -5,7 +5,7 @@ import database.db_create
 import database.db_drop
 import database.db_populate
 import database.db_insert
-#import database.db_delete
+import database.db_delete
 #import database.db_update
 #import database.db_view
 
@@ -75,7 +75,7 @@ CREATE - attempt to create all tables in the database
 DROP   - drop a table or multiple tables from the database
 PPLATE - populate the lookup tables with default values
 INSERT - insert an entry into a table
-# DELETE - delete an entry from a table
+DELETE - delete an entry from a table
 # UPDATE - update an entry in a table
 # SEARCH - search the movies database
 # VIEW   - print all entries from a table
@@ -156,10 +156,37 @@ EXIT   - exit the program''')
         except Exception as error:
             format_error(error)
 
+    elif action == 'delete':
+        try:
+            table = input(
+                'What table to delete from? (Movies, Genres, AgeRatings)\n> '
+            ).lower()
+            
+            # Set the column to the correct name for the table.
+            column = None
+            if table == 'movies':
+                column = 'ID'
+            elif table == 'genres':
+                column = 'GenreID'
+            elif table == 'ageratings':
+                column = 'AgeRatingID'
+            else:
+                print('That table does not exist / hasn\'t been implemented yet')
+
+            # If the table is valid, delete from it.
+            if table in ('movies', 'genres', 'ageratings'):
+                delete_id = input(f'Which {table} ID to delete?\n> ')
+                print('Delete entry if exists')
+                if database.db_delete.delete(conn, table, column, delete_id):
+                    conn.commit();
+                    print('Operation completed successfully')
+        except Exception as error:
+            format_error(error)
+
     elif action == 'exit':
         break
     
     else:
         print('That action does not exist / hasn\'t been implemented yet')
 
-    input('\nPress enter to continue...\n[ENTER]')
+    input('\nPress [ENTER] to continue...\n')
