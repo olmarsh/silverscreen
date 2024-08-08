@@ -9,11 +9,26 @@ def populate(conn):
     if conn.execute('SELECT COUNT(*) FROM Genres').fetchall()[0][0] == 0:
         conn.execute('''INSERT INTO Genres (Genre, Symbol)
         VALUES
-        ('Action','💣'),
+        ('Action', '💣'),
         ('Animation', '🎞️'),
         ('Comedy', '😂'),
         ('Crime', '🔍'),
-        ('Fantasy', '🪄')
+        ('Fantasy', '🪄'),
+        ('Horror', '👻'),
+        ('Romance', '❤️'),
+        ('Science Fiction', '🤖'),
+        ('Thriller', '🔪'),
+        ('Drama', '🎭'),
+        ('Documentary', '🎥'),
+        ('Musical', '🎵'),
+        ('Mystery', '🕵️'),
+        ('Adventure', '🧭'),
+        ('Historical', '🏛️'),
+        ('Family', '👪'),
+        ('Western', '🤠'),
+        ('Biography', '📖'),
+        ('Sport', '🏅'),
+        ('War', '⚔️')
         ''')
         print('Populated genres table')
     else:
