@@ -35,7 +35,7 @@ def populate(conn):
 
     return True;
     
-
+# If this program is run in terminal, execute its function.
 if __name__ == '__main__':
     conn = sqlite3.connect('silverscreen.db')
     print('Connected to database')

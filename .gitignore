@@ -1,5 +1,6 @@
 # Files
 *.db
+*.db-journal
 
 # Directories
 __pycache__/

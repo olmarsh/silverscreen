@@ -8,15 +8,15 @@ def create(conn):
     # Create genre lookup table
     conn.execute('''CREATE TABLE IF NOT EXISTS Genres (
     GenreID INTEGER PRIMARY KEY,
-    Genre TEXT,
+    Genre TEXT NOT NULL,
     Symbol TEXT
     );''')
 
     # Create age rating lookup table
     conn.execute('''CREATE TABLE IF NOT EXISTS AgeRatings (
     AgeRatingID INTEGER PRIMARY KEY,
-    AgeRating TEXT,
-    MinAge INTEGER,
+    AgeRating TEXT NOT NULL,
+    MinAge INTEGER NOT NULL,
     Description TEXT
     );''')
 
@@ -34,6 +34,7 @@ def create(conn):
 
     return True
 
+# If this program is run in terminal, execute its function.
 if __name__ == '__main__':
     conn = sqlite3.connect('silverscreen.db')
     print('Connected to database')

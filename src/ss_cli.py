@@ -4,8 +4,8 @@ import sqlite3
 import database.db_create
 import database.db_drop
 import database.db_populate
+import database.db_insert
 #import database.db_delete
-#import database.db_insert
 #import database.db_update
 #import database.db_view
 
@@ -22,6 +22,7 @@ print('''    ________   ________
 Silverscreen CLI database manager
 Oliver M.     development version
 
+Command line interface to manage the silverscreen movie database
 This command line interface is not intended for end user use!
 ''')
 
@@ -43,6 +44,17 @@ Press q then enter to quit
         print(line[0:-1], end=' ')
         if input().lower() == 'q': break
 
+def ninput(prompt, type=str):
+    '''Normal input function that returns None when a blank string is input. \
+       '''
+
+    ret = input(prompt)
+
+    # Return none if the input was blank.
+    if ret == '': return None
+    # Convert to specified type and return.
+    return type(ret)
+
 # Main program
 while True:
     # Print possible actions and get user's choice
@@ -51,7 +63,7 @@ HELP   - read help documentation for CLI
 CREATE - attempt to create all tables in the database
 DROP   - drop a table or multiple tables from the database
 PPLATE - populate the lookup tables with default values
-# INSERT - insert an entry into a table
+INSERT - insert an entry into a table
 # DELETE - delete an entry from a table
 # UPDATE - update an entry in a table
 # SEARCH - search the movies database
@@ -62,21 +74,67 @@ PPLATE - populate the lookup tables with default values
     if action == 'help':
         help()
 
-    if action == 'create':
+    elif action == 'create':
         print('Create all tables if they do not exist')
         if database.db_create.create(conn):
             print('Operation completed successfully')
 
-    if action == 'drop':
+    elif action == 'drop':
         print('Drop table(s) - type \'ALL\' to drop all tables')
         table = input('Which table to drop: ').title()
         if database.db_drop.drop_table(conn, table):
             print('Operation completed successfully')
 
-    if action == 'pplate':
+    elif action == 'pplate':
         print('Populate the tables with the default values')
         if database.db_populate.populate(conn):
             conn.commit()
             print('Operation completed successfully')
+
+    elif action == 'insert':
+        print('Insert an entry into a table')
+        table = input(
+           'What table to input into? (Movies, Genres, AgeRatings)\n> '
+        ).lower()
+
+        # Use appropriate column names depending on specified table
+        if table == 'movies':
+            print('Add new movie entry')
+            if database.db_insert.insert(
+                conn,
+                'Movies',
+                title = ninput('Movie title:  '),
+                releaseYear = ninput('Release year: ',int),
+                ageRating = ninput('Age rating:   '),
+                runtime = ninput('Runtime:      ', int),
+                genre = ninput('Genre:        ')
+            ):
+                conn.commit()
+                print('Operation completed successfully')
+        elif table == 'genres':
+            print('Add new genre entry')
+            if database.db_insert.insert(
+                conn,
+                'Genres',
+                genre = ninput('Genre name:     '),
+                symbol = ninput('Unicode symbol: ')
+            ):
+                conn.commit()
+                print('Operation completed successfully')
+        elif table == 'ageratings' or table == 'age ratings':
+            print('Add new age rating entry')
+            if database.db_insert.insert(
+                conn,
+                'AgeRatings',
+                ageRating = ninput('Age Rating:  '),
+                minAge = ninput('Minimum Age: '),
+                description = ninput('Description: ')
+            ):
+                conn.commit()
+                print('Operation completed successfully')
+        else:
+            print('That table does not exist / hasn\'t been implemented yet')
+    else:
+        print('That action does not exist / hasn\'t been implemented yet')
 
     input('Press enter to continue...\n')
