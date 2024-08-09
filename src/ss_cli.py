@@ -77,8 +77,8 @@ PPLATE - populate the lookup tables with default values
 INSERT - insert an entry into a table
 DELETE - delete an entry from a table
 UPDATE - update an entry in a table
-# SEARCH - search the movies database
-# VIEW   - print all entries from a table
+SEARCH - search the movies database
+VIEW   - print all entries from a table
 EXIT   - exit the program''')
     action = input("What action to take?\n> ").lower()
     print('')
@@ -222,7 +222,17 @@ EXIT   - exit the program''')
         except Exception as error:
             format_error(error)
 
-    # elif action == 'search':
+    elif action == 'search':
+        try:
+            column = input('''Which column to search
+(ID, Title, ReleaseYear, AgeRating, Runtime, Genre):
+> ''')
+            query = input('What is the search query: ')
+            print('\nResults:')
+            if database.db_view.format_movies(database.db_view.search_movies(conn, column, query)):
+                    print('Operation done successfully')
+        except Exception as error:
+            format_error(error)
 
     elif action == 'exit':
         break
