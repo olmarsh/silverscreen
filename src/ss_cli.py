@@ -6,7 +6,7 @@ import database.db_drop
 import database.db_populate
 import database.db_insert
 import database.db_delete
-#import database.db_update
+import database.db_update
 #import database.db_view
 
 
@@ -76,7 +76,7 @@ DROP   - drop a table or multiple tables from the database
 PPLATE - populate the lookup tables with default values
 INSERT - insert an entry into a table
 DELETE - delete an entry from a table
-# UPDATE - update an entry in a table
+UPDATE - update an entry in a table
 # SEARCH - search the movies database
 # VIEW   - print all entries from a table
 EXIT   - exit the program''')
@@ -180,6 +180,23 @@ EXIT   - exit the program''')
                 if database.db_delete.delete(conn, table, column, delete_id):
                     conn.commit();
                     print('Operation completed successfully')
+        except Exception as error:
+            format_error(error)
+
+    elif action == 'update':
+        try:
+            edit_id = int(input('Which movie ID to edit: '))
+            print(f'Editing movie ID {edit_id}')
+
+            field = input('''Which field to change
+(Title, ReleaseYear, AgeRating, Runtime, Genre): ''')
+            print(f'Editing field {field}')
+
+            value = input('What value to set the field to: ')
+            print(f'Setting {field} to {value}')
+
+            if database.db_update.update(conn, edit_id, {field: value}):
+                print('Operation completed successfully')
         except Exception as error:
             format_error(error)
 

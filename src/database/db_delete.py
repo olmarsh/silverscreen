@@ -4,6 +4,7 @@ import sqlite3
 
 def delete(conn, table, match_column, delete_id):
     '''Delete the selected ID from the selected table'''
+
     conn.execute(f'''DELETE FROM {table}
     WHERE {match_column} = {delete_id};
     ''');
