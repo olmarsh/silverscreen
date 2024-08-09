@@ -7,7 +7,7 @@ import database.db_populate
 import database.db_insert
 import database.db_delete
 import database.db_update
-#import database.db_view
+import database.db_view
 
 
 # Print splash screen
@@ -199,6 +199,30 @@ EXIT   - exit the program''')
                 print('Operation completed successfully')
         except Exception as error:
             format_error(error)
+
+    elif action == 'view':
+        try:
+            table = input(
+                'What table to view? (Movies, Genres, AgeRatings)\n> '
+            ).lower()
+
+            # Use appropriate function depending on specified table
+            if table == 'movies':
+                if database.db_view.format_movies(
+                    database.db_view.view_movies(conn)
+                ):
+                    print('Operation done successfully')
+            elif table == 'genres' or table == 'ageratings':
+                if database.db_view.format_general(
+                    database.db_view.view_general(conn, table)
+                ):
+                    print('Operation done successfully')
+            else:
+                print('Table doesn\'t exist / hasn\'t been implemented yet')
+        except Exception as error:
+            format_error(error)
+
+    # elif action == 'search':
 
     elif action == 'exit':
         break

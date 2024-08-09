@@ -2,13 +2,81 @@
 
 import sqlite3
 
-conn = sqlite3.connect('silverscreen.db')
-print('Connected to database')
 
-for row in conn.execute('''SELECT * FROM Movies
-INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
-INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
-ORDER BY ID ASC'''):
-    print(row)
+def format_movies(results):
+    '''Format the output from the view_movies or search_movies function.'''
 
-print('Operation done successfully')
+    # Define line spacings
+    formatted_row = '{:<5} {:<25} {:<13} {:<16} {:<6}'
+    # Print column headers, then the rest of the rows
+    print(formatted_row.format('ID', 'Title', 'Release Year', 'Genre', 'Age Rating'))
+    for row in results:
+        print(formatted_row.format(*row))
+
+    # Add newline at bottom
+    print('')
+    return True
+
+
+def format_general(results):
+    '''Format the output from a view or search function.'''
+
+    for row in results:
+        print(*row, sep=', ')
+
+    # Add newline at bottom
+    print('')
+    return True
+
+
+def view_movies(conn):
+    '''Return the entire movies table.'''
+
+    # Select all from table and return them.
+    cursor = conn.cursor()
+    cursor.execute('''SELECT ID, Title, ReleaseYear, Genre, AgeRating,
+                      Symbol, MinAge, Description FROM Movies
+    INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
+    INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
+    ORDER BY ID ASC''')
+    return cursor.fetchall()
+
+
+def view_general(conn, table):
+    '''Return the selected table'''
+    cursor = conn.cursor()
+    cursor.execute(f'''SELECT * FROM {table}''')
+    return cursor.fetchall()
+
+
+#def search_movies(conn, column, query):
+
+
+if __name__ == '__main__':
+    conn = sqlite3.connect('silverscreen.db')
+    print('Connected to database')
+
+    # Print possible actions and get user's choice
+    print('''Choose an action:
+SEARCH - search the movies database
+VIEW   - print all entries from a table''')
+    action = input('What action to take?\n> ').lower()
+    print('')
+    if action == 'view':
+        table = input(
+            'What table to view? (Movies, Genres, AgeRatings)\n> '
+        ).lower()
+
+        # Use appropriate function depending on specified table
+        if table == 'movies':
+            if format_movies(view_movies(conn)):
+                print('Operation done successfully')
+        elif table == 'genres' or table == 'ageratings':
+            if format_general(view_general(conn, table)):
+                print('Operation done successfully')
+        else:
+            print('Table doesn\'t exist / hasn\'t been implemented yet')
+    # elif action == 'search':
+
+    else:
+        print('That action does not exist for this module')

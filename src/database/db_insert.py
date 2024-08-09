@@ -83,7 +83,7 @@ if __name__ == '__main__':
     cursor = conn.cursor()
     print('Connected to database')
 
-# Get user inputs for new entry
+    # Get user inputs for new entry
     print('Insert an entry into a table')
     table = input(
         'What table to input into? (Movies, Genres, AgeRatings)\n> '
