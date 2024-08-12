@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<head>
+<title>{% block title %}{% endblock %} - silverscreen</title>
+</head>
+<nav>
+  <h1>silverscreen</h1>
+  <a href="/"">Homepage</a>
+  <a href="/movies">Movies</a>
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% block content %}{% endblock %}
+</section>
