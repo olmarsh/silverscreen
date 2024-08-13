@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
 
+{% block head %}
+  <!-- Include jquery and socketIO libraries -->
+  <script src="{{url_for('static', filename='jquery-3.7.1.min.js')}}"></script>
+  <script src="{{url_for('static', filename='socket.io.min.js')}}"></script>
+  <!-- Include script for this page-->
+  <script src="{{url_for('static', filename='movies.js')}}"></script>
+{% endblock %}
+
 {% block header %}
-  <h1>{% block title %}Movies - Table View{% endblock %}</h1>
+  <h1>{% block title %}Movies{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -9,7 +17,7 @@
     <tr>
       <th>Title</th>
       <th>Release Year</th>
-      <th>Runtime</th>
+      <th>Runtime (min)</th>
       <th>Genre</th>
       <th>Age Rating</th>
     </tr>
