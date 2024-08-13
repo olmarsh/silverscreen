@@ -1,4 +1,9 @@
-# __init__.py
-#
-# This empty file allows Python to import the files from outside of this
-# directory.
+'''Import the databases modules'''
+
+import database.db_create
+import database.db_drop
+import database.db_populate
+import database.db_insert
+import database.db_delete
+import database.db_update
+import database.db_view

@@ -5,5 +5,14 @@
 {% endblock %}
 
 {% block content %}
-  <p>Movies (table view)</p>
+  <table>
+    <tr>
+      <th>Title</th>
+      <th>Release Year</th>
+      <th>Runtime</th>
+      <th>Genre</th>
+      <th>Age Rating</th>
+    </tr>
+    {{ table_content|safe }}
+  </table>
 {% endblock %}
