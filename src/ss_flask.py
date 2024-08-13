@@ -17,28 +17,40 @@ def index():
 
 @app.route('/movies')
 def movies():
-    # TODO: return results via a websocket
-    # and only return the first 20 at once anyway
+    # Return the movies page with the table content
+    return render_template('movies.html')
+
+
+# Confirm to client that connection was successfull
+@socketio.on('connect')
+def test_connect():
+    emit('connected',  {'data':'Connected'})  # Confirm the client connected
+
+@socketio.on('')
+
+# When a table is requested:
+@socketio.on('table_request')
+def update_table():
+    # TODO: Only return the first 20 results at once
 
     conn = sqlite3.connect('silverscreen.db')
     movies = database.db_view.view_movies(conn)
 
+    # Create table headers
+    content = '''
+<tr>
+    <th>Title</th>
+    <th>Release Year</th>
+    <th>Runtime (min)</th>
+    <th>Genre</th>
+    <th>Age Rating</th>
+</tr>
+'''
     # Format each row and add it to the table content
-    content = ''
     for row in movies:
         content += format_table_row(row) + '\n'
 
-    content += '</table>'
-
-    # Return the movies page with the table content
-    return render_template('movies.html', table_content=content)
-
-
-# Test connection to client
-@socketio.on("connect")
-def test_connect():
-    emit("connected",  {"data":"Connected"})  # Confirm the client connected
-
+    emit('table_update', content)
 
 # Function definitions
 
