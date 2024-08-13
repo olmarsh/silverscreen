@@ -9,7 +9,6 @@ socketio = SocketIO(app,cors_allowed_origins='*')
 
 # Page definitions
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -30,27 +29,44 @@ def test_connect():
 
 # When a table is requested:
 @socketio.on('table_request')
-def update_table():
-    # TODO: Only return the first 20 results at once
+def update_table(results_per_page, read_page):
+    # Sanitise page information
+    try:
+        limit = int(results_per_page)
+    except:
+        limit = 20
+    if limit == 0: limit = 20
 
+    try:
+        page = int(read_page)
+    except:
+        page = 1
+    if page < 1: page = 1
+
+    # Connect to database and request rows
     conn = sqlite3.connect('silverscreen.db')
-    movies = database.db_view.view_movies(conn)
+    movies = database.db_view.view_movies(conn, limit=limit, offset=(page-1)*limit)
+    results_count = database.db_view.count_movies(conn)
 
     # Create table headers
     content = '''
-<tr>
-    <th>Title</th>
-    <th>Release Year</th>
-    <th>Runtime (min)</th>
-    <th>Genre</th>
-    <th>Age Rating</th>
-</tr>
-'''
+    <tr>
+        <th>Title</th>
+        <th>Release Year</th>
+        <th>Runtime (min)</th>
+        <th>Genre</th>
+        <th>Age Rating</th>
+    </tr>
+    '''
     # Format each row and add it to the table content
     for row in movies:
         content += format_table_row(row) + '\n'
 
-    emit('table_update', content)
+    emit('table_update', {
+            'table_content': content,
+            'result_count': results_count,
+            'page': page
+        })
 
 # Function definitions
 

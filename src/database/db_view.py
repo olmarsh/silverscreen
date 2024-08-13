@@ -30,17 +30,34 @@ def format_general(results):
     return True
 
 
-def view_movies(conn):
+def view_movies(conn, limit=0, offset=0):
     '''Return the entire movies table.'''
+
+    # Add extra parameters to query.
+    extra = ''
+    if limit > 0:
+        extra += f'LIMIT {limit}'
+        if offset != '' and offset > 0:
+            extra += f' OFFSET {offset}'
+        extra += ';'
 
     # Select all from table and return them.
     cursor = conn.cursor()
-    cursor.execute('''SELECT ID, Title, ReleaseYear, Runtime, Genre, AgeRating,
+    cursor.execute(f'''SELECT ID, Title, ReleaseYear, Runtime, Genre, AgeRating,
                    Symbol, MinAge, Description FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
-    ORDER BY ID ASC''')
+    ORDER BY ID ASC
+    {extra}''')
     return cursor.fetchall()
+
+def count_movies(conn):
+    '''Return the number of entries in the movies table.'''
+
+    cursor = conn.cursor()
+    cursor.execute('SELECT COUNT(*) FROM Movies')
+
+    return cursor.fetchone()[0]
 
 
 def view_general(conn, table):

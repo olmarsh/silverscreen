@@ -13,6 +13,24 @@
 {% endblock %}
 
 {% block content %}
+  <div>
+    <p>Results per page:</p>
+    <select id="page-size-dropdown">
+      <option value=10>10 results per page</option>
+      <option value=20 selected>20 results per page</option>
+      <option value=50>50 results per page</option>
+      <option value=100>100 results per page</option>
+    </select>
+  </div>
+  <p id="page-location">Page x of x</p>
+
+  <p style="cursor:pointer"><b>
+    <span class="nav-first" onclick="nav_first()">First</span>
+    <span class="nav-prev" onclick="nav_prev()">Previous</span>
+    <span class="nav-next" onclick="nav_next()">Next</span>
+    <span class="nav-last" onclick="nav_last()">Last</span>
+  </b></p>
+
   <table id="table">
     <tr>
       <th>Title</th>
@@ -22,4 +40,11 @@
       <th>Age Rating</th>
     </tr>
   </table>
+  
+  <p style="cursor:pointer"><b>
+    <span class="nav-first" onclick="nav_first()">First</span>
+    <span class="nav-prev" onclick="nav_prev()">Previous</span>
+    <span class="nav-next" onclick="nav_next()">Next</span>
+    <span class="nav-last" onclick="nav_last()">Last</span>
+  </b></p>
 {% endblock %}
