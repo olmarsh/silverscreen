@@ -51,11 +51,21 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC'):
     {extra}''')
     return cursor.fetchall()
 
-def count_movies(conn):
+def count_movies(conn, column='Title', query='', match_before = True):
     '''Return the number of entries in the movies table.'''
 
+    # Whether to return queries with matches in the middle of the string
+    match_before_string = ''
+    if match_before:
+        match_before_string = '\'%\' ||'
+
     cursor = conn.cursor()
-    cursor.execute('SELECT COUNT(*) FROM Movies')
+    cursor.execute(f'''SELECT COUNT(*) FROM Movies
+                   INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
+                   INNER JOIN AgeRatings on Movies.AgeRatingID = \
+                   AgeRatings.AgeRatingID
+                   WHERE {column} LIKE {match_before_string} '{query}' || '%'
+                   ''')
 
     return cursor.fetchone()[0]
 

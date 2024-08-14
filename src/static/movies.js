@@ -33,6 +33,14 @@ $(document).ready(function() {  // Only runs when the document is loaded
         // Format the page count indicator
         result_count = data.result_count;
         document.getElementById("page-location").innerHTML=result_count+" results found, page "+data.page+" of "+Math.ceil(result_count/size);
+    
+        // Show the empty indicator if no results were foudn
+        if (result_count == 0) {
+            document.getElementById("empty-indicator").hidden = false
+        } else {
+            document.getElementById("empty-indicator").hidden = true
+        }
+    
     });
 
     // Request the table again when the page size is changed
@@ -52,6 +60,7 @@ $(document).ready(function() {  // Only runs when the document is loaded
         // Update the search box to reflect the chosen type
         document.getElementById("search-box").placeholder = 'Search by '+document.getElementById("search-type-selector").value
         console.log("The search type size was set to "+search_type)
+        socket.emit("table_request", size, page, order, search, search_type);
     }
 
     // Request the table again when something is searched

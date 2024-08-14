@@ -83,14 +83,17 @@ def update_table(results_per_page, read_page, read_order, read_search='',
         movies = database.db_view.view_movies(conn, limit=limit,
                                               offset=(page-1)*limit,
                                               order=order)
+        results_count = database.db_view.count_movies(conn)
     else: 
         movies = database.db_view.search_movies(conn, search_type, read_search,
                                                 limit=limit,
                                                 offset=(page-1)*limit,
                                                 order=order,
                                                 match_before=match_before)
-    
-    results_count = database.db_view.count_movies(conn)
+        results_count = database.db_view.count_movies(conn, search_type,
+                                                      read_search,
+                                                      match_before=\
+                                                      match_before)
 
     # Create table headers
     content = '''
