@@ -29,7 +29,7 @@ def test_connect():
 
 # When a table is requested:
 @socketio.on('table_request')
-def update_table(results_per_page, read_page):
+def update_table(results_per_page, read_page, read_order):
     # Sanitise page information
     try:
         limit = int(results_per_page)
@@ -43,9 +43,19 @@ def update_table(results_per_page, read_page):
         page = 1
     if page < 1: page = 1
 
+    # Set order for query based on request
+    if read_order == 'title-asc': order = 'Title ASC'
+    elif read_order == 'title-desc': order = 'Title DESC'
+    elif read_order == 'releaseyear-desc': order = 'ReleaseYear DESC'
+    elif read_order == 'releaseyear-asc': order = 'ReleaseYear ASC'
+    elif read_order == 'runtime-asc': order = 'Runtime ASC'
+    elif read_order == 'runtime-desc': order = 'Runtime DESC'
+    elif read_order == 'genre-asc': order = 'Genre ASC'
+    elif read_order == 'genre-desc': order = 'Genre DESC'
+
     # Connect to database and request rows
     conn = sqlite3.connect('silverscreen.db')
-    movies = database.db_view.view_movies(conn, limit=limit, offset=(page-1)*limit)
+    movies = database.db_view.view_movies(conn, limit=limit, offset=(page-1)*limit, order=order)
     results_count = database.db_view.count_movies(conn)
 
     # Create table headers

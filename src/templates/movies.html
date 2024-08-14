@@ -21,8 +21,19 @@
       <option value=50>50 results per page</option>
       <option value=100>100 results per page</option>
     </select>
+    <p>Order by:</p>
+    <select id="order-dropdown">
+      <option value="title-asc">Title (A-Z)</option>
+      <option value="title-desc">Title (Z-A)</option>
+      <option value="releaseyear-desc" selected>Release Year (newest first)</option>
+      <option value="releaseyear-asc">Release Year (oldest first)</option>
+      <option value="runtime-asc">Runtime (shortest first)</option>
+      <option value="runtime-desc">Runtime (longest first)</option>
+      <option value="genre-asc">Genre (A-Z)</option>
+      <option value="genre-desc">Genre (Z-A)</option>
+    </select>
   </div>
-  <p id="page-location">Page x of x</p>
+  <p id="page-location"> results found, page  of </p>
 
   <p style="cursor:pointer"><b>
     <span class="nav-first" onclick="nav_first()">First</span>

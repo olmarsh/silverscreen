@@ -30,7 +30,7 @@ def format_general(results):
     return True
 
 
-def view_movies(conn, limit=0, offset=0):
+def view_movies(conn, limit=0, offset=0, order='ID ASC'):
     '''Return the entire movies table.'''
 
     # Add extra parameters to query.
@@ -47,7 +47,7 @@ def view_movies(conn, limit=0, offset=0):
                    Symbol, MinAge, Description FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
-    ORDER BY ID ASC
+    ORDER BY {order}
     {extra}''')
     return cursor.fetchall()
 
