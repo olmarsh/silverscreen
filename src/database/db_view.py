@@ -43,8 +43,8 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC'):
 
     # Select all from table and return them.
     cursor = conn.cursor()
-    cursor.execute(f'''SELECT ID, Title, ReleaseYear, Runtime, Genre, AgeRating,
-                   Symbol, MinAge, Description FROM Movies
+    cursor.execute(f'''SELECT ID, Title, ReleaseYear, Runtime, Genre,
+                   AgeRating, Symbol, MinAge, Description FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
     ORDER BY {order}
@@ -67,8 +67,16 @@ def view_general(conn, table):
     return cursor.fetchall()
 
 
-def search_movies(conn, column, query):
+def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC'):
     '''Search for a movie in the movies table by specified column'''
+
+    # Add extra parameters to query.
+    extra = ''
+    if limit > 0:
+        extra += f'LIMIT {limit}'
+        if offset != '' and offset > 0:
+            extra += f' OFFSET {offset}'
+        extra += ';'
 
     cursor = conn.cursor()
     cursor.execute(f'''SELECT ID, Title, ReleaseYear, Runtime, Genre,
@@ -76,7 +84,8 @@ def search_movies(conn, column, query):
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
     WHERE {column} LIKE '%' || '{query}' || '%'
-    ORDER BY ID ASC''')
+    ORDER BY {order}
+    {extra}''')
     return cursor.fetchall()
 
 

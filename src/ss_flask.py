@@ -3,6 +3,8 @@ from flask_socketio import SocketIO, emit
 import database
 import sqlite3
 
+import database.db_view
+
 # Flask setup
 app = Flask(__name__)
 socketio = SocketIO(app,cors_allowed_origins='*')
@@ -29,7 +31,8 @@ def test_connect():
 
 # When a table is requested:
 @socketio.on('table_request')
-def update_table(results_per_page, read_page, read_order):
+def update_table(results_per_page, read_page, read_order, read_search='',
+                 read_search_type=''):
     # Sanitise page information
     try:
         limit = int(results_per_page)
@@ -43,6 +46,15 @@ def update_table(results_per_page, read_page, read_order):
         page = 1
     if page < 1: page = 1
 
+    # If there was a query, read its search type and escape its characters
+    if read_search != '':
+        if read_search_type == 'Title': search_type = 'Title'
+        elif read_search_type == 'Release Year': search_type = 'ReleaseYear'
+        elif read_search_type == 'Runtime': search_type = 'Runtime'
+        elif read_search_type == 'Genre': search_type = 'Genre'
+        elif read_search_type == 'Age Rating': search_type = 'AgeRating'
+
+        
     # Set order for query based on request
     if read_order == 'title-asc': order = 'Title ASC'
     elif read_order == 'title-desc': order = 'Title DESC'
@@ -55,7 +67,17 @@ def update_table(results_per_page, read_page, read_order):
 
     # Connect to database and request rows
     conn = sqlite3.connect('silverscreen.db')
-    movies = database.db_view.view_movies(conn, limit=limit, offset=(page-1)*limit, order=order)
+
+    if read_search == '':  # If nothing was searched, request the entire db
+        movies = database.db_view.view_movies(conn, limit=limit,
+                                              offset=(page-1)*limit,
+                                              order=order)
+    else: 
+        movies = database.db_view.search_movies(conn, search_type, read_search,
+                                                limit=limit,
+                                                offset=(page-1)*limit,
+                                                order=order)
+    
     results_count = database.db_view.count_movies(conn)
 
     # Create table headers
