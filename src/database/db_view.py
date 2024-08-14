@@ -67,7 +67,8 @@ def view_general(conn, table):
     return cursor.fetchall()
 
 
-def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC'):
+def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
+                  match_before = True):
     '''Search for a movie in the movies table by specified column'''
 
     # Add extra parameters to query.
@@ -78,12 +79,17 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC'):
             extra += f' OFFSET {offset}'
         extra += ';'
 
+    # Whether to return queries with matches in the middle of the string
+    match_before_string = ''
+    if match_before:
+        match_before_string = '\'%\' ||'
+
     cursor = conn.cursor()
     cursor.execute(f'''SELECT ID, Title, ReleaseYear, Runtime, Genre,
                    AgeRating, Symbol, MinAge, Description FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
-    WHERE {column} LIKE '%' || '{query}' || '%'
+    WHERE {column} LIKE {match_before_string} '{query}' || '%'
     ORDER BY {order}
     {extra}''')
     return cursor.fetchall()

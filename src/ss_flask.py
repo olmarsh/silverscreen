@@ -47,12 +47,23 @@ def update_table(results_per_page, read_page, read_order, read_search='',
     if page < 1: page = 1
 
     # If there was a query, read its search type and escape its characters
+    match_before = True
     if read_search != '':
-        if read_search_type == 'Title': search_type = 'Title'
-        elif read_search_type == 'Release Year': search_type = 'ReleaseYear'
-        elif read_search_type == 'Runtime': search_type = 'Runtime'
-        elif read_search_type == 'Genre': search_type = 'Genre'
-        elif read_search_type == 'Age Rating': search_type = 'AgeRating'
+        if read_search_type == 'Title':
+            search_type = 'Title'
+            match_before = True
+        elif read_search_type == 'Release Year':
+            search_type = 'ReleaseYear'
+            match_before = False
+        elif read_search_type == 'Runtime':
+            search_type = 'Runtime'
+            match_before = False
+        elif read_search_type == 'Genre':
+            search_type = 'Genre'
+            match_before = True
+        elif read_search_type == 'Age Rating':
+            search_type = 'AgeRating'
+            match_before = False
 
         
     # Set order for query based on request
@@ -76,7 +87,8 @@ def update_table(results_per_page, read_page, read_order, read_search='',
         movies = database.db_view.search_movies(conn, search_type, read_search,
                                                 limit=limit,
                                                 offset=(page-1)*limit,
-                                                order=order)
+                                                order=order,
+                                                match_before=match_before)
     
     results_count = database.db_view.count_movies(conn)
 
