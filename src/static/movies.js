@@ -32,8 +32,12 @@ $(document).ready(function() {  // Only runs when the document is loaded
 
         // Format the page count indicator
         result_count = data.result_count;
-        document.getElementById("page-location").innerHTML=result_count+" results found, page "+data.page+" of "+Math.ceil(result_count/size);
-    
+        if (result_count > 0) {
+            document.getElementById("page-location").innerHTML=result_count+" results found, page "+data.page+" of "+Math.ceil(result_count/size);
+        } else {
+            document.getElementById("page-location").innerHTML=result_count+" results found";
+        }
+
         // Show the empty indicator if no results were foudn
         if (result_count == 0) {
             document.getElementById("empty-indicator").hidden = false

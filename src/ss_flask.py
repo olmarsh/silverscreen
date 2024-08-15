@@ -18,7 +18,6 @@ def index():
 
 @app.route('/movies')
 def movies():
-    # Return the movies page with the table content
     return render_template('movies.html')
 
 
@@ -49,6 +48,7 @@ def update_table(results_per_page, read_page, read_order, read_search='',
     # If there was a query, read its search type and escape its characters
     match_before = True
     if read_search != '':
+        search = escape_query(read_search)
         if read_search_type == 'Title':
             search_type = 'Title'
             match_before = True
@@ -85,14 +85,13 @@ def update_table(results_per_page, read_page, read_order, read_search='',
                                               order=order)
         results_count = database.db_view.count_movies(conn)
     else: 
-        movies = database.db_view.search_movies(conn, search_type, read_search,
+        movies = database.db_view.search_movies(conn, search_type, search,
                                                 limit=limit,
                                                 offset=(page-1)*limit,
                                                 order=order,
                                                 match_before=match_before)
         results_count = database.db_view.count_movies(conn, search_type,
-                                                      read_search,
-                                                      match_before=\
+                                                      search, match_before=\
                                                       match_before)
 
     # Create table headers
@@ -127,6 +126,14 @@ def format_table_row(row):
     <td>{row[4]}</td>
     <td>{row[5]}</td></tr>'''
 
+def escape_query(inp):
+    '''Escape all double and single quotes to prevent SQL injection'''
+
+    ret = inp
+    ret = ret.replace('\'', '\'\'')
+    ret = ret.replace('"', '""')
+
+    return ret
 
 if __name__ == '__main__':
    app.run()
