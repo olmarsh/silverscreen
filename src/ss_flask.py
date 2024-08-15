@@ -31,7 +31,7 @@ def test_connect():
 # When a table is requested:
 @socketio.on('table_request')
 def update_table(results_per_page, read_page, read_order, read_search='',
-                 read_search_type=''):
+                 read_search_type='', datetime=0):
     # Sanitise page information
     try:
         limit = int(results_per_page)
@@ -111,7 +111,8 @@ def update_table(results_per_page, read_page, read_order, read_search='',
     emit('table_update', {
             'table_content': content,
             'result_count': results_count,
-            'page': page
+            'page': page,
+            'datetime': datetime
         })
 
 # Function definitions
