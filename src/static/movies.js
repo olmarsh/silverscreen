@@ -6,6 +6,7 @@ var result_count = 0;
 var search = '';
 var search_type = 'Title';
 var last_query = 0;
+var search_debounce = 0;
 const socket = io();
 
 $(document).ready(function() {  // Only runs when the document is loaded
@@ -77,7 +78,7 @@ $(document).ready(function() {  // Only runs when the document is loaded
     }
 
     // Request the table again when something is searched
-    document.getElementById("search-box").oninput = function() {
+    document.getElementById("search-box").oninput = debounce(function() {
         search = document.getElementById("search-box").value;
 
         // Limit the page size to the maximum page number
@@ -85,7 +86,7 @@ $(document).ready(function() {  // Only runs when the document is loaded
 
         console.log("The query was made "+search)
         socket.emit("table_request", size, page, order, search, search_type, Date.now());
-    }
+    }, 250);
 
     // Request the table again when the table order is changed
     document.getElementById("order-dropdown").onchange = function() {
@@ -120,4 +121,17 @@ function nav_last() {
     console.log("Go to last page");
     page = Math.ceil(result_count/size);
     socket.emit("table_request", size, page, order, search, search_type, Date.now());
+}
+
+// Debounce function
+function debounce(func, wait) {
+    var timeout;
+    return function() {
+        var context = this;
+        var args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(function() {
+            func.apply(context, args);
+        }, wait);
+    };
 }
