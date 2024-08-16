@@ -7,6 +7,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Import custom font face */
 @font-face {
     font-family: "Miriam Libre";
     src: url("miriam-libre.ttf") format("truetype");
@@ -33,13 +34,15 @@ body {
     margin: 0px;
 
     font-family: "Miriam Libre", sans-serif;
+
+    user-select: none;
 }
 
 .nav-button {
     display: block;
     float: left;
 
-    color: black;
+    color: white;
     background-color: #9b9b9b;
 
     font-size: 30px;
@@ -58,13 +61,22 @@ body {
 
 .nav-button:hover {
     transform: scale(1.05);
+    background-color: #939393
+}
+
+.nav-button:active {
+    transform: scale(1);
+    background-color: #868686
 }
 
 
 .header-title {
     float: left;
 
-    color: black;
+    /* Text gradient */
+    background: linear-gradient(to right, #ae919d, #9a877a,#a47ea4, #717b93);
+    color: transparent;
+    background-clip: text;
 
     font-size: 40px;
     padding: 10px;
@@ -74,4 +86,13 @@ body {
 
 .header-logo {
     float: left;
+}
+
+.content {
+    padding: 10px
+}
+
+.title {
+    font-family: "Miriam Libre", sans-serif;
+    font-size: 20px;
 }
