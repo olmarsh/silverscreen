@@ -2,14 +2,16 @@
 <head>
 <title>{% block title %}{% endblock %} - silverscreen</title>
   {% block head %}{% endblock %}
+  <link rel="stylesheet" href="{{ url_for('static', filename= 'base.css') }}">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
 </head>
-<nav>
-  <h1>silverscreen</h1>
-  <a href="/">Homepage</a>
-  <a href="/movies">Movies</a>
+<nav class="header">
+  <img class="header-logo" width="64" height="64" src="{{ url_for('static', filename= 'logo.svg') }}" >
+  <span class="header-title">silverscreen</span>
+  <a class="nav-button" href="/">Homepage</a>
+  <a class="nav-button" href="/movies">Movies</a>
 </nav>
 <section class="content">
   <header>

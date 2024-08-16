@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 from flask_socketio import SocketIO, emit
 import database
 import sqlite3
@@ -8,6 +8,13 @@ import database.db_view
 # Flask setup
 app = Flask(__name__)
 socketio = SocketIO(app,cors_allowed_origins='*')
+
+# Allow caching of the logo to prevent flickering
+@app.route('/static/logo.svg')
+def logo_static():
+    response = send_from_directory('static', 'logo.svg')
+    response.headers['Cache-Control'] = 'public, max-age=3600'  # Cache for 1 hour
+    return response
 
 # Page definitions
 
@@ -28,7 +35,9 @@ def movie():
     # Open a connection to the database and view movie
     conn = sqlite3.connect('silverscreen.db')
     try:
-        movie = database.db_view.search_movies(conn, 'ID', id, limit=1)[0]
+        movie = database.db_view.search_movies(conn, 'ID', id, limit=1,
+                                               match_before=False,
+                                               match_after=False)[0]
         return render_template('movie.html',
                             title=movie[1],
                             releaseyear=movie[2],

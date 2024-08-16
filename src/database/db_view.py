@@ -51,20 +51,24 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC'):
     {extra}''')
     return cursor.fetchall()
 
-def count_movies(conn, column='Title', query='', match_before = True):
+def count_movies(conn, column='Title', query='', match_before = True,
+                 match_after = True):
     '''Return the number of entries in the movies table.'''
 
-    # Whether to return queries with matches in the middle of the string
+    # Whether to return queries with matches before or after the string
     match_before_string = ''
     if match_before:
         match_before_string = '\'%\' ||'
 
+    match_after_string = ''
+    if match_after:
+        match_after_string = '|| \'%\''
+
     cursor = conn.cursor()
     cursor.execute(f'''SELECT COUNT(*) FROM Movies
-                   INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
-                   INNER JOIN AgeRatings on Movies.AgeRatingID = \
-                   AgeRatings.AgeRatingID
-                   WHERE {column} LIKE {match_before_string} '{query}' || '%'
+    INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
+    INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
+    WHERE {column} LIKE {match_before_string} '{query}' {match_after_string}
                    ''')
 
     return cursor.fetchone()[0]
@@ -78,7 +82,7 @@ def view_general(conn, table):
 
 
 def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
-                  match_before = True):
+                  match_before = True, match_after = True):
     '''Search for a movie in the movies table by specified column'''
 
     # Add extra parameters to query.
@@ -89,17 +93,21 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
             extra += f' OFFSET {offset}'
         extra += ';'
 
-    # Whether to return queries with matches in the middle of the string
+    # Whether to return queries with matches before or after the string
     match_before_string = ''
     if match_before:
         match_before_string = '\'%\' ||'
+    
+    match_after_string = ''
+    if match_after:
+        match_after_string = '|| \'%\''
 
     cursor = conn.cursor()
     cursor.execute(f'''SELECT ID, Title, ReleaseYear, Runtime, Genre,
                    AgeRating, Symbol, MinAge, Description FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
-    WHERE {column} LIKE {match_before_string} '{query}' || '%'
+    WHERE {column} LIKE {match_before_string} '{query}' {match_after_string}
     ORDER BY {order}
     {extra}''')
     return cursor.fetchall()
