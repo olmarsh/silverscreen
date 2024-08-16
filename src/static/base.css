@@ -52,7 +52,14 @@ body {
     
     font-style: italic;
     text-decoration: none;
+
+    transition: transform .2s ease-in-out; 
 }
+
+.nav-button:hover {
+    transform: scale(1.05);
+}
+
 
 .header-title {
     float: left;
