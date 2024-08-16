@@ -31,7 +31,7 @@ def movie():
     return render_template('movie.html',
                            title=movie[1],
                            releaseyear=movie[2],
-                           runtime=movie[3]+' minutes',
+                           runtime=str(movie[3])+' minutes',
                            genre=movie[4]+' '+movie[6],
                            agerating=movie[5]+' ('+movie[8]+')',
                            id=movie[0])
@@ -136,7 +136,7 @@ def update_table(results_per_page, read_page, read_order, read_search='',
 def format_table_row(row):
     '''Format a row of the movies table to be displayed.'''
 
-    return f'''<tr><td>{row[1]}</td>
+    return f'''<tr><td><a href='/movie?id={row[0]}'>{row[1]}</a></td>
     <td>{row[2]}</td>
     <td>{row[3]}</td>
     <td>{row[4]}</td>
