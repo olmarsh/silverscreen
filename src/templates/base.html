@@ -7,7 +7,13 @@
   <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
 </head>
-<div class="header">
+<div class="header header-sticky">
+  <img class="header-logo" width="64" height="64" src="{{ url_for('static', filename= 'logo.svg') }}" >
+  <span class="header-title">silverscreen</span>
+  <a class="nav-button" href="/">Homepage</a>
+  <a class="nav-button" href="/movies">Movies</a>
+</div>
+<div class="header hidden"> <!-- Duplicate header to push the content down -->
   <img class="header-logo" width="64" height="64" src="{{ url_for('static', filename= 'logo.svg') }}" >
   <span class="header-title">silverscreen</span>
   <a class="nav-button" href="/">Homepage</a>

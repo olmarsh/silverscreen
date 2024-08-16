@@ -12,10 +12,18 @@ body {
     src: url("miriam-libre.ttf") format("truetype");
 }
 
+.header-sticky {
+    position: fixed;
+    top: 0;
+}
+
+.hidden {
+    opacity: 0 !important;
+}
+
 .header {
     float: left;
 
-    /*background: #d8d8d8;*/
     background-image: linear-gradient(to right, #d8d8d8, #c6c6c6);
 
     padding: 20px;
