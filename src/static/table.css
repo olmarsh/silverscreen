@@ -1,0 +1,32 @@
+.movies-table {
+    border-collapse: collapse;
+    border: 1px solid #9b9b9b;
+}
+
+/* Table headers */
+.movies-table tr th {
+    background-color: #9b9b9b;
+    color: white;
+    text-align: left;
+    padding: 10px 15px;
+    border-spacing: 0px;
+}
+
+/* Table cells */
+.movies-table td {
+    padding: 5px 15px;
+    transition: padding 0.3s ease-in-out;
+    border-bottom: 1px solid #9b9b9b;
+}
+
+.movies-table tr:hover {
+    background-color: #f4f4f4;
+}
+
+.movies-table td:hover {
+    padding: 10px 15px;
+}
+
+.movies-table-title {
+    width: 400px;
+}

@@ -53,8 +53,6 @@ def movie():
 def test_connect():
     emit('connected',  {'data':'Connected'})  # Confirm the client connected
 
-@socketio.on('')
-
 # When a table is requested:
 @socketio.on('table_request')
 def update_table(results_per_page, read_page, read_order, read_search='',
@@ -124,7 +122,7 @@ def update_table(results_per_page, read_page, read_order, read_search='',
     # Create table headers
     content = '''
     <tr>
-        <th>Title</th>
+        <th class="movies-table-title">Title</th>
         <th>Release Year</th>
         <th>Runtime (min)</th>
         <th>Genre</th>

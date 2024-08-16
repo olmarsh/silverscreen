@@ -6,6 +6,7 @@
   <script src="{{url_for('static', filename='socket.io.min.js')}}"></script>
   <!-- Include script for this page-->
   <script src="{{url_for('static', filename='movies.js')}}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename= 'table.css') }}">
 {% endblock %}
 
 {% block header %}
@@ -54,9 +55,9 @@
     <span class="nav-last" onclick="nav_last()">Last</span>
   </b></p>
 
-  <table id="table">
+  <table id="table" class="movies-table">
     <tr>
-      <th>Title</th>
+      <th class="movies-table-title">Title</th>
       <th>Release Year</th>
       <th>Runtime (min)</th>
       <th>Genre</th>
