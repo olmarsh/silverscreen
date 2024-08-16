@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
 import database
 import sqlite3
@@ -20,8 +20,23 @@ def index():
 def movies():
     return render_template('movies.html')
 
+@app.route('/movie')
+def movie():
+    # Get the movie id from the URL parameter
+    id = request.args.get('id')
 
-# Confirm to client that connection was successfull
+    # Open a connection to the database and view movie
+    conn = sqlite3.connect('silverscreen.db')
+    movie = database.db_view.search_movies(conn, 'ID', id, limit=1)[0]
+    return render_template('movie.html',
+                           title=movie[1],
+                           releaseyear=movie[2],
+                           runtime=movie[3]+' minutes',
+                           genre=movie[4]+' '+movie[6],
+                           agerating=movie[5]+' ('+movie[8]+')',
+                           id=movie[0])
+
+# Confirm to client that connection was successful
 @socketio.on('connect')
 def test_connect():
     emit('connected',  {'data':'Connected'})  # Confirm the client connected

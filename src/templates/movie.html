@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}{{title}}{% endblock %}</h1>
+  <p><i>Movie</i></p>
+{% endblock %}
+
+{% block content %}
+  <p>Title: {{title}}</p>
+  <p>Release Year: {{releaseyear}}</p>
+  <p>Runtime: {{runtime}}</p>
+  <p>Genre: {{genre}}</p>
+  <p>Age Rating: {{agerating}}</p>
+  <p><i>Movie ID: {{id}}</i></p>
+{% endblock %}
