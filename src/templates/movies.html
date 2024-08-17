@@ -1,40 +1,20 @@
 {% extends 'base.html' %}
 
 {% block head %}
-  <!-- Include jquery and socketIO libraries -->
-  <script src="{{url_for('static', filename='jquery-3.7.1.min.js')}}"></script>
-  <script src="{{url_for('static', filename='socket.io.min.js')}}"></script>
-  <!-- Include script for this page-->
-  <script src="{{url_for('static', filename='movies.js')}}"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename= 'table.css') }}">
+<!-- Include jquery and socketIO libraries -->
+<script src="{{url_for('static', filename='jquery-3.7.1.min.js')}}"></script>
+<script src="{{url_for('static', filename='socket.io.min.js')}}"></script>
+<!-- Include script for this page-->
+<script src="{{url_for('static', filename='movies.js')}}"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename= 'movies.css') }}">
 {% endblock %}
 
 {% block header %}
-  <h1>{% block title %}Movies{% endblock %}</h1>
+<h1>{% block title %}Movies{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  <div>
-    <p>Results per page:</p>
-    <select id="page-size-dropdown">
-      <option value=10>10 results per page</option>
-      <option value=20 selected>20 results per page</option>
-      <option value=50>50 results per page</option>
-      <option value=100>100 results per page</option>
-    </select>
-    <p>Order by:</p>
-    <select id="order-dropdown">
-      <option value="title-asc">Title (A-Z)</option>
-      <option value="title-desc">Title (Z-A)</option>
-      <option value="releaseyear-desc" selected>Release Year (newest first)</option>
-      <option value="releaseyear-asc">Release Year (oldest first)</option>
-      <option value="runtime-asc">Runtime (shortest first)</option>
-      <option value="runtime-desc">Runtime (longest first)</option>
-      <option value="genre-asc">Genre (A-Z)</option>
-      <option value="genre-desc">Genre (Z-A)</option>
-    </select>
-  </div>
-  <br>
+<div class="search-box">
   <span>Search by:</span>
   <select id="search-type-selector">
     <option selected>Title</option>
@@ -43,17 +23,37 @@
     <option>Genre</option>
     <option>Age Rating</option>
   </select>
-
   <input placeholder="Search" id="search-box" maxlength=255>
+</div>
+<div class="table-area">
+  <p>Results per page:</p>
+  <select id="page-size-dropdown">
+    <option value=10>10 results per page</option>
+    <option value=20 selected>20 results per page</option>
+    <option value=50>50 results per page</option>
+    <option value=100>100 results per page</option>
+  </select>
+  <p>Order by:</p>
+  <select id="order-dropdown">
+    <option value="title-asc">Title (A-Z)</option>
+    <option value="title-desc">Title (Z-A)</option>
+    <option value="releaseyear-desc" selected>Release Year (newest first)</option>
+    <option value="releaseyear-asc">Release Year (oldest first)</option>
+    <option value="runtime-asc">Runtime (shortest first)</option>
+    <option value="runtime-desc">Runtime (longest first)</option>
+    <option value="genre-asc">Genre (A-Z)</option>
+    <option value="genre-desc">Genre (Z-A)</option>
+  </select>
+  <br>
 
-  <p id="page-location"> results found, page  of </p>
+  <p id="page-location"> results found, page of </p>
 
-  <p style="cursor:pointer"><b>
-    <span class="nav-first" onclick="nav_first()">First</span>
-    <span class="nav-prev" onclick="nav_prev()">Previous</span>
-    <span class="nav-next" onclick="nav_next()">Next</span>
-    <span class="nav-last" onclick="nav_last()">Last</span>
-  </b></p>
+  <p class="table-nav"><b>
+      <span class="nav-first" onclick="nav_first()">First</span>
+      <span class="nav-prev" onclick="nav_prev()">Previous</span>
+      <span class="nav-next" onclick="nav_next()">Next</span>
+      <span class="nav-last" onclick="nav_last()">Last</span>
+    </b></p>
 
   <table id="table" class="movies-table">
     <tr>
@@ -65,11 +65,12 @@
     </tr>
   </table>
   <p id="empty-indicator" hidden="true"><i>No results found</i></p>
-  
-  <p style="cursor:pointer"><b>
-    <span class="nav-first" onclick="nav_first()">First</span>
-    <span class="nav-prev" onclick="nav_prev()">Previous</span>
-    <span class="nav-next" onclick="nav_next()">Next</span>
-    <span class="nav-last" onclick="nav_last()">Last</span>
-  </b></p>
+
+  <p class="table-nav"><b>
+      <span class="nav-first" onclick="nav_first()">First</span>
+      <span class="nav-prev" onclick="nav_prev()">Previous</span>
+      <span class="nav-next" onclick="nav_next()">Next</span>
+      <span class="nav-last" onclick="nav_last()">Last</span>
+    </b></p>
+</div>
 {% endblock %}

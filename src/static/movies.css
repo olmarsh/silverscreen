@@ -1,3 +1,38 @@
+/* SEARCH AND NAVIGATION */
+.table-area {
+    width: fit-content;
+}
+
+.table-nav {
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    margin: 10px;
+}
+
+.table-nav span {
+    color: white;
+    background-color: #9b9b9b;
+
+    padding: 5px;
+    
+    border-radius: 5px;
+
+    transition: padding .2s ease-in-out
+}
+
+.table-nav span:hover {
+    padding: 5px 10px;
+    background-color: #939393
+}
+
+.table-nav span:active {
+    padding: 5px 8px;
+    background-color: #868686
+}
+
+/* TABLE */
+
 .movies-table {
     border-collapse: collapse;
     border: 1px solid #9b9b9b;
