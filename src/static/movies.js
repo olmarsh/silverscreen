@@ -38,13 +38,17 @@ $(document).ready(function() {  // Only runs when the document is loaded
             result_count = data.result_count;
             if (result_count > 0) {
                 document.getElementById("page-location").innerHTML=result_count+" results found ("+(Date.now()-data.datetime)+"ms), page "+data.page+" of "+Math.ceil(result_count/size);
+                document.getElementById("top-page-indicator").innerHTML=+data.page+"/"+Math.ceil(result_count/size);
+                document.getElementById("bottom-page-indicator").innerHTML=+data.page+"/"+Math.ceil(result_count/size);
             } else if (result_count == 1) {
                 document.getElementById("page-location").innerHTML="1 result found ("+(Date.now()-data.datetime)+"ms), page "+data.page+" of "+Math.ceil(result_count/size);
+                document.getElementById("top-page-indicator").innerHTML=+data.page+"/"+Math.ceil(result_count/size);
+                document.getElementById("bottom-page-indicator").innerHTML=+data.page+"/"+Math.ceil(result_count/size);
             } else {
                 document.getElementById("page-location").innerHTML=result_count+" results found ("+(Date.now()-data.datetime)+"ms)";
+                document.getElementById("top-page-indicator").innerHTML="0/0"
+                document.getElementById("bottom-page-indicator").innerHTML="0/0"
             }
-            document.getElementById("top-page-indicator").innerHTML=+data.page+"/"+Math.ceil(result_count/size);
-            document.getElementById("bottom-page-indicator").innerHTML=+data.page+"/"+Math.ceil(result_count/size);
 
             // Show the empty indicator if no results were foudn
             if (result_count == 0) {
