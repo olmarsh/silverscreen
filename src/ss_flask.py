@@ -125,7 +125,7 @@ def update_table(results_per_page, read_page, read_order, read_search='',
         <th class="movies-table-title">Title</th>
         <th>Release Year</th>
         <th>Runtime (min)</th>
-        <th>Genre</th>
+        <th class="movies-table-genre">Genre</th>
         <th>Age Rating</th>
     </tr>
     '''

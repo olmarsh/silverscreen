@@ -5,17 +5,20 @@
 
 .table-nav {
     text-align: center;
-    cursor: pointer;
     user-select: none;
+    width: auto;
+
     margin: 10px;
+    min-width: 650px;
 }
 
 .table-nav span {
     color: white;
     background-color: #9b9b9b;
+    cursor: pointer;
 
+    margin-top: 15px;
     padding: 5px;
-    
     border-radius: 5px;
 
     transition: padding .2s ease-in-out
@@ -29,6 +32,35 @@
 .table-nav span:active {
     padding: 5px 8px;
     background-color: #868686
+}
+
+.order-dropdown {
+    float: left;
+    width: 200px
+}
+
+.page-size-dropdown {
+    float: right;
+    text-align: right;
+    width: 200px
+}
+
+#page-location {
+    padding-top: 10px;
+}
+
+#empty-indicator {
+    text-align: center;
+    padding: 5px;
+}
+
+#search-box {
+    padding: 5px;
+    width: 300px;
+}
+
+#search-type-selector {
+    padding: 5px;
 }
 
 /* TABLE */
@@ -72,4 +104,8 @@
 
 .movies-table-title {
     width: 400px;
+}
+
+.movies-table-genre {
+    width: 200px;
 }
