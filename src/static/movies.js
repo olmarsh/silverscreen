@@ -104,24 +104,28 @@ function nav_next() {
     page += 1;
     // Limit the page size to the maximum page number
     if (page > Math.ceil(result_count/size)) {page = Math.ceil(result_count/size)}
-    table_request();
+    else table_request();
 }
 function nav_prev() {
     console.log("Decreasing page");
     page -= 1;
     // Limit the page size to the minimum page number (1)
     if (page < 1) page = 1
-    table_request();
+    else table_request();
 }
 function nav_first() {
     console.log("Go to first page");
-    page = 1;
-    table_request();
+    if (page != 1) {
+        page = 1;
+        table_request();
+    }
 }
 function nav_last() {
     console.log("Go to last page");
-    page = Math.ceil(result_count/size);
-    table_request();
+    if (page != Math.ceil(result_count/size)) { 
+        page = Math.ceil(result_count/size);
+        table_request();
+    }
 }
 
 // Debounce function
