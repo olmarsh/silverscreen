@@ -6,7 +6,6 @@ var result_count = 0;
 var search = '';
 var search_type = 'Title';
 var last_query = 0;
-var search_debounce = 0;
 const socket = io();
 
 $(document).ready(function() {  // Only runs when the document is loaded
@@ -22,7 +21,7 @@ $(document).ready(function() {  // Only runs when the document is loaded
         document.getElementById("search-box").placeholder = 'Search by '+document.getElementById("search-type-selector").value
 
         // Request a table update upon first load
-        socket.emit("table_request", size, page, order, search, search_type, Date.now());
+        table_request();
     });
 
     // Update the table when an update is received
@@ -51,10 +50,12 @@ $(document).ready(function() {  // Only runs when the document is loaded
             } else {
                 document.getElementById("empty-indicator").hidden = true
             }
+            
+            // Make the table no longer grey
+            document.getElementById("table").classList.remove("loading")
         } else {
             console.log("Table update received, but it was discarded!")
         }
-    
     });
 
     // Request the table again when the page size is changed
@@ -65,7 +66,7 @@ $(document).ready(function() {  // Only runs when the document is loaded
         if (page > Math.ceil(result_count/size)) {page = Math.ceil(result_count/size)}
 
         console.log("The page size was set to "+size)
-        socket.emit("table_request", size, page, order, search, search_type, Date.now());
+        table_request();
     }
 
     document.getElementById("search-type-selector").onchange = function() {
@@ -74,26 +75,26 @@ $(document).ready(function() {  // Only runs when the document is loaded
         // Update the search box to reflect the chosen type
         document.getElementById("search-box").placeholder = 'Search by '+document.getElementById("search-type-selector").value
         console.log("The search type size was set to "+search_type)
-        socket.emit("table_request", size, page, order, search, search_type, Date.now());
+        table_request();
     }
 
     // Request the table again when something is searched
-    document.getElementById("search-box").oninput = debounce(function() {
+    document.getElementById("search-box").oninput = fade_table(debounce(function() {
         search = document.getElementById("search-box").value;
 
         // Limit the page size to the maximum page number
         if (page > Math.ceil(result_count/size)) {page = Math.ceil(result_count/size)}
 
         console.log("The query was made "+search)
-        socket.emit("table_request", size, page, order, search, search_type, Date.now());
-    }, 250);
+        table_request();
+    }, 250));
 
     // Request the table again when the table order is changed
     document.getElementById("order-dropdown").onchange = function() {
         order = document.getElementById("order-dropdown").value;
 
         console.log("The page order was set to "+order);
-        socket.emit("table_request", size, page, order, search, search_type, Date.now());
+        table_request();
     }
 });
 
@@ -103,24 +104,24 @@ function nav_next() {
     page += 1;
     // Limit the page size to the maximum page number
     if (page > Math.ceil(result_count/size)) {page = Math.ceil(result_count/size)}
-    socket.emit("table_request", size, page, order, search, search_type, Date.now());
+    table_request();
 }
 function nav_prev() {
     console.log("Decreasing page");
     page -= 1;
     // Limit the page size to the minimum page number (1)
     if (page < 1) {page = 0}
-    socket.emit("table_request", size, page, order, search, search_type, Date.now());
+    table_request();
 }
 function nav_first() {
     console.log("Go to first page");
     page = 1;
-    socket.emit("table_request", size, page, order, search, search_type, Date.now());
+    table_request();
 }
 function nav_last() {
     console.log("Go to last page");
     page = Math.ceil(result_count/size);
-    socket.emit("table_request", size, page, order, search, search_type, Date.now());
+    table_request();
 }
 
 // Debounce function
@@ -134,4 +135,19 @@ function debounce(func, wait) {
             func.apply(context, args);
         }, wait);
     };
+}
+
+function fade_table(func) {
+    return function() {
+        document.getElementById("table").classList.add("loading")
+        var context = this;
+        var args = arguments;
+        func.apply()
+    }
+}
+
+// Request an update from the table and make it grey
+function table_request() {
+    document.getElementById("table").classList.add("loading")
+    socket.emit("table_request", size, page, order, search, search_type, Date.now());
 }

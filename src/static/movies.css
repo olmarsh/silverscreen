@@ -36,6 +36,14 @@
 .movies-table {
     border-collapse: collapse;
     border: 1px solid #9b9b9b;
+    opacity: 1;
+    transition: opacity 0s;
+}
+
+/* Make transparent on loading elements */
+.movies-table.loading {
+    opacity: 0.5;
+    transition: opacity 0.5s;
 }
 
 /* Table headers */
