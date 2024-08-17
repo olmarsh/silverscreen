@@ -28,8 +28,7 @@ html {
 
 .title-text {
     /* Fade in */
-    opacity: 0;
-    animation: 2s ease-out 0.1s 1 fade-in-title forwards;
+    animation: 2s ease-out 0s 1 fade-in-title forwards;
 
     /* Text gradient */
     background: linear-gradient(to right, #ffd7e8, #ffdec8,#ffc4ff, #c4d6ff);
