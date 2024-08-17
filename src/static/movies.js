@@ -110,7 +110,7 @@ function nav_prev() {
     console.log("Decreasing page");
     page -= 1;
     // Limit the page size to the minimum page number (1)
-    if (page < 1) {page = 0}
+    if (page < 1) page = 1
     table_request();
 }
 function nav_first() {
