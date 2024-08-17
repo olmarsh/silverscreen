@@ -34,7 +34,7 @@ $(document).ready(function() {  // Only runs when the document is loaded
             // Set the table contents to the received contents
             document.getElementById("table").innerHTML=data.table_content;
 
-            // Format the page count indicator
+            // Format the page count indicators
             result_count = data.result_count;
             if (result_count > 0) {
                 document.getElementById("page-location").innerHTML=result_count+" results found ("+(Date.now()-data.datetime)+"ms), page "+data.page+" of "+Math.ceil(result_count/size);
@@ -43,6 +43,8 @@ $(document).ready(function() {  // Only runs when the document is loaded
             } else {
                 document.getElementById("page-location").innerHTML=result_count+" results found ("+(Date.now()-data.datetime)+"ms)";
             }
+            document.getElementById("top-page-indicator").innerHTML=+data.page+"/"+Math.ceil(result_count/size);
+            document.getElementById("bottom-page-indicator").innerHTML=+data.page+"/"+Math.ceil(result_count/size);
 
             // Show the empty indicator if no results were foudn
             if (result_count == 0) {

@@ -55,6 +55,7 @@
     <br>
     <span class="nav-first" onclick="nav_first()">First</span>
     <span class="nav-prev" onclick="nav_prev()">Previous</span>
+    <div class="page-indicator" id="top-page-indicator"></div>
     <span class="nav-next" onclick="nav_next()">Next</span>
     <span class="nav-last" onclick="nav_last()">Last</span>
     </b></div>
@@ -70,11 +71,12 @@
   </table>
   <p id="empty-indicator" hidden="true"><i>No results found</i></p>
 
-  <p class="table-nav"><b>
+  <div class="table-nav"><b>
       <span class="nav-first" onclick="nav_first()">First</span>
       <span class="nav-prev" onclick="nav_prev()">Previous</span>
+      <div class="page-indicator" id="bottom-page-indicator"></div>
       <span class="nav-next" onclick="nav_next()">Next</span>
       <span class="nav-last" onclick="nav_last()">Last</span>
-    </b></p>
+    </b></div>
 </div>
 {% endblock %}

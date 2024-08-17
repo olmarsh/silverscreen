@@ -9,7 +9,7 @@
     width: auto;
 
     margin: 10px;
-    min-width: 650px;
+    min-width: 700px;
 }
 
 .table-nav span {
@@ -61,6 +61,19 @@
 
 #search-type-selector {
     padding: 5px;
+}
+
+.page-indicator {
+    color: black;
+    background-color: #c2c2c2;
+
+    font-weight: normal;
+
+    display: inline-block;
+    margin-top: 15px;
+    padding: 5px;
+    border-radius: 5px;
+    max-width: 80px;
 }
 
 /* TABLE */

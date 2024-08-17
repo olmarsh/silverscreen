@@ -22,13 +22,14 @@ html {
     background-color: black;
     height: 100%;
     width: 100%;
-    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+    background: radial-gradient(ellipse at bottom, #332040 0%, #0d0812 100%);
     overflow-y: hidden;
 }
 
 .title-text {
     /* Fade in */
-    animation: 2s ease-out 0s 1 fade-in-title forwards;
+    opacity: 0;
+    animation: 2s ease-out 0.1s 1 fade-in-title forwards;
 
     /* Text gradient */
     background: linear-gradient(to right, #ffd7e8, #ffdec8,#ffc4ff, #c4d6ff);
