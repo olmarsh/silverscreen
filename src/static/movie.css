@@ -1,0 +1,31 @@
+.movie-display {
+    width: 500px;
+    margin: 10px;
+    margin-left: 20px;
+    font-size: 16px;
+    padding: 10px;
+
+    border: 5px solid #9b9b9b;
+    border-radius: 10px;
+}
+
+.movie-title {
+    color: white;
+    background: linear-gradient(to right, #ae919d, #9a877a,#a47ea4, #717b93);
+
+    text-align: center;
+
+    font-size: 24px;
+    font-weight: bold;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.movie-element {
+    background-color: #d8d8d8;
+
+    font-size: 16px;
+    padding: 10px;
+    margin: 20px 10px;
+    border-radius: 5px;
+}

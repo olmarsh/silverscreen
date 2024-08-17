@@ -18,7 +18,7 @@ $(document).ready(function() {  // Only runs when the document is loaded
         search = document.getElementById("search-box").value;
         search_type = document.getElementById("search-type-selector").value;
         // Update the search box to reflect the chosen type
-        document.getElementById("search-box").placeholder = 'Search by '+document.getElementById("search-type-selector").value
+        document.getElementById("search-box").placeholder = '🔍 Search by '+document.getElementById("search-type-selector").value
 
         // Request a table update upon first load
         table_request();

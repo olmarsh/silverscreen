@@ -1,15 +1,24 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename= 'movie.css') }}">
+{% endblock %}
+
 {% block header %}
-  <h1>{% block title %}{{title}}{% endblock %}</h1>
-  <p><i>Movie</i></p>
+<h1>{% block title %}{{title}}{% endblock %}</h1>
+<p><i>Movie</i></p>
 {% endblock %}
 
 {% block content %}
-  <p>Title: {{title}}</p>
-  <p>Release Year: {{releaseyear}}</p>
-  <p>Runtime: {{runtime}}</p>
-  <p>Genre: {{genre}}</p>
-  <p>Age Rating: {{agerating}}</p>
-  <p><i>Movie ID: {{id}}</i></p>
+<br>
+<div class="movie-display">
+  <p class="movie-title">{{title}}</p>
+  <p class="movie-element"><b>Release Year:</b> {{releaseyear}}</p>
+  <p class="movie-element"><b>Runtime:</b> {{runtime}}</p>
+  <p class="movie-element"><b>Genre:</b> {{genre_symbol}} {{genre}}</p>
+  <p class="movie-element"><b>Age Rating:</b> {{agerating}} <i>({{agerating_description}})</i></p>
+  <p style="text-align: right;"><i>Movie ID: {{id}}</i></p>
+</div>
+<br>
+<p>Finished? <a href="/movies">Return to table view</a></p>
 {% endblock %}

@@ -42,8 +42,10 @@ def movie():
                             title=movie[1],
                             releaseyear=movie[2],
                             runtime=str(movie[3])+' minutes',
-                            genre=movie[4]+' '+movie[6],
-                            agerating=movie[5]+' ('+movie[8]+')',
+                            genre=movie[4],
+                            genre_symbol=movie[6],
+                            agerating=movie[5],
+                            agerating_description=movie[8],
                             id=movie[0])
     except: # If the id was invalid, return the error template
         return render_template('error.html')
@@ -121,7 +123,7 @@ def update_table(results_per_page, read_page, read_order, read_search='',
 
     # Create table headers
     content = '''
-    <tr>
+    <tr class="movies-table-headers">
         <th class="movies-table-title">Title</th>
         <th>Release Year</th>
         <th>Runtime (min)</th>
@@ -149,7 +151,7 @@ def format_table_row(row):
     return f'''<tr><td><a href='/movie?id={row[0]}'>{row[1]}</a></td>
     <td>{row[2]}</td>
     <td>{row[3]}</td>
-    <td>{row[4]}</td>
+    <td>{row[6]} {row[4]}</td>
     <td>{row[5]}</td></tr>'''
 
 def escape_query(inp):

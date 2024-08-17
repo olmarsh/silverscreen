@@ -67,7 +67,7 @@
 
 .movies-table {
     border-collapse: collapse;
-    border: 1px solid #9b9b9b;
+    border: 0px solid black;
     opacity: 1;
     transition: opacity 0s;
 }
@@ -80,11 +80,16 @@
 
 /* Table headers */
 .movies-table tr th {
-    background-color: #9b9b9b;
     color: white;
     text-align: left;
     padding: 10px 15px;
     border-spacing: 0px;
+}
+
+.movies-table-headers {
+    background-image: linear-gradient(to right, #ae919d, #9a877a,#a47ea4, #717b93);
+    position: sticky;
+    top:100px;
 }
 
 /* Table cells */
