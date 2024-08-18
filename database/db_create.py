@@ -1,4 +1,4 @@
-'''Create the silverscreen database, add main table and lookup tables.'''
+'''Create the silverscreen database, add movie/user table and lookup tables.'''
 
 import sqlite3
 
@@ -34,10 +34,29 @@ def create(conn):
 
     return True
 
+
+def create_users(conn):
+    '''Create users table and lookup tables'''
+
+    conn.execute('''CREATE TABLE IF NOT EXISTS Users (
+        ID INTEGER PRIMARY KEY,
+        Username TEXT NOT NULL,
+        Password TEXT NOT NULL
+    );''')
+
+    return True;
+
 # If this program is run in terminal, execute its function.
 if __name__ == '__main__':
     conn = sqlite3.connect('silverscreen.db')
     print('Connected to database')
 
     if create(conn):
-        print('Operation completed successfully')
+        print('Created movies table and lookup tables')
+    else:
+        print('Error creating movies table')
+    if create_users(conn):
+        print('Created users table')
+    else:
+        print('Error creating users table')
+    print('Operation completed successfully')
