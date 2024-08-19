@@ -108,7 +108,7 @@
 /* Table cells */
 .movies-table td {
     padding: 5px 15px;
-    transition: padding 0.3s ease-in-out;
+    transition: padding 0.3s 0s ease-in-out;
     border-bottom: 1px solid #9b9b9b;
 }
 
@@ -118,6 +118,7 @@
 
 .movies-table td:hover {
     padding: 10px 15px;
+    transition: padding 0.3s 0.15s ease-in-out;
 }
 
 .movies-table-title {
