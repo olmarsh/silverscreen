@@ -28,8 +28,6 @@ def movies():
     for row in movies:
         content += format_table_row(row) + '\n'
 
-    content += '</table>'
-
     # Return the movies page with the table content
     return render_template('movies.html', table_content=content)
 
@@ -46,11 +44,15 @@ def test_connect():
 def format_table_row(row):
     '''Format a row of the movies table to be displayed.'''
 
-    return f'''<tr><td>{row[1]}</td>
-    <td>{row[2]}</td>
-    <td>{row[3]}</td>
-    <td>{row[4]}</td>
-    <td>{row[5]}</td></tr>'''
+    return f'''<span style="display: inline-block;
+      border: 2px solid black;
+      width: 200px;
+      margin: 10px;
+      padding: 5px;"><b>{row[1]}</b>
+    <p>Release Year: {row[2]}</p>
+    <p>Runtime: {row[3]} minutes</p>
+    <p>Genre: {row[4]}</p>
+    <p>Age Rating: {row[5]}</p></span>'''
 
 
 if __name__ == '__main__':

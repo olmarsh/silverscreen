@@ -13,14 +13,5 @@
 {% endblock %}
 
 {% block content %}
-  <table>
-    <tr>
-      <th>Title</th>
-      <th>Release Year</th>
-      <th>Runtime (min)</th>
-      <th>Genre</th>
-      <th>Age Rating</th>
-    </tr>
-    {{ table_content|safe }}
-  </table>
+{{ table_content|safe }}
 {% endblock %}
