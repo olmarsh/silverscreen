@@ -24,20 +24,39 @@ def movies():
 def movie():
     # Get the movie id from the URL parameter
     id = request.args.get('id')
+
+    # Check if the user wants to edit the movie
+    edit = request.args.get('edit')
+    if edit == 'true': edit = True
     
-    # Open a connection to the database and view movie
-    conn = sqlite3.connect('silverscreen.db')
-    try:
+    # If the user wants only to view
+    if not edit:
+        # Open a connection to the database and view movie
+        conn = sqlite3.connect('silverscreen.db')
+        try:
+            movie = database.db_view.search_movies(conn, 'ID', id, limit=1)[0]
+            return render_template('movie.html',
+                                title=movie[1],
+                                releaseyear=movie[2],
+                                runtime=str(movie[3])+' minutes',
+                                genre=movie[4]+' '+movie[6],
+                                agerating=movie[5]+' ('+movie[8]+')',
+                                id=movie[0])
+        except:  # If the id was invalid, return the error template
+            return render_template('error.html')
+        
+    else:  # If the user wants to edit, return the edit template
+                # Open a connection to the database and view movie
+        conn = sqlite3.connect('silverscreen.db')
         movie = database.db_view.search_movies(conn, 'ID', id, limit=1)[0]
-        return render_template('movie.html',
-                            title=movie[1],
-                            releaseyear=movie[2],
-                            runtime=str(movie[3])+' minutes',
-                            genre=movie[4]+' '+movie[6],
-                            agerating=movie[5]+' ('+movie[8]+')',
-                            id=movie[0])
-    except: # If the id was invalid, return the error template
-        return render_template('error.html')
+        return render_template('edit.html',
+                    title=movie[1],
+                    releaseyear=movie[2],
+                    runtime=str(movie[3])+' minutes',
+                    genre=movie[4]+' '+movie[6],
+                    agerating=movie[5]+' ('+movie[8]+')',
+                    id=movie[0])
+
 
 # Confirm to client that connection was successful
 @socketio.on('connect')

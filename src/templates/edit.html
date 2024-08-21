@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Editing {{title}}{% endblock %}</h1>
+  <p><i>Movie</i></p>
+{% endblock %}
+
+{% block content %}
+<form autocomplete="off">
+  <p>Title: <input value={{title}}></p>
+  <p>Release Year: <input value={{releaseyear}}></p>
+  <p>Runtime: <input value={{runtime}}></p>
+  <p>Genre: <input value={{genre}}></p>
+  <p>Age Rating: <input value={{agerating}}></p>
+  <p><i>Movie ID: {{id}}</i></p>
+</form>
+{% endblock %}
