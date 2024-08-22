@@ -8,10 +8,11 @@
 {% block content %}
 <form autocomplete="off">
   <p>Title: <input value={{title}}></p>
-  <p>Release Year: <input value={{releaseyear}}></p>
-  <p>Runtime: <input value={{runtime}}></p>
+  <p>Release Year: <input value={{releaseyear}} type="number"></p>
+  <p>Runtime: <input value={{runtime}} type="number"></p>
   <p>Genre: <input value={{genre}}></p>
   <p>Age Rating: <input value={{agerating}}></p>
   <p><i>Movie ID: {{id}}</i></p>
+  <button disabled>Save Changes</button>
 </form>
 {% endblock %}
