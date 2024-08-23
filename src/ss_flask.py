@@ -3,6 +3,7 @@ from flask_socketio import SocketIO, emit
 import database
 import sqlite3
 
+import database.db_update
 import database.db_view
 
 # Flask setup
@@ -57,6 +58,38 @@ def movie():
                     agerating=movie[5]+' ('+movie[8]+')',
                     id=movie[0])
 
+# Handle when a request to edit the database is sent
+@app.route('/handle_edit', methods=['POST'])
+def handle_edit():
+    # Get form values
+    title = request.form['title']
+    release_year = request.form['releaseyear']
+    runtime = request.form['runtime']
+    genre = request.form['genre']
+    age_rating = request.form['agerating']
+    movie_id = request.form['id']
+
+    # Connect to the table and update the values according to the form
+    try:
+        conn = sqlite3.connect('silverscreen.db')
+        if database.db_update.update(conn, movie_id, {
+            'Title': title,
+            'ReleaseYear': release_year,
+            'Runtime': runtime,
+            'Genre': genre,
+            'AgeRating': age_rating
+        }):
+            conn.commit()
+            return f'Success<br><a href="/movie?id={movie_id}"> \
+                    Return to movie page</a>'
+        return f'Failure (invalid)<br><a href="javascript:history.back()"> \
+                Return to edit page</a>'
+
+    except Exception as error:
+        conn.close()
+        return f'Failure ({type(error).__name__+'\n'+str(error)})<br> \
+                <a href="javascript:history.back()"> \
+                Return to edit page</a>'
 
 # Confirm to client that connection was successful
 @socketio.on('connect')

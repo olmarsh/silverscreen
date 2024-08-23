@@ -24,19 +24,19 @@ def update(conn, edit_id, fields):
                            WHERE Genre = \'{value.title()}\'''')
             field = 'GenreID'
             value = cursor.fetchone()[0]
-            print(f'Read genre id: {value}')
+            # print(f'Read genre id: {value}')
 
         if (field.lower() == 'agerating'):
             cursor.execute(f'''SELECT * FROM AgeRatings
                            WHERE AgeRating = \'{value.upper()}\'''')
             field = 'AgeRatingID'
             value = cursor.fetchone()[0]
-            print(f'Read age rating id: {value}')
+            # print(f'Read age rating id: {value}')
 
-    conn.execute(f'''UPDATE Movies SET
-    {field} = '{value}'
-    WHERE ID = {edit_id};
-    ''')
+        conn.execute(f'''UPDATE Movies SET
+        {field} = '{value}'
+        WHERE ID = {edit_id};
+        ''')
     return True
 
 if __name__ == '__main__':

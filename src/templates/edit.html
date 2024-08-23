@@ -6,13 +6,14 @@
 {% endblock %}
 
 {% block content %}
-<form autocomplete="off">
-  <p>Title: <input value={{title}}></p>
-  <p>Release Year: <input value={{releaseyear}} type="number"></p>
-  <p>Runtime: <input value={{runtime}} type="number"></p>
-  <p>Genre: <input value={{genre}}></p>
-  <p>Age Rating: <input value={{agerating}}></p>
+<form autocomplete="off" action="{{ url_for('handle_edit') }}" method="post">
+  <p>Title: <input value={{title}} name="title"></p>
+  <p>Release Year: <input value={{releaseyear}} type="number" name="releaseyear"></p>
+  <p>Runtime: <input value={{runtime}} type="number" name="runtime"></p>
+  <p>Genre: <input value={{genre}} name="genre"></p>
+  <p>Age Rating: <input value={{agerating}} name="agerating"></p>
+  <input type="hidden" name="id" value="{{id}}"/>
   <p><i>Movie ID: {{id}}</i></p>
-  <button disabled>Save Changes</button>
+  <input type="submit" value="Save Changes">
 </form>
 {% endblock %}
