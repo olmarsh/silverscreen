@@ -3,6 +3,7 @@ from flask_socketio import SocketIO, emit
 import database
 import sqlite3
 
+import database.db_delete
 import database.db_insert
 import database.db_update
 import database.db_view
@@ -63,6 +64,40 @@ def movie():
 def add():
     return render_template('add.html')
 
+@app.route('/delete')
+def delete():
+    id = request.args.get('id')
+    conn = sqlite3.connect('silverscreen.db')
+    try:
+        movie = database.db_view.search_movies(conn, 'ID', id, limit=1)[0]
+        return render_template('delete.html',
+                        title=movie[1],
+                        releaseyear=movie[2],
+                        runtime=str(movie[3])+' minutes',
+                        genre=movie[4]+' '+movie[6],
+                        agerating=movie[5]+' ('+movie[8]+')',
+                        id=movie[0]
+                        )
+    except:  # If the id was invalid, return the error template
+        return render_template('error.html')
+
+# Handle a request to delete a movie
+@app.route('/handle_delete', methods=['POST'])
+def handle_delete():
+    id = request.form['id']
+    conn = sqlite3.connect('silverscreen.db')
+    try:
+        if database.db_delete.delete(conn, 'Movies', 'ID', id):
+            conn.commit()
+            return f'Success<br><a href="/movies"> \
+                    Return to table view</a>'
+        return f'Failure (invalid)<br><a href="javascript:history.back()"> \
+                Return to delete page</a>'
+    except:
+        return f'Failure (invalid)<br><a href="javascript:history.back()"> \
+                Return to delete page</a>'
+
+
 # Handle when a request to edit or add movie to the database is sent
 @app.route('/handle_edit', methods=['POST'])
 def handle_edit():
@@ -121,13 +156,13 @@ def handle_edit():
                 return f'Success<br><a href="/movie?id={movie_id}"> \
                         Go to new movie page</a>'
             return f'Failure (invalid)<br><a href="javascript:history.back()"> \
-                    Return to edit page</a>'
+                    Return to add movie page</a>'
 
         except Exception as error:
             conn.close()
             return f'Failure ({type(error).__name__+'\n'+str(error)})<br> \
                     <a href="javascript:history.back()"> \
-                    Return to edit page</a>'
+                    Return to add movie page</a>'
 
 
 # Confirm to client that connection was successful
