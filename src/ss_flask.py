@@ -3,6 +3,7 @@ from flask_socketio import SocketIO, emit
 import database
 import sqlite3
 
+import database.db_insert
 import database.db_update
 import database.db_view
 
@@ -50,7 +51,7 @@ def movie():
                 # Open a connection to the database and view movie
         conn = sqlite3.connect('silverscreen.db')
         movie = database.db_view.search_movies(conn, 'ID', id, limit=1)[0]
-        return render_template('edit.html',
+        return render_template('edit.html', action='edit', heading='Editing',
                     title=movie[1],
                     releaseyear=movie[2],
                     runtime=str(movie[3])+' minutes',
@@ -58,38 +59,76 @@ def movie():
                     agerating=movie[5]+' ('+movie[8]+')',
                     id=movie[0])
 
-# Handle when a request to edit the database is sent
+@app.route('/add')
+def add():
+    return render_template('add.html')
+
+# Handle when a request to edit or add movie to the database is sent
 @app.route('/handle_edit', methods=['POST'])
 def handle_edit():
+    print(request.form)
     # Get form values
     title = request.form['title']
     release_year = request.form['releaseyear']
     runtime = request.form['runtime']
     genre = request.form['genre']
     age_rating = request.form['agerating']
-    movie_id = request.form['id']
 
-    # Connect to the table and update the values according to the form
-    try:
-        conn = sqlite3.connect('silverscreen.db')
-        if database.db_update.update(conn, movie_id, {
-            'Title': title,
-            'ReleaseYear': release_year,
-            'Runtime': runtime,
-            'Genre': genre,
-            'AgeRating': age_rating
-        }):
-            conn.commit()
-            return f'Success<br><a href="/movie?id={movie_id}"> \
-                    Return to movie page</a>'
-        return f'Failure (invalid)<br><a href="javascript:history.back()"> \
-                Return to edit page</a>'
+    # If the user wants to edit
+    if request.form['action'] == 'edit':
+        movie_id = request.form['id']
+        # Connect to the table and update the values according to the form
+        try:
+            conn = sqlite3.connect('silverscreen.db')
+            if database.db_update.update(conn, movie_id, {
+                'Title': title,
+                'ReleaseYear': release_year,
+                'Runtime': runtime,
+                'Genre': genre,
+                'AgeRating': age_rating
+            }):
+                conn.commit()
+                return f'Success<br><a href="/movie?id={movie_id}"> \
+                        Return to movie page</a>'
+            return f'Failure (invalid)<br><a href="javascript:history.back()"> \
+                    Return to edit page</a>'
 
-    except Exception as error:
-        conn.close()
-        return f'Failure ({type(error).__name__+'\n'+str(error)})<br> \
-                <a href="javascript:history.back()"> \
-                Return to edit page</a>'
+        except Exception as error:
+            conn.close()
+            return f'Failure ({type(error).__name__+'\n'+str(error)})<br> \
+                    <a href="javascript:history.back()"> \
+                    Return to edit page</a>'
+        
+    # If the user wants to add a new movie
+    elif request.form['action'] == 'insert':
+# Connect to the table and update the values according to the form
+        try:
+            conn = sqlite3.connect('silverscreen.db')
+            if database.db_insert.insert(conn, "Movies",
+                title = title,
+                releaseYear = release_year,
+                runtime = runtime,
+                genre = genre,
+                ageRating = age_rating
+            ):
+                conn.commit()
+
+                # Get most recent row added
+                cursor = conn.cursor()
+                cursor.execute('SELECT last_insert_rowid()')
+                movie_id = cursor.fetchone()[0]
+
+                return f'Success<br><a href="/movie?id={movie_id}"> \
+                        Go to new movie page</a>'
+            return f'Failure (invalid)<br><a href="javascript:history.back()"> \
+                    Return to edit page</a>'
+
+        except Exception as error:
+            conn.close()
+            return f'Failure ({type(error).__name__+'\n'+str(error)})<br> \
+                    <a href="javascript:history.back()"> \
+                    Return to edit page</a>'
+
 
 # Confirm to client that connection was successful
 @socketio.on('connect')
