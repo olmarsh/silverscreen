@@ -19,19 +19,24 @@ def update(conn, edit_id, fields):
     # If the field was genre or age rating, do the appropriate action with the
     # lookup table.
     for field, value in fields.items():
-        if (field.lower() == 'genre'):
-            cursor.execute(f'''SELECT * FROM Genres
-                           WHERE Genre = \'{value.title()}\'''')
-            field = 'GenreID'
-            value = cursor.fetchone()[0]
-            # print(f'Read genre id: {value}')
-
-        if (field.lower() == 'agerating'):
-            cursor.execute(f'''SELECT * FROM AgeRatings
-                           WHERE AgeRating = \'{value.upper()}\'''')
-            field = 'AgeRatingID'
-            value = cursor.fetchone()[0]
-            # print(f'Read age rating id: {value}')
+        try:
+            if (field.lower() == 'genre'):
+                cursor.execute(f'''SELECT * FROM Genres
+                            WHERE Genre = \'{value.title()}\'''')
+                field = 'GenreID'
+                value = cursor.fetchone()[0]
+                # print(f'Read genre id: {value}')
+        except:  # Raise an exception if not found in lookup table
+            raise Exception(f'ssLookupTableError: {value.title()} not a valid genre')
+        try:
+            if (field.lower() == 'agerating'):
+                cursor.execute(f'''SELECT * FROM AgeRatings
+                            WHERE AgeRating = \'{value.upper()}\'''')
+                field = 'AgeRatingID'
+                value = cursor.fetchone()[0]
+                # print(f'Read age rating id: {value}')
+        except:  # Raise an exception if not found in lookup table
+            raise Exception(f'ssLookupTableError: {value.upper()} not a valid age rating')
 
         conn.execute(f'''UPDATE Movies SET
         {field} = '{value}'

@@ -26,20 +26,26 @@ def insert(conn, table, **kwargs):
 
     # Get genre ID if genre was given, write it to kwargs.
     if 'genre' in kwargs and table == 'Movies':
-        cursor.execute(f'''SELECT * FROM Genres
-                           WHERE Genre = \'{kwargs['genre'].title()}\'''')
-        
-        kwargs['genreID'] = cursor.fetchone()[0]
-        print(f'Read genre id: {kwargs['genreID']}')
+        try:
+            cursor.execute(f'''SELECT * FROM Genres
+                            WHERE Genre = \'{kwargs['genre'].title()}\'''')
+            
+            kwargs['genreID'] = cursor.fetchone()[0]
+            print(f'Read genre id: {kwargs['genreID']}')
+        except:
+            raise Exception(f'ssLookupTableError: {kwargs['genre'].title()} not a valid genre')
 
     # Get age rating ID if age rating was given, write it to kwargs.
     if 'ageRating' in kwargs and table == 'Movies':
-        cursor.execute(f'''SELECT * FROM AgeRatings
-                           WHERE AgeRating = \'{kwargs['ageRating'].upper()}\'
-                           ''')
-        
-        kwargs['ageRatingID'] = cursor.fetchone()[0]
-        print(f'Read age rating id: {kwargs['ageRatingID']}')
+        try:
+            cursor.execute(f'''SELECT * FROM AgeRatings
+                            WHERE AgeRating = \'{kwargs['ageRating'].upper()}\'
+                            ''')
+            
+            kwargs['ageRatingID'] = cursor.fetchone()[0]
+            print(f'Read age rating id: {kwargs['ageRatingID']}')
+        except:
+            raise Exception(f'ssLookupTableError: {kwargs['ageRating'].upper()} not a valid age rating')
 
     # Pop both genre and age rating arguments
     try:

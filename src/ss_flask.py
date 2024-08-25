@@ -55,9 +55,9 @@ def movie():
         return render_template('edit.html', action='edit', heading='Editing',
                     title=movie[1],
                     releaseyear=movie[2],
-                    runtime=str(movie[3])+' minutes',
-                    genre=movie[4]+' '+movie[6],
-                    agerating=movie[5]+' ('+movie[8]+')',
+                    runtime=movie[3],
+                    genre=movie[4],
+                    agerating=movie[5],
                     id=movie[0])
 
 @app.route('/add')
@@ -269,7 +269,8 @@ def format_table_row(row):
     <td>{row[2]}</td>
     <td>{row[3]}</td>
     <td>{row[4]}</td>
-    <td>{row[5]}</td></tr>'''
+    <td>{row[5]}</td>
+    <td><a href='/delete?id={row[0]}'>❌</a></tr>'''
 
 def escape_query(inp):
     '''Escape all double and single quotes to prevent SQL injection'''
