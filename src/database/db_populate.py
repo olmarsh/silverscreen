@@ -10,25 +10,25 @@ def populate(conn):
         conn.execute('''INSERT INTO Genres (Genre, Symbol)
         VALUES
         ('Action', '💣'),
+        ('Adventure', '🧭'),
         ('Animation', '🎞️'),
+        ('Biography', '📖'),
         ('Comedy', '😂'),
         ('Crime', '🔍'),
-        ('Fantasy', '🪄'),
-        ('Horror', '👻'),
-        ('Romance', '❤️'),
-        ('Science Fiction', '🤖'),
-        ('Thriller', '🔪'),
-        ('Drama', '🎭'),
         ('Documentary', '🎥'),
+        ('Drama', '🎭'),
+        ('Family', '👪'),
+        ('Fantasy', '🪄'),
+        ('Historical', '🏛️'),
+        ('Horror', '👻'),
         ('Musical', '🎵'),
         ('Mystery', '🕵️'),
-        ('Adventure', '🧭'),
-        ('Historical', '🏛️'),
-        ('Family', '👪'),
-        ('Western', '🤠'),
-        ('Biography', '📖'),
+        ('Romance', '❤️'),
+        ('Science Fiction', '🤖'),
         ('Sport', '🏅'),
-        ('War', '⚔️')
+        ('Thriller', '🔪'),
+        ('War', '⚔️'),
+        ('Western', '🤠')
         ''')
         print('Populated genres table')
     else:

@@ -52,17 +52,22 @@ def movie():
                 # Open a connection to the database and view movie
         conn = sqlite3.connect('silverscreen.db')
         movie = database.db_view.search_movies(conn, 'ID', id, limit=1)[0]
+        genre_options = format_options('Genres')
         return render_template('edit.html', action='edit', heading='Editing',
                     title=movie[1],
                     releaseyear=movie[2],
                     runtime=movie[3],
                     genre=movie[4],
                     agerating=movie[5],
-                    id=movie[0])
+                    id=movie[0],
+                    genre_options=genre_options,
+                    agerating_options=format_options('AgeRatings'))
 
 @app.route('/add')
 def add():
-    return render_template('add.html')
+    return render_template('add.html',
+                    genre_options=format_options('Genres'),
+                    agerating_options=format_options('AgeRatings'))
 
 @app.route('/delete')
 def delete():
@@ -271,6 +276,20 @@ def format_table_row(row):
     <td>{row[4]}</td>
     <td>{row[5]}</td>
     <td><a href='/delete?id={row[0]}'>❌</a></tr>'''
+
+def format_options(table):
+    '''Format genre or age rating options for a dropdown'''
+
+    conn = sqlite3.connect('silverscreen.db')
+    results = database.db_view.view_general(conn, table)
+
+    # Create an empty string, then fill it with all the names, and return
+    ret = ''
+    for i in results:
+        ret += '<option>' + str(i[1]) + '</option>'
+
+    return ret
+
 
 def escape_query(inp):
     '''Escape all double and single quotes to prevent SQL injection'''

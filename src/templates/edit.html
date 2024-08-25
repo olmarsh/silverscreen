@@ -10,8 +10,16 @@
   <p>Title: <input value="{{title}}" name="title"></p>
   <p>Release Year: <input value="{{releaseyear}}" type="number" name="releaseyear"></p>
   <p>Runtime: <input value="{{runtime}}" type="number" name="runtime"></p>
-  <p>Genre: <input value="{{genre}}" name="genre"></p>
-  <p>Age Rating: <input value="{{agerating}}" name="agerating"></p>
+  <p>Genre: 
+    <select value="{{genre}}" name="genre">
+      {{ genre_options | safe }}
+    </select>
+  </p>
+  <p>Age Rating:
+    <select value="{{agerating}}" name="agerating">
+      {{ agerating_options | safe }}
+    </select>
+  </p>
   <input type="hidden" name="id" value="{{id}}"/>
   <input type="hidden" name="action" value="edit"/>
   <p><i>Movie ID: {{id}}</i></p>
