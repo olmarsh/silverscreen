@@ -12,7 +12,7 @@
 {% block content %}
 <br>
 <form autocomplete="off" action="{{ url_for('handle_edit') }}" method="post">
-  <div class="movie-display">
+  <div class="movie-display edit">
     <p class="movie-title"><input class="title-input" value="{{title}}" name="title"></p>
     <p class="movie-element"><b>Release Year:</b> <input value="{{releaseyear}}" type="number" name="releaseyear"></p>
     <p class="movie-element"><b>Runtime:</b> <input value="{{runtime}}" type="number" name="runtime"></p>
@@ -30,6 +30,7 @@
     <input type="hidden" name="action" value="edit"/>
     <p style="text-align: right;"><i>Movie ID: {{id}}</i></p>
   </div>
+  <br>
   <input type="submit" value="Save Changes">
   <br><br>
   <p>Don't want to edit? <a href="?id={{id}}">Return to movie view</a></p>

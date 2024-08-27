@@ -43,3 +43,11 @@ input {
     font-weight: bold;
     text-align: center;
 }
+
+.edit {
+    border: 5px solid green;
+}
+
+.delete {
+    border: 5px solid red;
+}

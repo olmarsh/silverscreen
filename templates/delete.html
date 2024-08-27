@@ -1,19 +1,27 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename= 'movie.css') }}">
+{% endblock %}
+
 {% block header %}
   <h1>{% block title %}Delete movie{% endblock %}</h1>
   <p><i>Delete movie operation</i></p>
 {% endblock %}
 
 {% block content %}
+<br>
 <form autocomplete="off" action="{{ url_for('handle_delete') }}" method="post">
-  <p>Movie ID: {{id}}</p>
-  <p>Title: {{title}}</p>
-  <p>Release Year: {{releaseyear}}</p>
-  <p>Runtime: {{runtime}}</p>
-  <p>Genre: {{genre}}</p>
-  <p>Age Rating: {{agerating}}</p>
+  <div class="movie-display delete">
+    <p class="movie-title">{{title}}</p>
+    <p class="movie-element"><b>Release Year:</b> {{releaseyear}}</p>
+    <p class="movie-element"><b>Runtime:</b> {{runtime}}</p>
+    <p class="movie-element"><b>Genre:</b> {{genre_symbol}} {{genre}}</p>
+    <p class="movie-element"><b>Age Rating:</b> {{agerating}} <i>({{agerating_description}})</i></p>
+    <p style="text-align: right;"><i>Movie ID: {{id}}</i></p>
+  </div>
   <input type="hidden" name="id" value="{{id}}"/>
+  <br>
   <input type="submit" value="Delete Movie">
 </form>
 {% endblock %}
