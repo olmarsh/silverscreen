@@ -29,3 +29,17 @@
     margin: 20px 10px;
     border-radius: 5px;
 }
+
+input {
+    width: auto;
+}
+
+.title-input {
+    padding: 2px;
+    margin: -2px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}
