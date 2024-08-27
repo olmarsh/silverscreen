@@ -287,7 +287,7 @@ def format_table_row(row):
     <td>{row[3]}</td>
     <td>{row[6]} {row[4]}</td>
     <td>{row[5]}</td>
-    <td><a href='/delete?id={row[0]}'>❌</a></tr>'''
+    <td><a href='/delete?id={row[0]}' class="delete-movie-button">❌</a></tr>'''
 
 def format_options(table):
     '''Format genre or age rating options for a dropdown'''

@@ -112,11 +112,8 @@
     border-bottom: 1px solid #9b9b9b;
 }
 
-.movies-table tr:hover {
+.movies-table tr:hover > td {
     background-color: #f4f4f4;
-}
-
-.movies-table td:hover {
     padding: 10px 15px;
     transition: padding 0.3s 0.15s ease-in-out;
 }
@@ -127,4 +124,10 @@
 
 .movies-table-genre {
     width: 200px;
+}
+
+.delete-movie-button {
+    user-select: none;
+    font-style: normal;
+    text-decoration: none;
 }
