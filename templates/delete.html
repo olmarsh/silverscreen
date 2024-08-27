@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Delete movie{% endblock %}</h1>
+  <p><i>Delete movie operation</i></p>
+{% endblock %}
+
+{% block content %}
+<form autocomplete="off" action="{{ url_for('handle_delete') }}" method="post">
+  <p>Movie ID: {{id}}</p>
+  <p>Title: {{title}}</p>
+  <p>Release Year: {{releaseyear}}</p>
+  <p>Runtime: {{runtime}}</p>
+  <p>Genre: {{genre}}</p>
+  <p>Age Rating: {{agerating}}</p>
+  <input type="hidden" name="id" value="{{id}}"/>
+  <input type="submit" value="Delete Movie">
+</form>
+{% endblock %}

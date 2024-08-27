@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Editing {{title}}{% endblock %}</h1>
+  <p><i>Movie</i></p>
+{% endblock %}
+
+{% block content %}
+<form autocomplete="off" action="{{ url_for('handle_edit') }}" method="post">
+  <p>Title: <input value="{{title}}" name="title"></p>
+  <p>Release Year: <input value="{{releaseyear}}" type="number" name="releaseyear"></p>
+  <p>Runtime: <input value="{{runtime}}" type="number" name="runtime"></p>
+  <p>Genre: 
+    <select value="{{genre}}" name="genre">
+      {{ genre_options | safe }}
+    </select>
+  </p>
+  <p>Age Rating:
+    <select value="{{agerating}}" name="agerating">
+      {{ agerating_options | safe }}
+    </select>
+  </p>
+  <input type="hidden" name="id" value="{{id}}"/>
+  <input type="hidden" name="action" value="edit"/>
+  <p><i>Movie ID: {{id}}</i></p>
+  <input type="submit" value="Save Changes">
+</form>
+{% endblock %}
