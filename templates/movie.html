@@ -17,7 +17,7 @@
   <p class="movie-element"><b>Runtime:</b> {{runtime}}</p>
   <p class="movie-element"><b>Genre:</b> {{genre_symbol}} {{genre}}</p>
   <p class="movie-element"><b>Age Rating:</b> {{agerating}} <i>({{agerating_description}})</i></p>
-  <p style="text-align: right;"><i>Movie ID: {{id}}</i></p>
+  <p style="text-align: right;"><i>Movie ID: <span id="movie-id">{{id}}</span></i></p>
 </div>
 <br>
 <p>Finished? <a href="/movies">Return to table view</a></p>
@@ -26,5 +26,16 @@
   <p>Management tools</p>
   <a href="?id={{id}}&edit=true">Edit this movie</a><br>
   <a href="/delete?id={{id}}">Delete this movie</a>
+</div>
+
+<!-- Popup -->
+<div id="popup-shadow" class="popup-shadow" hidden{{popup_visible}}>
+  <div class="popup">
+    <p>{{popup_message}}</p><br>
+    <p onclick="document.getElementById('popup-shadow').hidden = true;
+    window.history.pushState('movie', document.title, '/movies?id='+document.getElementById('movie-id').innerHTML)"
+    style="text-decoration: underline; cursor: pointer; user-select: none;"
+    >Close</p>
+  </div>
 </div>
 {% endblock %}

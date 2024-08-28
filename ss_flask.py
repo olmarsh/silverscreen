@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 from flask_socketio import SocketIO, emit
 import database
 import sqlite3
@@ -28,10 +28,23 @@ def index():
 
 @app.route('/movies')
 def movies():
-    return render_template('movies.html')
+    popup = request.args.get('popup')
+    # If there is no popup message, do not show popup
+    if popup == '' or popup == None:
+        return render_template('movies.html')
+    # Else show popup message and make it visible.
+    return render_template('movies.html', popup_visible='display', popup_message=popup)
 
 @app.route('/movie')
 def movie():
+    # Get the popup text from url parameters
+    popup = request.args.get('popup')
+    # If there is no popup message, do not show popup
+    if popup == '' or popup == None:
+        popup_display = ''
+    else:
+        popup_display = 'display'
+
     # Get the movie id from the URL parameter
     id = request.args.get('id')
 
@@ -55,7 +68,8 @@ def movie():
                                 genre_symbol=movie[6],
                                 agerating=movie[5],
                                 agerating_description=movie[8],
-                                id=movie[0])
+                                id=movie[0],
+                                popup_visible=popup_display, popup_message=popup)
         except:  # If the id was invalid, return the error template
             return render_template('error.html')
         
@@ -89,8 +103,10 @@ def delete():
                         title=movie[1],
                         releaseyear=movie[2],
                         runtime=str(movie[3])+' minutes',
-                        genre=movie[4]+' '+movie[6],
-                        agerating=movie[5]+' ('+movie[8]+')',
+                        genre=movie[4],
+                        genre_symbol=movie[6],
+                        agerating=movie[5],
+                        agerating_description=movie[8],
                         id=movie[0]
                         )
     except:  # If the id was invalid, return the error template
@@ -104,8 +120,8 @@ def handle_delete():
     try:
         if database.db_delete.delete(conn, 'Movies', 'ID', id):
             conn.commit()
-            return f'Success<br><a href="/movies"> \
-                    Return to table view</a>'
+            # Return the movie table page
+            return redirect(url_for('movies', popup="Deleted successfully"))
         return f'Failure (invalid)<br><a href="javascript:history.back()"> \
                 Return to delete page</a>'
     except:
@@ -138,8 +154,7 @@ def handle_edit():
                 'AgeRating': age_rating
             }):
                 conn.commit()
-                return f'Success<br><a href="/movie?id={movie_id}"> \
-                        Return to movie page</a>'
+                return redirect(url_for('movie', id=movie_id, popup="Edited movie successfully"))
             return f'Failure (invalid)<br><a href="javascript:history.back()"> \
                     Return to edit page</a>'
 
@@ -168,8 +183,7 @@ def handle_edit():
                 cursor.execute('SELECT last_insert_rowid()')
                 movie_id = cursor.fetchone()[0]
 
-                return f'Success<br><a href="/movie?id={movie_id}"> \
-                        Go to new movie page</a>'
+                return redirect(url_for('movie', id=movie_id, popup="Added movie successfully"))
             return f'Failure (invalid)<br><a href="javascript:history.back()"> \
                     Return to add movie page</a>'
 
