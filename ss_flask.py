@@ -65,16 +65,13 @@ def movie():
         movie = database.db_view.search_movies(conn, 'ID', id, limit=1,
                                                match_before=False,
                                                match_after=False)[0]
-        genre_options = format_options('Genres')
         return render_template('edit.html', action='edit', heading='Editing',
                     title=movie[1],
                     releaseyear=movie[2],
                     runtime=movie[3],
-                    genre=movie[4],
-                    agerating=movie[5],
                     id=movie[0],
-                    genre_options=genre_options,
-                    agerating_options=format_options('AgeRatings'))
+                    genre_options=format_options('Genres', movie[4]),
+                    agerating_options=format_options('AgeRatings', movie[5]))
 
 @app.route('/add')
 def add():
@@ -289,7 +286,7 @@ def format_table_row(row):
     <td>{row[5]}</td>
     <td><a href='/delete?id={row[0]}' class="delete-movie-button">❌</a></tr>'''
 
-def format_options(table):
+def format_options(table, selected=None):
     '''Format genre or age rating options for a dropdown'''
 
     conn = sqlite3.connect('silverscreen.db')
@@ -298,7 +295,11 @@ def format_options(table):
     # Create an empty string, then fill it with all the names, and return
     ret = ''
     for i in results:
-        ret += '<option>' + str(i[1]) + '</option>'
+        # If this option is the selected value, select its option
+        if selected == str(i[1]):
+            ret += '<option selected>' + str(i[1]) + '</option>'
+        else:
+            ret += '<option>' + str(i[1]) + '</option>'
 
     return ret
 
