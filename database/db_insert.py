@@ -19,7 +19,7 @@ def insert(conn, table, **kwargs):
     to_remove = {}
 
     for kwarg in kwargs:
-        if kwargs[kwarg] == None:
+        if kwargs[kwarg] == None or kwargs[kwarg] == "":
             to_remove[kwarg] = kwargs
     for kwarg in to_remove:
         kwargs.pop(kwarg)

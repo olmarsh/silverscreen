@@ -72,3 +72,9 @@ input {
     padding: 50px;
     background-color: white;
 }
+
+input[type=submit] {
+    padding: 10px;
+    margin-left: 25px;
+    font-size: 16px;
+}

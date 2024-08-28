@@ -37,11 +37,16 @@ def update(conn, edit_id, fields):
                 # print(f'Read age rating id: {value}')
         except:  # Raise an exception if not found in lookup table
             raise Exception(f'ssLookupTableError: {value.upper()} not a valid age rating')
-
-        conn.execute(f'''UPDATE Movies SET
-        {field} = '{value}'
-        WHERE ID = {edit_id};
-        ''')
+        if value == None or value == "":
+            conn.execute(f'''UPDATE Movies SET
+            {field} = NULL
+            WHERE ID = {edit_id};
+            ''')
+        else:  
+            conn.execute(f'''UPDATE Movies SET
+            {field} = '{value}'
+            WHERE ID = {edit_id};
+            ''')
     return True
 
 if __name__ == '__main__':
