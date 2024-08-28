@@ -71,7 +71,7 @@ def movie():
                                 id=movie[0],
                                 popup_visible=popup_display, popup_message=popup)
         except:  # If the id was invalid, return the error template
-            return render_template('error.html')
+            return render_template('error.html', error_statement='404 Not Found'), 404
         
     else:  # If the user wants to edit, return the edit template
                 # Open a connection to the database and view movie
@@ -110,7 +110,7 @@ def delete():
                         id=movie[0]
                         )
     except:  # If the id was invalid, return the error template
-        return render_template('error.html')
+        return render_template('error.html', error_statement='404 Not Found'), 404
 
 # Handle a request to delete a movie
 @app.route('/handle_delete', methods=['POST'])
@@ -122,12 +122,11 @@ def handle_delete():
             conn.commit()
             # Return the movie table page
             return redirect(url_for('movies', popup="Deleted successfully"))
-        return f'Failure (invalid)<br><a href="javascript:history.back()"> \
-                Return to delete page</a>'
-    except:
-        return f'Failure (invalid)<br><a href="javascript:history.back()"> \
-                Return to delete page</a>'
-
+        return render_template('error.html', error_statement='Failure (invalid)',
+                               return_statement='Return to delete page')
+    except Exception as error:
+        return render_template('error.html', error_statement=f'Failure ({type(error).__name__+'\n'+str(error)})',
+                               return_statement='Return to delete page')
 
 # Handle when a request to edit or add movie to the database is sent
 @app.route('/handle_edit', methods=['POST'])
@@ -155,14 +154,13 @@ def handle_edit():
             }):
                 conn.commit()
                 return redirect(url_for('movie', id=movie_id, popup="Edited movie successfully"))
-            return f'Failure (invalid)<br><a href="javascript:history.back()"> \
-                    Return to edit page</a>'
+            return render_template('error.html', error_statement='Failure (invalid)',
+                                    return_statement='Return to edit page')
 
         except Exception as error:
             conn.close()
-            return f'Failure ({type(error).__name__+'\n'+str(error)})<br> \
-                    <a href="javascript:history.back()"> \
-                    Return to edit page</a>'
+            return render_template('error.html', error_statement=f'Failure ({type(error).__name__+'\n'+str(error)})',
+                                    return_statement='Return to edit page')
         
     # If the user wants to add a new movie
     elif request.form['action'] == 'insert':
@@ -184,14 +182,12 @@ def handle_edit():
                 movie_id = cursor.fetchone()[0]
 
                 return redirect(url_for('movie', id=movie_id, popup="Added movie successfully"))
-            return f'Failure (invalid)<br><a href="javascript:history.back()"> \
-                    Return to add movie page</a>'
-
+            return render_template('error.html', error_statement=f'Failure (Invalid)',
+                                    return_statement='Return to add movie page')
         except Exception as error:
             conn.close()
-            return f'Failure ({type(error).__name__+'\n'+str(error)})<br> \
-                    <a href="javascript:history.back()"> \
-                    Return to add movie page</a>'
+            return render_template('error.html', error_statement=f'Failure ({type(error).__name__+'\n'+str(error)})',
+                                    return_statement='Return to add movie page')
 
 
 # Confirm to client that connection was successful

@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Error{% endblock %}</h1>
+<h1>{% block title %}Error{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  <p>Go back <a href="/">home</a> or to the <a href="/movies">table view</a></p>
+<p><i>{{error_statement}}</i></p>
+<br>
+<p><a href="javascript:history.back()">{{return_statement}}</a></p>
+<p>Go back <a href="/">home</a> or to the <a href="/movies">table view</a></p>
   
 {% endblock %}
