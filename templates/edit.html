@@ -14,8 +14,8 @@
 <form autocomplete="off" action="{{ url_for('handle_edit') }}" method="post">
   <div class="movie-display edit">
     <p class="movie-title"><input class="title-input" value="{{title}}" name="title"></p>
-    <p class="movie-element"><b>Release Year:</b> <input value="{{releaseyear}}" type="number" name="releaseyear"></p>
-    <p class="movie-element"><b>Runtime:</b> <input value="{{runtime}}" type="number" name="runtime"></p>
+    <p class="movie-element"><b>Release Year:</b> <input value="{{releaseyear}}" type="number" min="1800" name="releaseyear"></p>
+    <p class="movie-element"><b>Runtime:</b> <input value="{{runtime}}" type="number" min="0" name="runtime"></p>
     <p class="movie-element"><b>Genre</b>: 
       <select value="{{genre}}" name="genre">
         {{ genre_options | safe }}
