@@ -26,6 +26,10 @@ html {
     overflow-y: hidden;
 }
 
+body {
+    background-color: transparent !important;
+}
+
 .title-text {
     /* Fade in */
     opacity: 0;
@@ -71,7 +75,7 @@ html {
     /* Fade in */
     animation: 2s ease-out 0s 1 fade-in-text;
 
-    color: white;
+    color: white !important;
     
     font-size: 24px;
 

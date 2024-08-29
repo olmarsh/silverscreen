@@ -49,13 +49,13 @@ input {
 }
 
 .edit {
-    border: 5px solid green;
-    box-shadow: 2px 2px 10px green;
+    border: 5px solid green !important;
+    box-shadow: 0 0 10px green !important;
 }
 
 .delete {
-    border: 5px solid red;
-    box-shadow: 2px 2px 10px red;
+    border: 5px solid red !important;
+    box-shadow: 0 0 10px red !important;
 }
 
 .popup-shadow {
@@ -83,4 +83,25 @@ input[type=submit] {
     padding: 10px;
     margin-left: 25px;
     font-size: 16px;
+}
+
+/* Dark mode */
+
+.dark-mode .movie-title {
+    background-image: linear-gradient(to right, #5f5056, #5e524a,#5a455a, #434957);
+}
+
+.dark-mode .movie-element {
+    background-color: #484848;
+    box-shadow: 2px 2px 10px black;
+}
+
+.dark-mode .movie-display {
+    background-color: #2b2b2b;
+    border-color: #1b1b1b;
+}
+
+.dark-mode .edit {
+    border: 5px solid #00be00 !important;
+    box-shadow: 0 0 10px #00be00 !important;
 }

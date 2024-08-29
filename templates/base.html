@@ -6,12 +6,14 @@
   <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
+  <script src="{{url_for('static', filename='dark.js')}}"></script>
 </head>
 <div class="header header-sticky">
   <img class="header-logo" width="64" height="64" src="{{ url_for('static', filename= 'logo.svg') }}" >
   <span class="header-title">silverscreen</span>
   <a class="nav-button" href="/">Homepage</a>
   <a class="nav-button" href="/movies">Movies</a>
+  <button class="darkmode-button" onclick="document.body.classList.toggle('dark-mode');">Toggle dark mode</button>
 </div>
 <section class="content">
   <div class="title">
