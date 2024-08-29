@@ -8,16 +8,18 @@
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
   <script src="{{url_for('static', filename='dark.js')}}"></script>
 </head>
-<div class="header header-sticky">
-  <img class="header-logo" width="64" height="64" src="{{ url_for('static', filename= 'logo.svg') }}" >
-  <span class="header-title">silverscreen</span>
-  <a class="nav-button" href="/">Homepage</a>
-  <a class="nav-button" href="/movies">Movies</a>
-  <button class="darkmode-button nav-button" onclick="toggle()">Toggle dark mode</button>
-</div>
-<section class="content">
-  <div class="title">
-    {% block header %}{% endblock %}
+<body>
+  <div class="header header-sticky">
+    <img class="header-logo" width="64" height="64" src="{{ url_for('static', filename= 'logo.svg') }}" >
+    <span class="header-title">silverscreen</span>
+    <a class="nav-button" href="/">Homepage</a>
+    <a class="nav-button" href="/movies">Movies</a>
+    <button class="darkmode-button nav-button" onclick="toggle()">Toggle dark mode</button>
   </div>
-  {% block content %}{% endblock %}
-</section>
+  <section class="content">
+    <div class="title">
+      {% block header %}{% endblock %}
+    </div>
+    {% block content %}{% endblock %}
+  </section>
+</body>

@@ -30,6 +30,7 @@ body {
     box-sizing: border-box;
     margin: 0px;
     height:100px;
+    display: flex;
 
     font-family: "Miriam Libre", sans-serif;
 
@@ -49,6 +50,7 @@ body {
     padding-right: 10px;
     margin: 10px;
     width: auto;
+    border: 3px solid #dcdcdc;
 
     border-radius: 10px;
     
@@ -102,9 +104,12 @@ input, select {
 }
 
 .darkmode-button {
-    float: right;
+    margin: 20px 0px;;
+    margin-left: auto;
     font-size: 12px;
     font-weight: bold;
+    min-width: fit-content;
+    cursor: pointer;
 }
 
 /* Dark mode general */
@@ -120,7 +125,7 @@ input, select {
 }
   
 .dark-mode a:visited {
-    color: #c244c2;
+    color: #fd14fd;
 }
 
 /* Dark mode header */
@@ -130,6 +135,7 @@ input, select {
 
 .dark-mode .nav-button {
     background-color: #555555;
+    border: 3px solid #9b9b9b;
 }
 
 .dark-mode .nav-button:hover {

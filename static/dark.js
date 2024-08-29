@@ -1,6 +1,11 @@
 // Set the theme when the page loads.
 window.onload = function() {
-    document.body.classList.add(localStorage.getItem("theme") || "");
+    // Ignore error from adding empty string to
+    try {
+        document.body.classList.add(localStorage.getItem("theme") || "");
+    } catch {
+
+    }
 }
 
 function toggle() {
