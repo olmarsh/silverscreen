@@ -102,7 +102,9 @@ input, select {
 }
 
 .darkmode-button {
-    float: right
+    float: right;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 /* Dark mode general */
