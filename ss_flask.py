@@ -247,19 +247,28 @@ def update_table(results_per_page, read_page, read_order, read_search='',
     conn = sqlite3.connect('silverscreen.db')
 
     if read_search == '':  # If nothing was searched, request the entire db
+        results_count = database.db_view.count_movies(conn)
+
+        # Limit page number to number of results
+        if page > (results_count // int(results_per_page))+1:
+            page = (results_count // int(results_per_page))+1
+
         movies = database.db_view.view_movies(conn, limit=limit,
                                               offset=(page-1)*limit,
                                               order=order)
-        results_count = database.db_view.count_movies(conn)
-    else: 
+    else:
+        results_count = database.db_view.count_movies(conn, search_type,
+                                                      search, match_before=\
+                                                      match_before)
+        # Limit page number to number of results
+        if page > (results_count // int(results_per_page))+1:
+            page = (results_count // int(results_per_page))+1
+
         movies = database.db_view.search_movies(conn, search_type, search,
                                                 limit=limit,
                                                 offset=(page-1)*limit,
                                                 order=order,
                                                 match_before=match_before)
-        results_count = database.db_view.count_movies(conn, search_type,
-                                                      search, match_before=\
-                                                      match_before)
 
     # Create table headers
     content = '''

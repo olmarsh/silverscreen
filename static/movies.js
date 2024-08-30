@@ -36,6 +36,7 @@ $(document).ready(function() {  // Only runs when the document is loaded
 
             // Format the page count indicators
             result_count = data.result_count;
+            page = data.page;
             if (result_count > 0) {
                 document.getElementById("page-location").innerHTML=result_count+" results found ("+(Date.now()-data.datetime)+"ms), page "+data.page+" of "+Math.ceil(result_count/size);
                 document.getElementById("top-page-indicator").innerHTML=+data.page+"/"+Math.ceil(result_count/size);
