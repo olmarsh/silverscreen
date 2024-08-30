@@ -85,6 +85,35 @@ input[type=submit] {
     font-size: 16px;
 }
 
+.management-button {
+    background-color: #9b9b9b;
+    box-shadow: 2px 2px 10px black;
+
+    font-size: 16px;
+    padding: 5px;
+    margin: 15px;
+    border: 2px solid #dcdcdc;
+    border-radius: 5px;
+    margin: 15px 0px;
+    width: fit-content;
+}
+
+.management-button > a {
+    color: white !important;
+    text-decoration: none;
+}
+
+#management-tools {
+    border:  2px solid grey;
+    border-radius: 5px;
+    padding: 10px;
+    margin-left: 20px;
+    padding-bottom: 0px;
+    min-width: fit-content;
+    width: 400px;
+    box-shadow: 2px 2px 10px black;
+}
+
 /* Dark mode */
 
 .dark-mode .movie-title {
@@ -104,4 +133,9 @@ input[type=submit] {
 .dark-mode .edit {
     border: 5px solid #00be00 !important;
     box-shadow: 0 0 10px #00be00 !important;
+}
+
+.dark-mode .management-button {
+    background-color: #555555;
+    border: 2px solid #9b9b9b;
 }
