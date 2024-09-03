@@ -1,4 +1,4 @@
-'''Add an entry to a silverscreen database'''
+'''Add an entry to a silverscreen database, users or movies'''
 
 import sqlite3
 
@@ -63,6 +63,18 @@ def insert(conn, table, **kwargs):
 
     return True
 
+
+def user_insert(conn, username, password):
+    '''Insert a new user into the database.'''
+    conn.execute(f'''INSERT INTO Users (
+        Username, Password
+    )
+    VALUES (
+        '{username}', '{password}'
+    );''')
+    return True
+
+
 # If this program is run in terminal, execute its function.
 if __name__ == '__main__':
 
@@ -86,7 +98,7 @@ if __name__ == '__main__':
     # Get user inputs for new entry
     print('Insert an entry into a table')
     table = input(
-        'What table to input into? (Movies, Genres, AgeRatings)\n> '
+        'What table to input into? (Movies, Genres, AgeRatings, Users)\n> '
     ).lower()
     # Use appropriate column names depending on specified table
     if table == 'movies':
@@ -120,6 +132,15 @@ if __name__ == '__main__':
             ageRating = ninput('Age Rating:  '),
             minAge = ninput('Minimum Age: '),
             description = ninput('Description: ')
+        ):
+            conn.commit()
+            print('Operation completed successfully')
+    elif table == 'users':
+        print('Add new user')
+        if user_insert (
+            conn,
+            username = ninput('Username: '),
+            password = ninput('Password: ')
         ):
             conn.commit()
             print('Operation completed successfully')
