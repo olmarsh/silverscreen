@@ -73,8 +73,8 @@ def user_insert(conn, username, password):
         raise Exception(f'Password length must be between 12 and 50 characters (Length: {len(password)})')
 
     # Abort if the password does not fulfil character requirements
-    if not validate_password():
-        raise Exception(f'Password length must be between 12 and 50 characters (Length: {len(password)})')
+    if not validate_password(password):
+        raise Exception('Password must contain characters of: uppercase, lowercase, number and special')
 
     # Generate salt
     salt = bcrypt.gensalt()
@@ -94,10 +94,26 @@ def user_insert(conn, username, password):
     return True
 
 
-def validate_password():
+def validate_password(password):
     '''Returns true if a password meets special character requirements.'''
     
-    return True;
+    # Set all requirements to false
+    lower, upper, num, special = (False,)*4
+
+    special_characters = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~']
+
+    # If a requirement is met, set it to true
+    for i in password:
+        if i == i.lower():
+            lower = True
+        if i == i.upper():
+            upper = True
+        if i.isdigit:
+            num = True
+        if i in special_characters:
+            special = True
+
+    return lower and upper and num and special;
 
 # If this program is run in terminal, execute its function.
 if __name__ == '__main__':
