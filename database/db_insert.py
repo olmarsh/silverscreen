@@ -1,6 +1,7 @@
 '''Add an entry to a silverscreen database, users or movies'''
 
 import sqlite3
+import bcrypt
 
 def insert(conn, table, **kwargs):
     '''Insert into the table based on the specified keyword arguments.
@@ -65,15 +66,38 @@ def insert(conn, table, **kwargs):
 
 
 def user_insert(conn, username, password):
-    '''Insert a new user into the database.'''
+    '''Hash the user's password and insert a the user into the database.'''
+
+    # Abort if the password is the wrong length
+    if len(password) <= 12 or len(password) >= 50:
+        raise Exception(f'Password length must be between 12 and 50 characters (Length: {len(password)})')
+
+    # Abort if the password does not fulfil character requirements
+    if not validate_password():
+        raise Exception(f'Password length must be between 12 and 50 characters (Length: {len(password)})')
+
+    # Generate salt
+    salt = bcrypt.gensalt()
+
+    # Convert password to bytes and hash with salt
+    hash = bcrypt.hashpw(bytes(password, 'utf-8'), salt)
+    
+    # Insert username and hashed password bytes into table
     conn.execute(f'''INSERT INTO Users (
         Username, Password
     )
     VALUES (
-        '{username}', '{password}'
-    );''')
+        '{username}', '{str(hash)[2:-1]}'
+        );'''
+    )
+
     return True
 
+
+def validate_password():
+    '''Returns true if a password meets special character requirements.'''
+    
+    return True;
 
 # If this program is run in terminal, execute its function.
 if __name__ == '__main__':

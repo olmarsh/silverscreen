@@ -41,8 +41,7 @@ def create_users(conn):
     conn.execute('''CREATE TABLE IF NOT EXISTS Users (
         ID INTEGER PRIMARY KEY,
         Username TEXT UNIQUE NOT NULL CHECK (LENGTH(Username) >= 3 AND LENGTH(Username) <= 25),
-        Password TEXT NOT NULL,
-        CONSTRAINT CheckPassLength CHECK (LENGTH(Password) >= 12 AND LENGTH(Password) <= 255)
+        Password TEXT NOT NULL
     );''')
 
     return True;
