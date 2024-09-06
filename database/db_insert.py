@@ -87,8 +87,9 @@ def user_insert(conn, username, password):
         Username, Password
     )
     VALUES (
-        '{username}', '{str(hash)[2:-1]}'
-        );'''
+        '{username}', ?
+        );''',
+        (hash.decode("utf-8"),)
     )
 
     return True
