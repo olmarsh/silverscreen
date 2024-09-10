@@ -13,7 +13,7 @@ print('''    ________   ________
       |\\_________\\\\_________\\
       \\|_________\\|_________|
 Silverscreen CLI database manager
-Oliver M.     development version
+O. Marsh      development version
 
 Command line interface to manage the silverscreen movie database
 This command line interface is not intended for end user use!

@@ -4,15 +4,7 @@ import sqlite3
 
 
 def update(conn, edit_id, fields):
-    '''Update a specified entry in the movie database.
-
-    Parameters:
-    conn: Database connection object
-    **kwargs: The column names followed by the value for this operation
-              Use camelCase for these arguments, match the column name in
-              the database exactly except the first letter must be lowercase
-
-    '''
+    '''Update a specified entry in the movie database.'''
 
     cursor = conn.cursor()
 
@@ -39,22 +31,55 @@ def update(conn, edit_id, fields):
     ''')
     return True
 
+def update_user(conn, edit_id, fields):
+    '''Update information about a user in the database.'''
+
+    for field, value in fields.items():
+        conn.execute(f'''UPDATE Users SET
+        {field} = '{value}'
+    WHERE ID = {edit_id};
+    ''')
+
+    return True
+
 if __name__ == '__main__':
     # Connect to database
     conn = sqlite3.connect('silverscreen.db')
     print('Connected to database')
 
-    edit_id = int(input('Which movie ID to edit: '))
-    print(f'Editing movie ID {edit_id}')
+    table = input(
+        'What table to update? (Movies, Users)\n> '
+    ).lower()
 
-    field = input('''Which field to change
-(Title, ReleaseYear, AgeRating, Runtime, Genre): ''')
-    print(f'Editing field {field}')
+    if table.lower() == 'movies':
+        edit_id = int(input('Which movie ID to edit: '))
+        print(f'Editing movie ID {edit_id}')
 
-    value = input('What value to set the field to: ')
-    print(f'Setting {field} to {value}')
+        field = input('Which field to change \
+(Title, ReleaseYear, AgeRating, Runtime, Genre): ')
+        print(f'Editing field {field}')
 
-    if update(conn, edit_id, {field: value}):
-        print('Operation completed successfully')
+        value = input('What value to set the field to: ')
+        print(f'Setting {field} to {value}')
 
-    conn.commit()
+        if update(conn, edit_id, {field: value}):
+            print('Operation completed successfully')
+    elif table == 'users':
+        edit_id = int(input('Which user ID to edit: '))
+        print(f'Editing user ID {edit_id}')
+
+        field = input('Which field to change \
+(Username, Password, Admin): ')
+        print(f'Editing field {field}')
+
+        if field.lower() == 'admin':
+            if input('Should this user have admin priveleges? y/N\n> ').lower() == 'y':
+                value = 1
+            else:
+                value = 0
+        else:
+            value = input('What value to set the field to: ')
+        print(f'Setting {field} to {value}')
+        if update_user(conn, edit_id, {field: value}):
+            print('Operation completed successfully')
+            conn.commit()

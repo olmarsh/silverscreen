@@ -26,6 +26,8 @@ if __name__ == '__main__':
     conn = sqlite3.connect('silverscreen.db')
     
     user = authenticate(conn, username, password)
+
+    # If the hash of the password matched the stored hash, authenticate the user.
     if user:
         print('Login Successful')
         print(user[1])
