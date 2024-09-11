@@ -18,6 +18,20 @@ def format_movies(results):
     print('')
     return True
 
+def format_users(results):
+    '''Format the output from the view_movies or search_movies function.'''
+
+    # Define line spacings
+    formatted_row = '{:<5} {:<30} {:<65} {:<10}'
+    # Print column headers, then the rest of the rows
+    print(formatted_row.format('ID', 'Username', 'Password hash', 'Admin?'))
+    for row in results:
+        print(formatted_row.format(*row))
+
+    # Add newline at bottom
+    print('')
+    return True
+
 
 def format_general(results):
     '''Format the output from a view or search function.'''
@@ -51,6 +65,7 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC'):
     {extra}''')
     return cursor.fetchall()
 
+
 def count_movies(conn, column='Title', query='', match_before = True,
                  match_after = True):
     '''Return the number of entries in the movies table.'''
@@ -75,15 +90,44 @@ def count_movies(conn, column='Title', query='', match_before = True,
 
 
 def view_general(conn, table):
-    '''Return the selected table'''
+    '''Return the selected table.'''
+
     cursor = conn.cursor()
     cursor.execute(f'''SELECT * FROM {table}''')
     return cursor.fetchall()
 
+def search_users(conn, column, query, limit=0, offset=0, order='ID ASC',
+                   match_before = True, match_after = True):
+    '''Search for a user in the users table by specified column.'''
+
+    # Add extra parameters to query.
+    extra = ''
+    if limit > 0:
+        extra += f'LIMIT {limit}'
+        if offset != '' and offset > 0:
+            extra += f' OFFSET {offset}'
+        extra += ';'
+
+    # Whether to return queries with matches before or after the string
+    match_before_string = ''
+    if match_before:
+        match_before_string = '\'%\' ||'
+    
+    match_after_string = ''
+    if match_after:
+        match_after_string = '|| \'%\''
+
+    cursor = conn.cursor()
+    cursor.execute(f'''SELECT ID, Username, Password, Admin FROM Users
+    WHERE {column} LIKE {match_before_string} '{query}' {match_after_string}
+    ORDER BY {order}
+    {extra}''')
+    return cursor.fetchall()
+    
 
 def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
                   match_before = True, match_after = True):
-    '''Search for a movie in the movies table by specified column'''
+    '''Search for a movie in the movies table by specified column.'''
 
     # Add extra parameters to query.
     extra = ''
@@ -119,32 +163,46 @@ if __name__ == '__main__':
 
     # Print possible actions and get user's choice
     print('''Choose an action:
-SEARCH - search the movies database
+SEARCH - search the movies or users table
 VIEW   - print all entries from a table''')
     action = input('What action to take?\n> ').lower()
     print('')
     if action == 'view':
         table = input(
-            'What table to view? (Movies, Genres, AgeRatings)\n> '
+            'What table to view? (Movies, Genres, AgeRatings, Users)\n> '
         ).lower()
 
         # Use appropriate function depending on specified table
         if table == 'movies':
             if format_movies(view_movies(conn)):
                 print('Operation done successfully')
-        elif table == 'genres' or table == 'ageratings':
+        elif table == 'genres' or table == 'ageratings' or table == 'users':
             if format_general(view_general(conn, table)):
                 print('Operation done successfully')
         else:
             print('Table doesn\'t exist / hasn\'t been implemented yet')
 
     elif action == 'search':
-        column = input('''Which column to search
+        table = input(
+            'What table to search? (Movies, Users)\n> '
+        ).lower()
+
+        if table == 'movies':
+            column = input('''Which column to search
 (ID, Title, ReleaseYear, AgeRating, Runtime, Genre):
-> ''')        
-        query = input('What is the search query: ')
-        print('\nResults:')
-        if format_movies(search_movies(conn, column, query)):
-                print('Operation done successfully')
+> ''')
+            query = input('What is the search query: ')
+            print('\nResults:')
+            if format_movies(search_movies(conn, column, query)):
+                    print('Operation done successfully')
+        if table == 'users':
+            column = input('''Which column to search
+(ID, Username, Admin):
+> ''')
+            query = input('What is the search query: ')
+            print('\nResults:')
+            if format_users(search_users(conn, column, query)):
+                    print('Operation done successfully')
+
     else:
         print('That action does not exist for this module')
