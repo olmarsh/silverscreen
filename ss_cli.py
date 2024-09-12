@@ -72,6 +72,7 @@ DELETE - delete an entry from a table
 UPDATE - update an entry in a table
 SEARCH - search the movies database
 VIEW   - print all entries from a table
+LOGIN  - test logging in as a web user
 EXIT   - exit the program''')
     action = input("What action to take?\n> ").lower()
     print('')
@@ -105,7 +106,7 @@ EXIT   - exit the program''')
     elif action == 'insert':
         print('Insert an entry into a table')
         table = input(
-           'What table to input into? (Movies, Genres, AgeRatings)\n> '
+           'What table to input into? (Movies, Genres, AgeRatings, Users)\n> '
         ).lower()
         try:
             # Use appropriate column names depending on specified table
@@ -143,6 +144,15 @@ EXIT   - exit the program''')
                 ):
                     conn.commit()
                     print('Operation completed successfully')
+            elif table == 'users':
+                print('Add new user')
+                if database.db_insert.user_insert (
+                    conn,
+                    username = ninput('Username: '),
+                    password = ninput('Password: ')
+                ):
+                    conn.commit()
+                    print('Operation completed successfully')
             else:
                 print('That table does not exist / hasn\'t been implemented \
                       yet')
@@ -157,7 +167,7 @@ EXIT   - exit the program''')
             
             # Set the column to the correct name for the table.
             column = None
-            if table == 'movies':
+            if table == 'movies' or table == 'users':
                 column = 'ID'
             elif table == 'genres':
                 column = 'GenreID'
@@ -167,7 +177,7 @@ EXIT   - exit the program''')
                 print('That table does not exist / hasn\'t been implemented yet')
 
             # If the table is valid, delete from it.
-            if table in ('movies', 'genres', 'ageratings'):
+            if table in ('movies', 'genres', 'ageratings', 'users'):
                 delete_id = input(f'Which {table} ID to delete?\n> ')
                 print('Delete entry if exists')
                 if database.db_delete.delete(conn, table, column, delete_id):
@@ -178,25 +188,57 @@ EXIT   - exit the program''')
 
     elif action == 'update':
         try:
-            edit_id = int(input('Which movie ID to edit: '))
-            print(f'Editing movie ID {edit_id}')
 
-            field = input('''Which field to change
-(Title, ReleaseYear, AgeRating, Runtime, Genre): ''')
-            print(f'Editing field {field}')
+            table = input(
+                'What table to update? (Movies, Users)\n> '
+            ).lower()
 
-            value = input('What value to set the field to: ')
-            print(f'Setting {field} to {value}')
+            if table.lower() == 'movies':
+                # Take all inputs.
+                edit_id = int(input('Which movie ID to edit: '))
+                print(f'Editing movie ID {edit_id}')
 
-            if database.db_update.update(conn, edit_id, {field: value}):
-                print('Operation completed successfully')
+                field = input('Which field to change \
+(Title, ReleaseYear, AgeRating, Runtime, Genre): ')
+                print(f'Editing field {field}')
+
+                value = input('What value to set the field to: ')
+                print(f'Setting {field} to {value}')
+
+                # Attempt to apply them to database.
+                if database.db_update.update(conn, edit_id, {field: value}):
+                    print('Operation completed successfully')
+
+            elif table == 'users':
+                # Take all inputs.
+                edit_id = int(input('Which user ID to edit: '))
+                print(f'Editing user ID {edit_id}')
+
+                field = input('Which field to change \
+(Username, Password, Admin): ')
+                print(f'Editing field {field}')
+
+                # Aid user in choosing between 1 and 0.
+                if field.lower() == 'admin':
+                    if input('Should this user have admin priveleges? y/N\n> ').lower() == 'y':
+                        value = 1
+                    else:
+                        value = 0
+                else:
+                    value = input('What value to set the field to: ')
+                print(f'Setting {field} to {value}')
+
+                # Attempt to apply inputs to database.
+                if database.db_update.update_user(conn, edit_id, {field: value}):
+                    print('Operation completed successfully')
+                    conn.commit()
         except Exception as error:
             format_error(error)
 
     elif action == 'view':
         try:
             table = input(
-                'What table to view? (Movies, Genres, AgeRatings)\n> '
+                'What table to view? (Movies, Genres, AgeRatings, Users)\n> '
             ).lower()
 
             # Use appropriate function depending on specified table
@@ -205,7 +247,7 @@ EXIT   - exit the program''')
                     database.db_view.view_movies(conn)
                 ):
                     print('Operation done successfully')
-            elif table == 'genres' or table == 'ageratings':
+            elif table == 'genres' or table == 'ageratings' or table == 'users':
                 if database.db_view.format_general(
                     database.db_view.view_general(conn, table)
                 ):
@@ -224,6 +266,24 @@ EXIT   - exit the program''')
             print('\nResults:')
             if database.db_view.format_movies(database.db_view.search_movies(conn, column, query)):
                     print('Operation done successfully')
+        except Exception as error:
+            format_error(error)
+
+    elif action == 'login':
+        try:
+            username = input('Username: ')
+            password = input('Password: ')
+
+            conn = sqlite3.connect('silverscreen.db')
+            
+            user = database.db_login.authenticate(conn, username, password)
+
+            # If the hash of the password matched the stored hash, authenticate the user.
+            if user:
+                print('Login Successful')
+                print(user[1])
+            else:
+                print('Login Unsuccessful')
         except Exception as error:
             format_error(error)
 
