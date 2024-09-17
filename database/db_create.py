@@ -5,6 +5,9 @@ import sqlite3
 def create(conn):
     '''Create silverscreen movie table and lookup tables.'''
 
+    # Enable foreign keys
+    conn.execute('PRAGMA foreign_keys = ON;')
+
     # Create genre lookup table
     conn.execute('''CREATE TABLE IF NOT EXISTS Genres (
     GenreID INTEGER PRIMARY KEY,
@@ -39,7 +42,7 @@ def create(conn):
         UserID INTEGER NOT NULL,
         Rating REAL NOT NULL CHECK (Rating >= 0 AND Rating <= 5),
         FOREIGN KEY (MovieID) REFERENCES Movies(ID),
-        FOREIGN KEY (UserID) REFERENCES Users(UserID),
+        FOREIGN KEY (UserID) REFERENCES Users(ID),
         UNIQUE (UserID, MovieID)
     );''')
     conn.execute('''CREATE TABLE IF NOT EXISTS Favourites (
@@ -47,7 +50,7 @@ def create(conn):
         MovieID INTEGER NOT NULL,
         UserID INTEGER NOT NULL,
         FOREIGN KEY (MovieID) REFERENCES Movies(ID),
-        FOREIGN KEY (UserID) REFERENCES Users(UserID),
+        FOREIGN KEY (UserID) REFERENCES Users(ID),
         UNIQUE (UserID, MovieID)
     );''')
 

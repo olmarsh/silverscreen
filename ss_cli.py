@@ -25,7 +25,6 @@ This command line interface is not intended for end user use!
 conn = sqlite3.connect('silverscreen.db')
 print('Connected to database\n')
 
-
 def help():
     '''Read the help file and print it line by line'''
 
@@ -33,7 +32,7 @@ def help():
 Press enter to read new lines
 Press q then enter to quit
 -----------------------------''')
-    help_file = open('src/cli_help.txt', 'r')
+    help_file = open('cli_help.txt', 'r')
     help_text = help_file.readlines()
     # Print the entire line except for the last character, which is a newline,
     # and wait for user input.
@@ -317,7 +316,7 @@ EXIT   - exit the program''')
                     print('Operation done successfully')
 
             # Search for either favourites or ratings
-            if table == 'ratings' or table == 'favourites':
+            elif table == 'ratings' or table == 'favourites':
                 # Specify what to search for
                 user_id = ninput(f'Which user ID to view {table} for (blank for all users): ')
                 movie_id = ninput('Which movie ID to search (blank for all movies): ')
