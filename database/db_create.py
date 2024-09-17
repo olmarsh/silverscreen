@@ -32,6 +32,25 @@ def create(conn):
         FOREIGN KEY (GenreID) REFERENCES Genres (GenreID)
     );''')
 
+    # Create ratings and favourite tables
+    conn.execute('''CREATE TABLE IF NOT EXISTS Ratings (
+        RatingID INTEGER PRIMARY KEY,
+        MovieID INTEGER NOT NULL,
+        UserID INTEGER NOT NULL,
+        Rating REAL NOT NULL CHECK (Rating >= 0 AND Rating <= 5),
+        FOREIGN KEY (MovieID) REFERENCES Movies(ID),
+        FOREIGN KEY (UserID) REFERENCES Users(UserID),
+        UNIQUE (UserID, MovieID)
+    );''')
+    conn.execute('''CREATE TABLE IF NOT EXISTS Favourites (
+        FavouriteID INTEGER PRIMARY KEY,
+        MovieID INTEGER NOT NULL,
+        UserID INTEGER NOT NULL,
+        FOREIGN KEY (MovieID) REFERENCES Movies(ID),
+        FOREIGN KEY (UserID) REFERENCES Users(UserID),
+        UNIQUE (UserID, MovieID)
+    );''')
+
     return True
 
 
@@ -52,12 +71,13 @@ if __name__ == '__main__':
     conn = sqlite3.connect('silverscreen.db')
     print('Connected to database')
 
-    if create(conn):
-        print('Created movies table and lookup tables')
-    else:
-        print('Error creating movies table')
     if create_users(conn):
         print('Created users table')
     else:
         print('Error creating users table')
+
+    if create(conn):
+        print('Created movies table and lookup tables')
+    else:
+        print('Error creating movies table')
     print('Operation completed successfully')

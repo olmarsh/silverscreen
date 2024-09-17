@@ -2,6 +2,9 @@
 
 import sqlite3
 import database
+import database.db_create
+import database.db_insert
+import database.db_update
 
 # Print splash screen
 print('''    ________   ________
@@ -83,7 +86,7 @@ EXIT   - exit the program''')
     elif action == 'create':
         print('Create all tables if they do not exist')
         try:
-            if database.db_create.create(conn):
+            if database.db_create.create_users(conn) and database.db_create.create(conn):
                 print('Operation completed successfully')
         except Exception as error:
             format_error(error)
@@ -106,7 +109,7 @@ EXIT   - exit the program''')
     elif action == 'insert':
         print('Insert an entry into a table')
         table = input(
-           'What table to input into? (Movies, Genres, AgeRatings, Users)\n> '
+           'What table to input into? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
         ).lower()
         try:
             # Use appropriate column names depending on specified table
@@ -153,16 +156,34 @@ EXIT   - exit the program''')
                 ):
                     conn.commit()
                     print('Operation completed successfully')
+            elif table == 'ratings':
+                print('Insert a rating')
+                if database.db_insert.rating_insert (
+                    conn,
+                    user_id = ninput('User ID: '),
+                    movie_id = ninput('Movie ID: '),
+                    rating = ninput('Rating: ')
+                ):
+                    conn.commit()
+                    print('Operation completed successfully')
+            elif table == 'favourites':
+                print('Add new favourite')
+                if database.db_insert.favourite_insert (
+                    conn,
+                    user_id = ninput('User ID: '),
+                    movie_id = ninput('Movie ID: ')
+                ):
+                    conn.commit()
+                    print('Operation completed successfully')
             else:
-                print('That table does not exist / hasn\'t been implemented \
-                      yet')
+                print('That table does not exist / hasn\'t been implemented yet')
         except Exception as error:
             format_error(error)
 
     elif action == 'delete':
         try:
             table = input(
-                'What table to delete from? (Movies, Genres, AgeRatings)\n> '
+                'What table to delete from? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
             ).lower()
             
             # Set the column to the correct name for the table.
@@ -173,11 +194,15 @@ EXIT   - exit the program''')
                 column = 'GenreID'
             elif table == 'ageratings':
                 column = 'AgeRatingID'
+            elif table == 'ratings':
+                column = 'RatingID'
+            elif table == 'favourites':
+                column = 'FavouriteID'
             else:
                 print('That table does not exist / hasn\'t been implemented yet')
 
             # If the table is valid, delete from it.
-            if table in ('movies', 'genres', 'ageratings', 'users'):
+            if table in ('movies', 'genres', 'ageratings', 'users', 'ratings', 'favourites'):
                 delete_id = input(f'Which {table} ID to delete?\n> ')
                 print('Delete entry if exists')
                 if database.db_delete.delete(conn, table, column, delete_id):
@@ -232,13 +257,23 @@ EXIT   - exit the program''')
                 if database.db_update.update_user(conn, edit_id, {field: value}):
                     print('Operation completed successfully')
                     conn.commit()
+            
+            elif table == 'ratings':
+                user_id = input('Which user ID to edit rating: ')
+                movie_id = input('Which movie ID to edit favourite: ')
+                rating = input('New rating value: ')
+                if database.db_update.update_rating(conn, user_id, movie_id, rating):
+                    print('Operation completed successfully')
+                    conn.commit()
+            else:
+                print('That table does not exist / hasn\'t been implemented yet')
         except Exception as error:
             format_error(error)
 
     elif action == 'view':
         try:
             table = input(
-                'What table to view? (Movies, Genres, AgeRatings, Users)\n> '
+                'What table to view? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
             ).lower()
 
             # Use appropriate function depending on specified table
@@ -247,10 +282,11 @@ EXIT   - exit the program''')
                     database.db_view.view_movies(conn)
                 ):
                     print('Operation done successfully')
-            elif table == 'genres' or table == 'ageratings' or table == 'users':
-                if database.db_view.format_general(
-                    database.db_view.view_general(conn, table)
-                ):
+            elif table in ('genres', 'ageratings', 'users'):
+                if database.db_view.format_general(database.db_view.view_general(conn, table)):
+                    print('Operation done successfully')
+            elif table in ('ratings', 'favourites'):
+                if database.db_view.format_favourites_ratings(database.db_view.view_general(conn, table), table_type=table):
                     print('Operation done successfully')
             else:
                 print('Table doesn\'t exist / hasn\'t been implemented yet')
@@ -259,13 +295,37 @@ EXIT   - exit the program''')
 
     elif action == 'search':
         try:
-            column = input('''Which column to search
+            table = input(
+                'What table to view? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
+            ).lower()
+            if table == 'movies':
+                # Take inputs for movies table and search.
+                column = input('''Which column to search
 (ID, Title, ReleaseYear, AgeRating, Runtime, Genre):
 > ''')
-            query = input('What is the search query: ')
-            print('\nResults:')
-            if database.db_view.format_movies(database.db_view.search_movies(conn, column, query)):
+                query = input('What is the search query: ')
+                print('\nResults:')
+                if database.db_view.format_movies(database.db_view.search_movies(conn, column, query)):
+                        print('Operation done successfully')
+            if table == 'users':
+                column = input('''Which column to search
+(ID, Username, Admin):
+> ''')
+                query = input('What is the search query: ')
+                print('\nResults:')
+                if database.db_view.format_users(database.db_view.search_users(conn, column, query)):
                     print('Operation done successfully')
+
+            # Search for either favourites or ratings
+            if table == 'ratings' or table == 'favourites':
+                # Specify what to search for
+                user_id = ninput(f'Which user ID to view {table} for (blank for all users): ')
+                movie_id = ninput('Which movie ID to search (blank for all movies): ')
+                print('\nResults:')
+                if database.db_view.format_favourites_ratings(database.db_view.search_favourites_ratings(conn, table, user_id, movie_id), table_type=table):
+                    print('Operation done successfully')
+            else:
+                print('Table doesn\'t exist / hasn\'t been implemented yet')
         except Exception as error:
             format_error(error)
 

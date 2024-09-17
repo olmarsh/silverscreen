@@ -19,6 +19,8 @@ def drop_all_tables(conn):
     conn.execute('DROP TABLE IF EXISTS Genres')
     conn.execute('DROP TABLE IF EXISTS Movies')
     conn.execute('DROP TABLE IF EXISTS Users')
+    conn.execute('DROP TABLE IF EXISTS Ratings')
+    conn.execute('DROP TABLE IF EXISTS Favourites')
     return True
 
 # If this program is run in terminal, execute its function.

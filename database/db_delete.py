@@ -14,7 +14,7 @@ if __name__ == '__main__':
     conn = sqlite3.connect("silverscreen.db")
     print("Connected to database")
     table = input(
-        'What table to delete from? (Movies, Genres, AgeRatings, Users)\n> '
+        'What table to delete from? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
     ).lower()
     
     # Set the column to the correct name for the table.
@@ -25,14 +25,17 @@ if __name__ == '__main__':
         column = 'GenreID'
     elif table == 'ageratings':
         column = 'AgeRatingID'
+    elif table == 'ratings':
+        column = 'RatingID'
+    elif table == 'favourites':
+        column = 'FavouriteID'
     else:
         print('That table does not exist / hasn\'t been implemented yet')
 
     # If the table is valid, delete from it.
-    if table in ('movies', 'genres', 'ageratings', 'users'):
+    if table in ('movies', 'genres', 'ageratings', 'users', 'ratings', 'favourites'):
         delete_id = input(f'Which {table} ID to delete?\n> ')
         print('Delete entry if exists')
         if delete(conn, table, column, delete_id):
             conn.commit();
             print('Operation completed successfully')
-

@@ -33,6 +33,25 @@ def format_users(results):
     return True
 
 
+def format_favourites_ratings(results, table_type = 'ratings'):
+    '''Format the output from a favourites or ratings search function.'''
+
+    # Define line spacings
+    formatted_row = '{:<5} {:<10} {:<10}'
+    # Add the extra row for ratings if needed
+    if table_type == 'ratings':
+        formatted_row += ' {:<5}'
+
+    # Print column headers, then the rest of the rows
+    print(formatted_row.format('ID', 'User ID', 'Movie ID', 'Rating'))
+    for row in results:
+        print(formatted_row.format(*row))
+
+    # Add newline at bottom
+    print('')
+    return True
+
+
 def format_general(results):
     '''Format the output from a view or search function.'''
 
@@ -123,6 +142,33 @@ def search_users(conn, column, query, limit=0, offset=0, order='ID ASC',
     ORDER BY {order}
     {extra}''')
     return cursor.fetchall()
+
+def search_favourites_ratings(conn, table, user_id=None, movie_id=None, limit=0, offset=0):
+    '''Search for ratings/favourites in the ratings/favourites table by user id, movie id.'''
+
+    # Add extra parameters to query.
+    extra = ''
+    if limit > 0:
+        extra += f'LIMIT {limit}'
+        if offset != '' and offset > 0:
+            extra += f' OFFSET {offset}'
+        extra += ';'
+
+    # Add appropriate search parameters
+    params = ''
+    if user_id or movie_id:
+        params += 'WHERE '
+    if user_id:
+        params += f'UserID = \'{user_id}\' '
+    if movie_id:
+        params += f'MovieID = \'{movie_id}\' '
+
+
+    cursor = conn.cursor()
+    cursor.execute(f'''SELECT * FROM {table}
+    {params}
+    {extra}''')
+    return cursor.fetchall()
     
 
 def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
@@ -158,6 +204,18 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
 
 
 if __name__ == '__main__':
+    # Only define the function if it is being run as main.
+    def ninput(prompt, returntype=str):
+        '''Normal input function that returns None when a blank string is input. \
+        Return type can also be specified'''
+
+        ret = input(prompt)
+
+        # Return none if the input was blank.
+        if ret == '': return None
+        # Convert to specified type and return.
+        return returntype(ret)
+
     conn = sqlite3.connect('silverscreen.db')
     print('Connected to database')
 
@@ -169,25 +227,29 @@ VIEW   - print all entries from a table''')
     print('')
     if action == 'view':
         table = input(
-            'What table to view? (Movies, Genres, AgeRatings, Users)\n> '
+            'What table to view? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
         ).lower()
 
         # Use appropriate function depending on specified table
         if table == 'movies':
             if format_movies(view_movies(conn)):
                 print('Operation done successfully')
-        elif table == 'genres' or table == 'ageratings' or table == 'users':
+        elif table in ('genres', 'ageratings', 'users'):
             if format_general(view_general(conn, table)):
+                print('Operation done successfully')
+        elif table in ('ratings', 'favourites'):
+            if format_favourites_ratings(view_general(conn, table), table_type=table):
                 print('Operation done successfully')
         else:
             print('Table doesn\'t exist / hasn\'t been implemented yet')
 
     elif action == 'search':
         table = input(
-            'What table to search? (Movies, Users)\n> '
+            'What table to search? (Movies, Users, Ratings, Favourites)\n> '
         ).lower()
 
         if table == 'movies':
+            # Take inputs for movies table and search.
             column = input('''Which column to search
 (ID, Title, ReleaseYear, AgeRating, Runtime, Genre):
 > ''')
@@ -202,7 +264,18 @@ VIEW   - print all entries from a table''')
             query = input('What is the search query: ')
             print('\nResults:')
             if format_users(search_users(conn, column, query)):
-                    print('Operation done successfully')
+                print('Operation done successfully')
+
+        # Search for either favourites or ratings
+        if table == 'ratings' or table == 'favourites':
+            # Specify what to search for
+            user_id = ninput(f'Which user ID to view {table} for (blank for all users): ')
+            movie_id = ninput('Which movie ID to search (blank for all movies): ')
+            print('\nResults:')
+            if format_favourites_ratings(search_favourites_ratings(conn, table, user_id, movie_id), table_type=table):
+                print('Operation done successfully')
+        else:
+            print('Table doesn\'t exist / hasn\'t been implemented yet')
 
     else:
         print('That action does not exist for this module')

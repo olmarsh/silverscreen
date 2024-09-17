@@ -37,10 +37,21 @@ def update_user(conn, edit_id, fields):
     for field, value in fields.items():
         conn.execute(f'''UPDATE Users SET
         {field} = '{value}'
-    WHERE ID = {edit_id};
+        WHERE ID = {edit_id};
+        ''')
+
+    return True
+
+def update_rating(conn, user_id, movie_id, value):
+    '''Update a rating in the database.'''
+
+    conn.execute(f'''UPDATE Ratings SET
+    rating = '{value}'
+    WHERE MovieID = {movie_id} AND UserID = {user_id};
     ''')
 
     return True
+
 
 if __name__ == '__main__':
     # Connect to database
@@ -48,7 +59,7 @@ if __name__ == '__main__':
     print('Connected to database')
 
     table = input(
-        'What table to update? (Movies, Users)\n> '
+        'What table to update? (Movies, Users, Ratings)\n> '
     ).lower()
 
     if table.lower() == 'movies':
@@ -83,3 +94,12 @@ if __name__ == '__main__':
         if update_user(conn, edit_id, {field: value}):
             print('Operation completed successfully')
             conn.commit()
+    elif table == 'ratings':
+        user_id = input('Which user ID to edit rating: ')
+        movie_id = input('Which movie ID to edit favourite: ')
+        rating = input('New rating value: ')
+        if update_rating(conn, user_id, movie_id, rating):
+            print('Operation completed successfully')
+            conn.commit()
+    else:
+        print('That table does not exist / hasn\'t been implemented yet')

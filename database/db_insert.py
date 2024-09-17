@@ -65,6 +65,33 @@ def insert(conn, table, **kwargs):
     return True
 
 
+def rating_insert(conn, user_id, movie_id, rating):
+    '''Insert a rating into the ratings table via user ID and movie ID.'''
+
+    # If the rating is valid, write it to the table
+    if float(rating) in (0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5):
+        conn.execute(f'''INSERT INTO Ratings (MovieID, UserID, Rating)
+        VALUES (
+            {movie_id}, {user_id}, {rating}
+        )
+        ''')
+
+        return True
+    else:
+        raise Exception('Rating must be in increments of 0.5 between 0 and 5')
+
+def favourite_insert(conn, user_id, movie_id):
+    '''Insert a favourite into the favourites table via user ID and movie ID.'''
+
+    # If the rating is valid, write it to the table
+    conn.execute(f'''INSERT INTO Favourites (MovieID, UserID)
+    VALUES (
+        {movie_id}, {user_id}
+    )
+    ''')
+    return True
+
+
 def user_insert(conn, username, password):
     '''Hash the user's password and insert a the user into the database.'''
 
@@ -139,7 +166,7 @@ if __name__ == '__main__':
     # Get user inputs for new entry
     print('Insert an entry into a table')
     table = input(
-        'What table to input into? (Movies, Genres, AgeRatings, Users)\n> '
+        'What table to input into? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
     ).lower()
     # Use appropriate column names depending on specified table
     if table == 'movies':
@@ -185,6 +212,24 @@ if __name__ == '__main__':
         ):
             conn.commit()
             print('Operation completed successfully')
+    elif table == 'ratings':
+        print('Insert a rating')
+        if rating_insert (
+            conn,
+            user_id = ninput('User ID: '),
+            movie_id = ninput('Movie ID: '),
+            rating = ninput('Rating: ')
+        ):
+            conn.commit()
+            print('Operation completed successfully')
+    elif table == 'favourites':
+        print('Add new favourite')
+        if favourite_insert (
+            conn,
+            user_id = ninput('User ID: '),
+            movie_id = ninput('Movie ID: ')
+        ):
+            conn.commit()
+            print('Operation completed successfully')
     else:
-        print('That table does not exist / hasn\'t been implemented \
-                yet')
+        print('That table does not exist / hasn\'t been implemented yet')
