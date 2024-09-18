@@ -24,6 +24,7 @@ if __name__ == '__main__':
     password = input('Password: ')
 
     conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
     
     user = authenticate(conn, username, password)
 

@@ -160,6 +160,7 @@ if __name__ == '__main__':
 
     # Connect to database
     conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
     cursor = conn.cursor()
     print('Connected to database')
 

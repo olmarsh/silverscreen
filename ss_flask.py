@@ -34,6 +34,7 @@ def movie():
     
     # Open a connection to the database and view movie
     conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
     try:
         movie = database.db_view.search_movies(conn, 'ID', id, limit=1,
                                                match_before=False,
@@ -105,6 +106,7 @@ def update_table(results_per_page, read_page, read_order, read_search='',
 
     # Connect to database and request rows
     conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
 
     if read_search == '':  # If nothing was searched, request the entire db
         movies = database.db_view.view_movies(conn, limit=limit,

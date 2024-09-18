@@ -217,6 +217,7 @@ if __name__ == '__main__':
         return returntype(ret)
 
     conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
     print('Connected to database')
 
     # Print possible actions and get user's choice

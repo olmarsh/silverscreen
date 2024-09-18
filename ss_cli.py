@@ -24,6 +24,7 @@ This command line interface is not intended for end user use!
 ''')
 
 conn = sqlite3.connect('silverscreen.db')
+conn.execute('PRAGMA foreign_keys = ON;')
 print('Connected to database\n')
 
 def help():

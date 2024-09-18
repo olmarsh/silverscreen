@@ -54,5 +54,7 @@ if __name__ == '__main__':
     import database.db_insert
 
     conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
+
     print('Connected to database\n')
     import_default_list(conn)
