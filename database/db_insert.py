@@ -208,7 +208,10 @@ if __name__ == '__main__':
         if user_insert (
             conn,
             username = ninput('Username: '),
-            password = ninput('Password: ')
+            password = ninput('''\nPassword limitations:
+12 characters
+Must contain uppercase, lowercase, number and special character\n
+Password: ''')
         ):
             conn.commit()
             print('Operation completed successfully')

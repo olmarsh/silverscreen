@@ -5,6 +5,7 @@ import database
 import database.db_create
 import database.db_insert
 import database.db_update
+import ss_import
 
 # Print splash screen
 print('''    ________   ________
@@ -69,12 +70,13 @@ HELP   - read help documentation for CLI
 CREATE - attempt to create all tables in the database
 DROP   - drop a table or multiple tables from the database
 PPLATE - populate the lookup tables with default values
+IMPORT - import the default movies into the table
 INSERT - insert an entry into a table
-DELETE - delete an entry from a table
-UPDATE - update an entry in a table
-SEARCH - search the movies database
+DELETE - delete an entry from a table   by ID
+UPDATE - update an entry in a table     by ID
+SEARCH - search the movies database     by any column
 VIEW   - print all entries from a table
-LOGIN  - test logging in as a web user
+LOGIN  - test logging in as a web user  by ID
 EXIT   - exit the program''')
     action = input("What action to take?\n> ").lower()
     print('')
@@ -104,6 +106,9 @@ EXIT   - exit the program''')
         if database.db_populate.populate(conn):
             conn.commit()
             print('Operation completed successfully')
+
+    elif action == 'import':
+        ss_import.import_default_list(conn)
 
     elif action == 'insert':
         print('Insert an entry into a table')
@@ -151,7 +156,10 @@ EXIT   - exit the program''')
                 if database.db_insert.user_insert (
                     conn,
                     username = ninput('Username: '),
-                    password = ninput('Password: ')
+                    password = ninput('''\nPassword limitations:
+12 characters
+Must contain uppercase, lowercase, number and special character\n
+Password: ''')
                 ):
                     conn.commit()
                     print('Operation completed successfully')
