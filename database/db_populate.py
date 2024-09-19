@@ -53,6 +53,7 @@ def populate(conn):
 # If this program is run in terminal, execute its function.
 if __name__ == '__main__':
     conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
     print('Connected to database')
 
     populate(conn)

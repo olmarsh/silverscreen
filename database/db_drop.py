@@ -18,11 +18,15 @@ def drop_all_tables(conn):
     conn.execute('DROP TABLE IF EXISTS AgeRatings')
     conn.execute('DROP TABLE IF EXISTS Genres')
     conn.execute('DROP TABLE IF EXISTS Movies')
+    conn.execute('DROP TABLE IF EXISTS Users')
+    conn.execute('DROP TABLE IF EXISTS Ratings')
+    conn.execute('DROP TABLE IF EXISTS Favourites')
     return True
 
 # If this program is run in terminal, execute its function.
 if (__name__ == '__main__'):
     conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
     print('Connected to database')
 
     print('Drop table(s) - type \'ALL\' to drop all tables')

@@ -1,7 +1,101 @@
-SILVERSCREEN CLI HELP DOCS
-Line 1
-Line 2
-Line 3
-Line 4
-TODO: WRITE THIS AFTER FINISHING
-Final line
+### SILVERSCREEN CLI HELP DOCS
+This document is for understanding how to use the CLI.
+## CONTENTS:
+  # Line 003 Contents
+  # Line 014 Command Overview
+    015 HELP        045 DELETE
+    017 CREATE      050 UPDATE
+    021 DROP        056 SEARCH
+    025 PPLATE      063  VIEW
+    028 IMPORT      067  LOGIN
+    033 INSERT      072  EXIT
+  # Line 074 Troubleshooting
+  # Line 085 Guided setup
+## COMMAND OVERVIEW:
+  # HELP
+    Opens this document in an interactive reader
+  # CREATE
+    Attempts to create all tables IF NOT EXISTS. Will never overwrite
+    existing tables. Creates the following tables:
+        AgeRatings, Favourites, Genres, Movies, Ratings, Users
+  # DROP
+    Drops (deletes) an entire table from the database. Requests input
+    for which table to drop before operation. Input of 'ALL' will
+    drop all tables.
+  # PPLATE
+    Populates the Genres and AgeRatings tables with the default
+    values. Will not populate the tables if they contain values.
+  # IMPORT
+    Imports the default movie list from the file 'default_films.txt'
+    in the working directory. Gives the options to 'preserve' the
+    movie ID from the text file (useful for new databases) or to
+    assign new IDs (useful for existing databases).
+  # INSERT
+    Inserts an entry into the specified table. The available tables
+    are:
+        AgeRatings, Favourites, Genres, Movies, Ratings, Users
+    The inserted value must conform to the constraints of the table.
+    Specific notes:
+      Favourites & Ratings
+        When inserting into the Favourites or Ratings table, both the
+        user ID and the movie ID must be known beforehand.
+      Users
+        The password constraints are displayed before the password is
+        inserted. The password is hashed when it is stored.
+  # DELETE
+    Deletes an entry from the specified table by its ID. The ID of
+    the entry must be known beforehand.
+    When a movie or user is deleted, all ratings and favourites
+    associated are also deleted.
+  # UPDATE
+    Updates an entry in a table by its ID. The ID of the entry must
+    be known beforehand. The available tables are:
+        Movies, Ratings, Users
+    The inserted value must conform to the constraints of the table.
+    Specific notes: See INSERT (026)
+  # SEARCH
+    Searches any table by any column, both of which can be specified.
+    The available tables are:
+        AgeRatings, Favourites, Genres, Movies, Ratings, Users
+    The column searched must match one of the columns of the table.
+    The output is formatted differently depending on which table is
+    searched.
+  # VIEW
+    Formats and prints all entries from a table. The available tables
+    are:
+        AgeRatings, Favourites, Genres, Movies, Ratings, Users
+  # LOGIN
+    Simulates logging in as a web user. Input the username and
+    password and compare it to the hashed information.
+    If the hashed information matches the input information, it
+    returns the relevant user information.
+  # EXIT
+    Terminates the program and returns to previous cmd prompt.
+## TROUBLESHOOTING
+  # Cannot import modules
+    - Ensure the working directory of the program contains the
+      'database' directory and ss_import.py file
+    - Ensure the program is unzipped before running
+    - Ensure the bcrypt module is installed in your environment
+  # Hard-to-understand error messages
+    (NoneType is not subscriptable, SQL-related errors)
+    - Ensure your inputs are valid
+        As this is only intended for server management, raw error
+        messages are preferred. End users will use the web interface
+## GUIDED SETUP
+  This guide will help you to set up the database for the first time,
+  and perform some necessary steps.
+  # Initial setup (Drop all tables before running these step)
+    1. CREATE           Run the create command to create the tables
+    2. PPLATE           Run the populate command to populate lookup
+                        tables
+    3. IMPORT           Run the import command to import default list
+         or
+    3. INSERT > MOVIES  Insert custom movies individually
+  # Add an admin user
+    1. INSERT > USERS   Insert a user with username/password
+    2. UPDATE > USERS > ADMIN  Insert a user and make them an admin
+  (For security, the CLI is the only way users can be made admin)
+  # Running the web server
+    1. Run the file ss_flask.py from a terminal.
+End of file, press >> q << to exit.
