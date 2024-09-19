@@ -17,8 +17,18 @@ Silverscreen CLI database manager
 O. Marsh      development version
 
 Command line interface to manage the silverscreen movie database
-This command line interface is not intended for end user use!
+This command line interface is for DATABASE MANAGEMENT PURPOSES
+and is not intended for user use!
+
+It will only be usable with reasonable training and reading of
+the documentation (provided by HELP)
+      
+If you are an END USER, or WEB ADMIN, use the WEB INTERFACE.
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ''')
+
+input('Press [Enter] to continue running the command line interface\n')
 
 conn = sqlite3.connect('silverscreen.db')
 conn.execute('PRAGMA foreign_keys = ON;')
@@ -28,16 +38,52 @@ def help():
     '''Read the help file and print it line by line'''
 
     print('''Reading help file
-Press enter to read new lines
-Press q then enter to quit
------------------------------''')
+Press >> enter << to read new lines
+Type  >> q << then enter to quit
+Type  >> g << and a number (i.e. g10) to Goto to a line
+Type  >> j << and a number (i.e. j4, j-4) to Jump up/down lines (+/- allowed)
+Type  >> p << and a number (i.e. p5) to print that many successive lines
+--------------------------------------------------------------------------:----''')
     help_file = open('cli_help.txt', 'r')
     help_text = help_file.readlines()
     # Print the entire line except for the last character, which is a newline,
     # and wait for user input.
-    for line in help_text:
-        print(line[0:-1], end=' ')
-        if input().lower() == 'q': break
+    line = 0
+    while True:
+        print(f'{(line+1):03d}', end=' ')
+        print(f'{help_text[line][0:-1]:70}', end=':')
+        line += 1  # Move to next line
+
+        # Take input for navigation commands
+        command = input().lower()
+        if command == '': command = 'n'
+
+        if command[0] == 'q':  # Manage quitting the help function
+            break
+        elif command[0] == 'g':  # Manage jumping to a line
+            try:
+                line = int(command[1:])-1
+                print('! Goto Line',command[1:])
+            except:
+                pass
+        elif command[0] == 'j':  # Manage jumping forwards
+            try:
+                line = line+int(command[1:])-1
+                print('! Jump',command[1:],'Lines')
+            except:
+                pass
+        elif command[0] == 'p':  # Manage printing successive lines
+            try:
+                for i in range(int(command[1:])-1):
+                    print(f'{(line+1):03d} {help_text[line][0:-1]:70}', end='|\n')
+                    line += 1  # Move to next line
+            except:
+                pass
+        # Limit the line number to within the text file's length
+        if line < 0:
+            line = 0
+        if line > len(help_text)-1:
+            line = len(help_text)-1
 
 
 def ninput(prompt, returntype=str):
@@ -72,9 +118,9 @@ IMPORT - import the default movies into the table
 INSERT - insert an entry into a table
 DELETE - delete an entry from a table   by ID
 UPDATE - update an entry in a table     by ID
-SEARCH - search the movies database     by any column
+SEARCH - search a table                 by any column
 VIEW   - print all entries from a table
-LOGIN  - test logging in as a web user  by ID
+LOGIN  - test logging in as a web user  by username
 EXIT   - exit the program''')
     action = input("What action to take?\n> ").lower()
     print('')
@@ -241,7 +287,7 @@ Password: ''')
 
                 # Attempt to apply them to database.
                 if database.db_update.update(conn, edit_id, {field: value}):
-                    print('Operation completed successfully')
+                    print('Updated if exists\nOperation completed successfully')
 
             elif table == 'users':
                 # Take all inputs.
@@ -264,7 +310,7 @@ Password: ''')
 
                 # Attempt to apply inputs to database.
                 if database.db_update.update_user(conn, edit_id, {field: value}):
-                    print('Operation completed successfully')
+                    print('Updated if exists\nOperation completed successfully')
                     conn.commit()
             
             elif table == 'ratings':
@@ -272,7 +318,7 @@ Password: ''')
                 movie_id = input('Which movie ID to edit favourite: ')
                 rating = input('New rating value: ')
                 if database.db_update.update_rating(conn, user_id, movie_id, rating):
-                    print('Operation completed successfully')
+                    print('Updated if exists\nOperation completed successfully')
                     conn.commit()
             else:
                 print('That table does not exist / hasn\'t been implemented yet')
@@ -305,7 +351,7 @@ Password: ''')
     elif action == 'search':
         try:
             table = input(
-                'What table to view? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
+                'What table to search? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
             ).lower()
             if table == 'movies':
                 # Take inputs for movies table and search.

@@ -124,7 +124,7 @@ if __name__ == '__main__':
         print(f'Setting {field} to {value}')
 
         if update(conn, edit_id, {field: value}):
-            print('Operation completed successfully')
+            print('Updated if exists\nOperation completed successfully')
     elif table == 'users':
         edit_id = int(input('Which user ID to edit: '))
         print(f'Editing user ID {edit_id}')
@@ -142,14 +142,14 @@ if __name__ == '__main__':
             value = input('What value to set the field to: ')
         print(f'Setting {field} to {value}')
         if update_user(conn, edit_id, {field: value}):
-            print('Operation completed successfully')
+            print('Updated if exists\nOperation completed successfully')
             conn.commit()
     elif table == 'ratings':
         user_id = input('Which user ID to edit rating: ')
         movie_id = input('Which movie ID to edit favourite: ')
         rating = input('New rating value: ')
         if update_rating(conn, user_id, movie_id, rating):
-            print('Operation completed successfully')
+            print('Updated if exists\nOperation completed successfully')
             conn.commit()
     else:
         print('That table does not exist / hasn\'t been implemented yet')
