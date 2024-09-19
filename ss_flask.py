@@ -197,7 +197,7 @@ def handle_edit():
             return render_template('error.html', error_statement=f'Failure ({type(error).__name__+'\n'+str(error)})',
                                     return_statement='Return to add movie page')
 
-
+# Login and signup
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -211,10 +211,32 @@ def handle_login():
     # Authenticate against hash in database
     conn = sqlite3.connect('silverscreen.db')
     conn.execute('PRAGMA foreign_keys = ON;')
-    if database.db_login.authenticate(conn, username, password):
-        return('Success')
+    try:
+        if database.db_login.authenticate(conn, username, password):
+            return('Success')
+        else:
+            return('Failure: Username or password incorrect')
+    except:
+        return('Failure: Username or password incorrect')
+    
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
+
+@app.route('/handle_signup', methods=['POST'])
+def handle_signup():
+    # Get username and password from form
+    username = request.form['username']
+    password = request.form['password']
+    
+    # Authenticate against hash in database
+    conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
+    if database.db_insert.user_insert(conn, username, password):
+        conn.commit()
+        return('Success: Signed user up')
     else:
-        return('Failure')
+        return('Failure: Did not sign user up')
 
 
 # Confirm to client that connection was successful

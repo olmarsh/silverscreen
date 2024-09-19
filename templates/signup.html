@@ -5,16 +5,16 @@
 {% endblock %}
 
 {% block header %}
-  <h1>{% block title %}Login{% endblock %}</h1>
-  <p><i>Login to your account</i></p>
+  <h1>{% block title %}Sign Up{% endblock %}</h1>
+  <p><i>Register a new account</i></p>
 {% endblock %}
 
 {% block content %}
 
 <br>
-<form autocomplete="off" action="{{ url_for('handle_login') }}" method="post">
+<form autocomplete="off" action="{{ url_for('handle_signup') }}" method="post">
   Username: <input placeholder="Username" name="username"><br>
   Password: <input type="password" placeholder="Password" name="password"><br><br>
-  <input type="submit" value="Log in">
+  <input type="submit" value="Sign up">
 </form>
 {% endblock %}
