@@ -43,12 +43,18 @@ Type  >> q << then enter to quit
 Type  >> g << and a number (i.e. g10) to Goto to a line
 Type  >> j << and a number (i.e. j4, j-4) to Jump up/down lines (+/- allowed)
 Type  >> p << and a number (i.e. p5) to print that many successive lines
---------------------------------------------------------------------------:----''')
+--------------------------------------------------------------------------|----''')
     help_file = open('cli_help.txt', 'r')
     help_text = help_file.readlines()
     # Print the entire line except for the last character, which is a newline,
     # and wait for user input.
     line = 0
+
+    # Print the contents page
+    for i in range(12):
+        print(f'{(line+1):03d} {help_text[line][0:-1]:70}', end='|\n')
+        line += 1  # Move to next line
+
     while True:
         print(f'{(line+1):03d}', end=' ')
         print(f'{help_text[line][0:-1]:70}', end=':')

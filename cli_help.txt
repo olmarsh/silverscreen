@@ -1,7 +1,7 @@
 ### SILVERSCREEN CLI HELP DOCS
 This document is for understanding how to use the CLI.
 ## CONTENTS:
-  # Line 002 Contents
+  # Line 003 Contents
   # Line 014 Command Overview
     015 HELP        045 DELETE
     017 CREATE      050 UPDATE
