@@ -223,7 +223,7 @@ Password: ''')
         try:
 
             table = input(
-                'What table to update? (Movies, Users)\n> '
+                'What table to update? (Movies, Users, Ratings)\n> '
             ).lower()
 
             if table.lower() == 'movies':

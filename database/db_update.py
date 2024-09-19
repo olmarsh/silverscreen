@@ -1,6 +1,7 @@
 '''Update a specified entry from the movie database'''
 
 import sqlite3
+import bcrypt
 
 
 def update(conn, edit_id, fields):
@@ -35,10 +36,36 @@ def update_user(conn, edit_id, fields):
     '''Update information about a user in the database.'''
 
     for field, value in fields.items():
-        conn.execute(f'''UPDATE Users SET
-        {field} = '{value}'
-        WHERE ID = {edit_id};
-        ''')
+
+        # If the password is being updated, make sure it fits requirements.
+        if field.lower() == 'password':
+            password = value
+
+            # Abort if the password is the wrong length
+            if len(password) <= 12 or len(password) >= 50:
+                raise Exception(f'Password length must be between 12 and 50 characters (Length: {len(password)})')
+
+            # Abort if the password does not fulfil character requirements
+            if not validate_password(password):
+                raise Exception('Password must contain characters of: uppercase, lowercase, number and special')
+
+            # Generate salt
+            salt = bcrypt.gensalt()
+
+            # Convert password to bytes and hash with salt
+            value = bcrypt.hashpw(bytes(password, 'utf-8'), salt)
+
+            conn.execute(f'''UPDATE Users SET
+            {field} = ?
+            WHERE ID = {edit_id};
+            ''', (value.decode("utf-8"),)
+            )
+
+        else:  # For other values, hashing is not needed.
+            conn.execute(f'''UPDATE Users SET
+            {field} = '{value}'
+            WHERE ID = {edit_id};
+            ''')
 
     return True
 
@@ -51,6 +78,28 @@ def update_rating(conn, user_id, movie_id, value):
     ''')
 
     return True
+
+
+def validate_password(password):
+    '''Returns true if a password meets special character requirements.'''
+    
+    # Set all requirements to false
+    lower, upper, num, special = (False,)*4
+
+    special_characters = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~']
+
+    # If a requirement is met, set it to true
+    for i in password:
+        if i == i.lower():
+            lower = True
+        if i == i.upper():
+            upper = True
+        if i.isdigit:
+            num = True
+        if i in special_characters:
+            special = True
+
+    return lower and upper and num and special;
 
 
 if __name__ == '__main__':
