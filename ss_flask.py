@@ -5,6 +5,7 @@ import sqlite3
 
 import database.db_delete
 import database.db_insert
+import database.db_login
 import database.db_update
 import database.db_view
 
@@ -75,8 +76,10 @@ def movie():
             return render_template('error.html', error_statement='404 Not Found'), 404
         
     else:  # If the user wants to edit, return the edit template
-                # Open a connection to the database and view movie
+        # Open a connection to the database and view movie
         conn = sqlite3.connect('silverscreen.db')
+        conn.execute('PRAGMA foreign_keys = ON;')
+
         movie = database.db_view.search_movies(conn, 'ID', id, limit=1,
                                                match_before=False,
                                                match_after=False)[0]
@@ -98,6 +101,7 @@ def add():
 def delete():
     id = request.args.get('id')
     conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
     try:
         movie = database.db_view.search_movies(conn, 'ID', id, limit=1)[0]
         return render_template('delete.html',
@@ -118,6 +122,7 @@ def delete():
 def handle_delete():
     id = request.form['id']
     conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
     try:
         if database.db_delete.delete(conn, 'Movies', 'ID', id):
             conn.commit()
@@ -146,6 +151,7 @@ def handle_edit():
         # Connect to the table and update the values according to the form
         try:
             conn = sqlite3.connect('silverscreen.db')
+            conn.execute('PRAGMA foreign_keys = ON;')
             if database.db_update.update(conn, movie_id, {
                 'Title': title,
                 'ReleaseYear': release_year,
@@ -168,6 +174,7 @@ def handle_edit():
 # Connect to the table and update the values according to the form
         try:
             conn = sqlite3.connect('silverscreen.db')
+            conn.execute('PRAGMA foreign_keys = ON;')
             if database.db_insert.insert(conn, "Movies",
                 title = title,
                 releaseYear = release_year,
@@ -189,6 +196,25 @@ def handle_edit():
             conn.close()
             return render_template('error.html', error_statement=f'Failure ({type(error).__name__+'\n'+str(error)})',
                                     return_statement='Return to add movie page')
+
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/handle_login', methods=['POST'])
+def handle_login():
+    # Get username and password from form
+    username = request.form['username']
+    password = request.form['password']
+    
+    # Authenticate against hash in database
+    conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
+    if database.db_login.authenticate(conn, username, password):
+        return('Success')
+    else:
+        return('Failure')
 
 
 # Confirm to client that connection was successful
@@ -311,6 +337,7 @@ def format_options(table, selected=None):
     '''Format genre or age rating options for a dropdown'''
 
     conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
     results = database.db_view.view_general(conn, table)
 
     # Create an empty string, then fill it with all the names, and return
