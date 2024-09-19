@@ -104,12 +104,22 @@ input, select {
 }
 
 .darkmode-button {
-    margin: 20px 0px;;
+    margin: 0px;
     margin-left: auto;
     font-size: 12px;
     font-weight: bold;
     min-width: fit-content;
     cursor: pointer;
+}
+
+.right-header-section {
+    margin: 0px;
+    margin-left: auto;
+    text-align: right;
+}
+
+.user-indicator {
+    display: block;
 }
 
 /* Dark mode general */

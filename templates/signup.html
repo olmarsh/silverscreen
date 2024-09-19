@@ -15,6 +15,7 @@
 <form autocomplete="off" action="{{ url_for('handle_signup') }}" method="post">
   Username: <input placeholder="Username" name="username"><br>
   Password: <input type="password" placeholder="Password" name="password"><br><br>
-  <input type="submit" value="Sign up">
+  <input type="submit" value="Sign up"><br><br>
+  <p>Got an account? <a href="/login">Log in</a> instead!</p>
 </form>
 {% endblock %}
