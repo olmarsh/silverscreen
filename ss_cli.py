@@ -2,9 +2,6 @@
 
 import sqlite3
 import database
-import database.db_create
-import database.db_insert
-import database.db_update
 import ss_import
 
 # Print splash screen
@@ -109,7 +106,10 @@ EXIT   - exit the program''')
             print('Operation completed successfully')
 
     elif action == 'import':
-        ss_import.import_default_list(conn)
+        try:
+            ss_import.import_default_list(conn)
+        except Exception as error:
+            format_error(error)
 
     elif action == 'insert':
         print('Insert an entry into a table')
@@ -216,6 +216,7 @@ Password: ''')
                 if database.db_delete.delete(conn, table, column, delete_id):
                     conn.commit();
                     print('Operation completed successfully')
+
         except Exception as error:
             format_error(error)
 
@@ -315,7 +316,7 @@ Password: ''')
                 print('\nResults:')
                 if database.db_view.format_movies(database.db_view.search_movies(conn, column, query)):
                         print('Operation done successfully')
-            if table == 'users':
+            elif table == 'users':
                 column = input('''Which column to search
 (ID, Username, Admin):
 > ''')
@@ -341,8 +342,6 @@ Password: ''')
         try:
             username = input('Username: ')
             password = input('Password: ')
-
-            conn = sqlite3.connect('silverscreen.db')
             
             user = database.db_login.authenticate(conn, username, password)
 

@@ -1,5 +1,8 @@
 '''Imports the database values from the default_films.txt file'''
 
+import database
+
+
 def import_default_list(conn):
     '''Import the default list into the table.'''
     # Open the films file and read its contents into a variable.
@@ -25,7 +28,7 @@ def import_default_list(conn):
                 genre = parsed_line[5]
             ):
                 print('Imported', parsed_line[1],'\n')
-        conn.commit()
+            conn.commit()
         print('Operation completed successfully')
     elif preserve == 'n':
         # Same program but ID is allowed to increment automatically.

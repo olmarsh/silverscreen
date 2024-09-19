@@ -12,6 +12,7 @@ def delete(conn, table, match_column, delete_id):
 
 if __name__ == '__main__':
     conn = sqlite3.connect("silverscreen.db")
+    conn.execute('PRAGMA foreign_keys = ON;')
     print("Connected to database")
     table = input(
         'What table to delete from? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '

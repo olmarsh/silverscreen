@@ -41,16 +41,16 @@ def create(conn):
         MovieID INTEGER NOT NULL,
         UserID INTEGER NOT NULL,
         Rating REAL NOT NULL CHECK (Rating >= 0 AND Rating <= 5),
-        FOREIGN KEY (MovieID) REFERENCES Movies(ID),
-        FOREIGN KEY (UserID) REFERENCES Users(ID),
+        FOREIGN KEY (MovieID) REFERENCES Movies(ID) ON DELETE CASCADE,
+        FOREIGN KEY (UserID) REFERENCES Users(ID) ON DELETE CASCADE,
         UNIQUE (UserID, MovieID)
     );''')
     conn.execute('''CREATE TABLE IF NOT EXISTS Favourites (
         FavouriteID INTEGER PRIMARY KEY,
         MovieID INTEGER NOT NULL,
         UserID INTEGER NOT NULL,
-        FOREIGN KEY (MovieID) REFERENCES Movies(ID),
-        FOREIGN KEY (UserID) REFERENCES Users(ID),
+        FOREIGN KEY (MovieID) REFERENCES Movies(ID) ON DELETE CASCADE,
+        FOREIGN KEY (UserID) REFERENCES Users(ID) ON DELETE CASCADE,
         UNIQUE (UserID, MovieID)
     );''')
 
