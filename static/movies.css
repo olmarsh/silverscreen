@@ -142,13 +142,14 @@
 .favourite-movie-button {
     user-select: none;
     position: relative;
+    white-space: nowrap;
 
-    font-size: 20px;
     color: grey;
 }
 
 .favourite-movie-button::before {
-    content: "❤"
+    content: "❤";
+    font-size: 20px;
 }
 
 .ratings-display::after {
@@ -162,18 +163,24 @@
     overflow: hidden;
 
     color: red;
+    font-size: 20px;
 }
 
 .ratings-display {
-    user-select: none;
     position: relative;
+}
 
-    font-size: 20px;
+.ratings-row {
+    user-select: none;
+    display: flex;
+    white-space: nowrap;
+    width: max-content;
     color: grey;
 }
 
 .ratings-display::before {
-    content: "★★★★★"
+    content: "★★★★★";
+    font-size: 20px;
 }
 
 .ratings-display::after {
@@ -185,6 +192,7 @@
     width: calc(var(--rating) * 20%);
     overflow: hidden;
 
+    font-size: 20px;
     color: gold;
 }
 

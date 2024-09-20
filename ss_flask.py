@@ -405,8 +405,11 @@ def format_table_row(row):
     <td>{row[3]}</td>
     <td>{row[6]} {row[4]}</td>
     <td>{row[5]}</td>
-    <td class="favourite-movie-button" style="--visibility: hidden;"></td>
-    <td><div class="ratings-display" style="--rating: 4.3"></div></td>
+    <td class="favourite-movie-button" style="--visibility: hidden;"> ({row[11]})</td>
+    <td><div class="ratings-row"><div class="ratings-display" style="--rating:
+        {row[9] if row[9] is not None else 0}"></div><span style="align-self: flex-end">
+        ({row[10]})</span>
+    </div></td>
     <td><a href='/delete?id={row[0]}' class="delete-movie-button">❌</a></td>
     </tr>'''
 
