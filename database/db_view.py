@@ -6,13 +6,24 @@ import sqlite3
 def format_movies(results):
     '''Format the output from the view_movies or search_movies function.'''
 
+
     # Define line spacings
-    formatted_row = '{:<5} {:<25} {:<13} {:<10} {:<16} {:<6}'
+    formatted_row = '{:<5} {:<25} {:<13} {:<10} {:<16} {:<12} {:<15} {}'
     # Print column headers, then the rest of the rows
     print(formatted_row.format('ID', 'Title', 'Release Year', 'Runtime',
-                               'Genre', 'Age Rating'))
+                               'Genre', 'Age Rating', 'Average Rating', 'Favourites'))
     for row in results:
-        print(formatted_row.format(*row))
+        # Remove unneccessary results
+        cut_row = list(row[0:6])
+        if row[9] == None:
+            cut_row.append('-')
+        else:
+            cut_row.append(f'{row[9]} ({row[10]} ratings)')
+        if row[11] == None:
+            cut_row.append('-')
+        else:
+            cut_row.append(row[11])
+        print(formatted_row.format(*cut_row))
 
     # Add newline at bottom
     print('')
@@ -77,7 +88,19 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC'):
     # Select all from table and return them.
     cursor = conn.cursor()
     cursor.execute(f'''SELECT ID, Title, ReleaseYear, Runtime, Genre,
-                   AgeRating, Symbol, MinAge, Description FROM Movies
+    AgeRating, Symbol, MinAge, Description,
+    (SELECT AVG(Ratings.Rating)
+        FROM Ratings 
+        WHERE Ratings.MovieID = Movies.ID
+    ),
+    (SELECT Count(Ratings.Rating)
+        FROM Ratings 
+        WHERE Ratings.MovieID = Movies.ID
+    ),
+    (SELECT Count(Favourites.MovieID)
+        FROM Favourites 
+        WHERE Favourites.MovieID = Movies.ID
+    ) FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
     ORDER BY {order}
@@ -103,7 +126,7 @@ def count_movies(conn, column='Title', query='', match_before = True,
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
     WHERE {column} LIKE {match_before_string} '{query}' {match_after_string}
-                   ''')
+    ''')
 
     return cursor.fetchone()[0]
 
@@ -172,7 +195,8 @@ def search_favourites_ratings(conn, table, user_id=None, movie_id=None, limit=0,
     
 
 def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
-                  match_before = True, match_after = True):
+                  match_before = True, match_after = True,
+                  get_favourites = False, user = None):
     '''Search for a movie in the movies table by specified column.'''
 
     # Add extra parameters to query.
@@ -194,9 +218,21 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
 
     cursor = conn.cursor()
     cursor.execute(f'''SELECT ID, Title, ReleaseYear, Runtime, Genre,
-                   AgeRating, Symbol, MinAge, Description FROM Movies
+    AgeRating, Symbol, MinAge, Description,
+    (SELECT AVG(Ratings.Rating)
+        FROM Ratings 
+        WHERE Ratings.MovieID = Movies.ID
+    ),
+    (SELECT Count(Ratings.Rating)
+        FROM Ratings 
+        WHERE Ratings.MovieID = Movies.ID
+    ),
+    (SELECT Count(Favourites.MovieID)
+        FROM Favourites 
+        WHERE Favourites.MovieID = Movies.ID
+    ) FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
-    INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
+    INNER JOIN AgeRatings ON Movies.AgeRatingID = AgeRatings.AgeRatingID
     WHERE {column} LIKE {match_before_string} '{query}' {match_after_string}
     ORDER BY {order}
     {extra}''')
