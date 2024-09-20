@@ -18,4 +18,14 @@
   <input type="submit" value="Sign up"><br><br>
   <p>Got an account? <a href="/login">Log in</a> instead!</p>
 </form>
+
+<!-- Popup -->
+<div id="popup-shadow" class="popup-shadow" hidden{{popup_visible}}>
+  <div class="popup">
+    <p>{{popup_message}}</p><br>
+    <p onclick="document.getElementById('popup-shadow').hidden = true; window.history.pushState('movies', document.title, '/movies')"
+    style="text-decoration: underline; cursor: pointer; user-select: none;"
+    >Close</p>
+  </div>
+</div>
 {% endblock %}

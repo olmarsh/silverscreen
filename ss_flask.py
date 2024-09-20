@@ -1,17 +1,39 @@
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 from flask_socketio import SocketIO, emit
-import database
+from flask_login import LoginManager, login_user, login_required, logout_user
 import sqlite3
 
-import database.db_delete
-import database.db_insert
-import database.db_login
-import database.db_update
-import database.db_view
+import database
 
 # Flask setup
 app = Flask(__name__)
+app.secret_key = 'development   '
 socketio = SocketIO(app,cors_allowed_origins='*')
+
+login_manager = LoginManager(app)
+@login_manager.user_loader
+def load_user(user_id):    
+    return User(user_id)
+
+class User():
+    # Initialise user with ID
+    def __init__(self, user_id):
+        conn = sqlite3.connect('silverscreen.db')
+        conn.execute('PRAGMA foreign_keys = ON;')
+        user_info = database.db_view.search_users(
+                    conn, 'ID', user_id, limit=1, match_before=False,
+                    match_after = False
+                )[0]
+        self.user_id = user_id
+        self.username = user_info[1]
+        self.admin = user_info[3]
+        self.is_active = True
+        self.is_authenticated = True
+        self.is_anonymous = False
+
+    def get_id(self):
+        return self.user_id
+    
 
 # Allow caching of the logo to prevent flickering
 @app.route('/static/logo.svg')
@@ -127,7 +149,7 @@ def handle_delete():
         if database.db_delete.delete(conn, 'Movies', 'ID', id):
             conn.commit()
             # Return the movie table page
-            return redirect(url_for('movies', popup="Deleted successfully"))
+            return redirect(url_for('movies', popup="Deleted successfully", popup_visible='display'))
         return render_template('error.html', error_statement='Failure (invalid)',
                                return_statement='Return to delete page')
     except Exception as error:
@@ -200,7 +222,14 @@ def handle_edit():
 # Login and signup
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    # Get the popup text from url parameters
+    popup = request.args.get('popup')
+    # If there is no popup message, do not show popup
+    if popup == '' or popup == None:
+        popup_display = ''
+    else:
+        popup_display = 'display'
+    return render_template('login.html', popup_visible=popup_display, popup_message=popup)
 
 @app.route('/handle_login', methods=['POST'])
 def handle_login():
@@ -213,15 +242,28 @@ def handle_login():
     conn.execute('PRAGMA foreign_keys = ON;')
     try:
         if database.db_login.authenticate(conn, username, password):
-            return('Success')
+            # Get the ID of this user if password was correct
+            login_user(User(database.db_view.search_users(
+                conn, 'username', username, limit=1, match_before=False,
+                match_after = False
+                )[0][0]))
+            return redirect('/movies')
         else:
-            return('Failure: Username or password incorrect')
+            return redirect(url_for('login', popup='Username or password incorrect'))
     except:
-        return('Failure: Username or password incorrect')
+        return redirect(url_for('login', popup='Username or password incorrect'))
     
 @app.route('/signup')
 def signup():
-    return render_template('signup.html')
+    # Get the popup text from url parameters
+    popup = request.args.get('popup')
+    # If there is no popup message, do not show popup
+    if popup == '' or popup == None:
+        popup_display = ''
+    else:
+        popup_display = 'display'
+    
+    return render_template('signup.html', popup_visible=popup_display, popup_message=popup)
 
 @app.route('/handle_signup', methods=['POST'])
 def handle_signup():
@@ -234,9 +276,16 @@ def handle_signup():
     conn.execute('PRAGMA foreign_keys = ON;')
     if database.db_insert.user_insert(conn, username, password):
         conn.commit()
-        return('Success: Signed user up')
+        return redirect(url_for('login', popup='Signed up successfully'))
     else:
-        return('Failure: Did not sign user up')
+        return redirect(url_for('signup', popup='Failure'))
+
+@app.route("/logout")
+@login_required
+def logout():
+    redirect_page = request.args.get('redirect')
+    logout_user()
+    return redirect(f'/{redirect_page}')
 
 
 # Confirm to client that connection was successful

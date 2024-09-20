@@ -106,6 +106,7 @@ input, select {
 .darkmode-button {
     margin: 0px;
     margin-left: auto;
+    float: right;
     font-size: 12px;
     font-weight: bold;
     min-width: fit-content;
@@ -165,4 +166,27 @@ input, select {
 .dark-mode .popup {
     color: black;
     background-color: lightgrey;
+}
+
+/* Popups */
+
+.popup-shadow {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #0000006d
+}
+
+.popup {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    border-radius: 10px;
+
+    margin: auto;
+    padding: 50px;
+    background-color: white;
 }

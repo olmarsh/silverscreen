@@ -138,27 +138,6 @@
     text-decoration: none;
 }
 
-.popup-shadow {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #0000006d
-}
-
-.popup {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 300px;
-    border-radius: 10px;
-
-    margin: auto;
-    padding: 50px;
-    background-color: white;
-}
-
 .management-button {
     background-color: #9b9b9b;
     box-shadow: 2px 2px 10px black;
