@@ -380,7 +380,7 @@ def update_table(results_per_page, read_page, read_order, read_search='',
         <th>Runtime (min)</th>
         <th class="movies-table-genre">Genre</th>
         <th>Age Rating</th>
-        <th></th>
+        <th></th><th></th><th></th>
     </tr>
     '''
     # Format each row and add it to the table content
@@ -405,7 +405,10 @@ def format_table_row(row):
     <td>{row[3]}</td>
     <td>{row[6]} {row[4]}</td>
     <td>{row[5]}</td>
-    <td><a href='/delete?id={row[0]}' class="delete-movie-button">❌</a></tr>'''
+    <td class="favourite-movie-button" style="--visibility: hidden;"></td>
+    <td><div class="ratings-display" style="--rating: 4.3"></div></td>
+    <td><a href='/delete?id={row[0]}' class="delete-movie-button">❌</a></td>
+    </tr>'''
 
 def format_options(table, selected=None):
     '''Format genre or age rating options for a dropdown'''

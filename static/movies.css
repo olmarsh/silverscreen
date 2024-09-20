@@ -108,7 +108,8 @@
 .movies-table-headers {
     background-image: linear-gradient(to right, #ae919d, #9a877a,#a47ea4, #717b93);
     position: sticky;
-    top:100px;
+    top: 100px;
+    z-index: 1000;
 }
 
 /* Table cells */
@@ -136,6 +137,55 @@
     user-select: none;
     font-style: normal;
     text-decoration: none;
+}
+
+.favourite-movie-button {
+    user-select: none;
+    position: relative;
+
+    font-size: 20px;
+    color: grey;
+}
+
+.favourite-movie-button::before {
+    content: "❤"
+}
+
+.ratings-display::after {
+    content: "❤";
+    position: absolute;
+
+    visibility: var(--visibility);
+
+    top: 0;
+    left: 0;
+    overflow: hidden;
+
+    color: red;
+}
+
+.ratings-display {
+    user-select: none;
+    position: relative;
+
+    font-size: 20px;
+    color: grey;
+}
+
+.ratings-display::before {
+    content: "★★★★★"
+}
+
+.ratings-display::after {
+    content: "★★★★★";
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    width: calc(var(--rating) * 20%);
+    overflow: hidden;
+
+    color: gold;
 }
 
 .management-button {
