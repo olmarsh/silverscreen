@@ -74,7 +74,7 @@ def format_general(results):
     return True
 
 
-def view_movies(conn, limit=0, offset=0, order='ID ASC'):
+def view_movies(conn, limit=0, offset=0, order='ID ASC', user=0):
     '''Return the entire movies table.'''
 
     # Add extra parameters to query.
@@ -93,14 +93,18 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC'):
         FROM Ratings 
         WHERE Ratings.MovieID = Movies.ID
     ),
-    (SELECT Count(Ratings.Rating)
+    (SELECT COUNT(Ratings.Rating)
         FROM Ratings 
         WHERE Ratings.MovieID = Movies.ID
     ),
-    (SELECT Count(Favourites.MovieID)
-        FROM Favourites 
+    (SELECT COUNT(Favourites.MovieID)
+        FROM Favourites
         WHERE Favourites.MovieID = Movies.ID
-    ) FROM Movies
+    ) AS TotalFavourites,
+    (SELECT COUNT(Favourites.MovieID)
+        FROM Favourites 
+        WHERE Favourites.MovieID = Movies.ID AND Favourites.UserID = {user}
+    ) AS IsFavourite FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
     ORDER BY {order}
@@ -196,7 +200,7 @@ def search_favourites_ratings(conn, table, user_id=None, movie_id=None, limit=0,
 
 def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
                   match_before = True, match_after = True,
-                  get_favourites = False, user = None):
+                  user = 0):
     '''Search for a movie in the movies table by specified column.'''
 
     # Add extra parameters to query.
@@ -223,14 +227,18 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
         FROM Ratings 
         WHERE Ratings.MovieID = Movies.ID
     ),
-    (SELECT Count(Ratings.Rating)
+    (SELECT COUNT(Ratings.Rating)
         FROM Ratings 
         WHERE Ratings.MovieID = Movies.ID
     ),
-    (SELECT Count(Favourites.MovieID)
+    (SELECT COUNT(Favourites.MovieID)
         FROM Favourites 
         WHERE Favourites.MovieID = Movies.ID
-    ) FROM Movies
+    ) AS TotalFavourites,
+    (SELECT COUNT(Favourites.MovieID) 
+        FROM Favourites 
+        WHERE Favourites.MovieID = Movies.ID AND Favourites.UserID = {user}
+    ) AS IsFavourite FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings ON Movies.AgeRatingID = AgeRatings.AgeRatingID
     WHERE {column} LIKE {match_before_string} '{query}' {match_after_string}

@@ -141,6 +141,7 @@
 
 .favourite-movie-button {
     user-select: none;
+    cursor: pointer;
     position: relative;
     white-space: nowrap;
 
@@ -152,7 +153,7 @@
     font-size: 20px;
 }
 
-.ratings-display::after {
+.favourite-movie-button::after {
     content: "❤";
     position: absolute;
 

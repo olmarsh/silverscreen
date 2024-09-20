@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 from flask_socketio import SocketIO, emit
-from flask_login import LoginManager, login_user, login_required, logout_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import sqlite3
 
 import database
@@ -83,7 +83,8 @@ def movie():
         try:
             movie = database.db_view.search_movies(conn, 'ID', id, limit=1,
                                                    match_before=False,
-                                                   match_after=False)[0]
+                                                   match_after=False,
+                                                   user=current_user.user_id)[0]
             return render_template('movie.html',
                                 title=movie[1],
                                 releaseyear=movie[2],
@@ -357,7 +358,8 @@ def update_table(results_per_page, read_page, read_order, read_search='',
 
         movies = database.db_view.view_movies(conn, limit=limit,
                                               offset=(page-1)*limit,
-                                              order=order)
+                                              order=order,
+                                              user=current_user.user_id)
     else:
         results_count = database.db_view.count_movies(conn, search_type,
                                                       search, match_before=\
@@ -370,7 +372,8 @@ def update_table(results_per_page, read_page, read_order, read_search='',
                                                 limit=limit,
                                                 offset=(page-1)*limit,
                                                 order=order,
-                                                match_before=match_before)
+                                                match_before=match_before,
+                                                user = current_user.user_id)
 
     # Create table headers
     content = '''
@@ -399,13 +402,15 @@ def update_table(results_per_page, read_page, read_order, read_search='',
 
 def format_table_row(row):
     '''Format a row of the movies table to be displayed.'''
-
+    print(row)
     return f'''<tr><td><a href='/movie?id={row[0]}'>{row[1]}</a></td>
     <td>{row[2]}</td>
     <td>{row[3]}</td>
     <td>{row[6]} {row[4]}</td>
     <td>{row[5]}</td>
-    <td class="favourite-movie-button" style="--visibility: hidden;"> ({row[11]})</td>
+    <td><div class="favourite-movie-button" style="--visibility:
+        {'visible' if row[12] == 1 else 'hidden'};"> ({row[11]})
+    </div></td>
     <td><div class="ratings-row"><div class="ratings-display" style="--rating:
         {row[9] if row[9] is not None else 0}"></div><span style="align-self: flex-end">
         ({row[10]})</span>
