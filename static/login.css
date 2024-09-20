@@ -2,3 +2,9 @@ input {
     padding: 4px;
     margin: 2px;
 }
+
+.password-requirements {
+    padding-left: 10px;
+    font-size: 12px;
+    font-style: italic;
+}

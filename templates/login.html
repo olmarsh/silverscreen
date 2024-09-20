@@ -13,8 +13,8 @@
 
 <br>
 <form autocomplete="off" action="{{ url_for('handle_login') }}" method="post">
-  Username: <input placeholder="Username" name="username"><br>
-  Password: <input type="password" placeholder="Password" name="password"><br><br>
+  Username: <input placeholder="Username" name="username" required><br>
+  Password: <input type="password" placeholder="Password" name="password" required><br><br>
   <input type="submit" value="Log in"><br><br>
   <p>No account? <a href="/signup">Sign up</a> instead!</p>
 </form>

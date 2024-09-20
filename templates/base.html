@@ -41,8 +41,13 @@
       <a class="nav-button" href="/login">Log in</a>
     {% endif %}
     <div class="right-header-section">
-      <span class="user-indicator">Signed in as:<br>{{ current_user.username }} ID {{current_user.user_id}}</span>
       <button class="darkmode-button nav-button" onclick="toggle()">Toggle dark mode</button>
+      <br><br><br>
+      {% if current_user.is_authenticated %}
+      <span class="user-indicator">Signed in as: {{ current_user.username }}</span>
+      {% else %}
+      <span class="user-indicator">Not signed in</span>
+      {% endif %}
     </div>
   </div>
   <section class="content">

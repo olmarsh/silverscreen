@@ -13,8 +13,17 @@
 
 <br>
 <form autocomplete="off" action="{{ url_for('handle_signup') }}" method="post">
-  Username: <input placeholder="Username" name="username"><br>
-  Password: <input type="password" placeholder="Password" name="password"><br><br>
+  Username: <input placeholder="Username" name="username" required minlength="3" maxlength="25"><br>
+  Password: <input type="password" placeholder="Password" name="password" required minlength="12" maxlength="50" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)" title="Must contain: number, lowercase character, uppercase character, symbol.">
+  <div class="password-requirements">
+    <ul><b>Requirements:</b>
+      <li>12 characters</li>
+      <li>Lowercase character</li>
+      <li>Uppercase character</li>
+      <li>Special character</li>
+    </ul>
+  </div>
+  <br>
   <input type="submit" value="Sign up"><br><br>
   <p>Got an account? <a href="/login">Log in</a> instead!</p>
 </form>

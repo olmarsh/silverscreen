@@ -274,11 +274,14 @@ def handle_signup():
     # Authenticate against hash in database
     conn = sqlite3.connect('silverscreen.db')
     conn.execute('PRAGMA foreign_keys = ON;')
-    if database.db_insert.user_insert(conn, username, password):
-        conn.commit()
-        return redirect(url_for('login', popup='Signed up successfully'))
-    else:
-        return redirect(url_for('signup', popup='Failure'))
+    try:
+        if database.db_insert.user_insert(conn, username, password):
+            conn.commit()
+            return redirect(url_for('login', popup='Signed up successfully'))
+        else:
+            return redirect(url_for('signup', popup='Failure'))
+    except Exception as error:
+        return redirect(url_for('signup', popup=f'Failure: {error}'))
 
 @app.route("/logout")
 @login_required
