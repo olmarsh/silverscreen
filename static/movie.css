@@ -93,6 +93,68 @@ input[type=submit] {
     box-shadow: 2px 2px 10px black;
 }
 
+.favourite-movie-button {
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+    white-space: nowrap;
+
+    color: grey;
+}
+
+.favourite-movie-button::before {
+    content: "❤";
+    font-size: 20px;
+}
+
+.favourite-movie-button::after {
+    content: "❤";
+    position: absolute;
+
+    visibility: var(--visibility);
+
+    top: 0;
+    left: 0;
+    overflow: hidden;
+
+    color: red;
+    font-size: 20px;
+}
+
+.ratings-display {
+    position: relative;
+}
+
+.user-ratings {
+    cursor: pointer;
+}
+
+.ratings-row {
+    user-select: none;
+    display: flex;
+    white-space: nowrap;
+    width: max-content;
+    color: grey;
+}
+
+.ratings-display::before {
+    content: "★★★★★";
+    font-size: 20px;
+}
+
+.ratings-display::after {
+    content: "★★★★★";
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    width: calc(var(--rating) * 20%);
+    overflow: hidden;
+
+    font-size: 20px;
+    color: gold;
+}
+
 /* Dark mode */
 
 .dark-mode .movie-title {

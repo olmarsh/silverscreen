@@ -104,6 +104,10 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC', user=0):
     (SELECT COUNT(Favourites.MovieID)
         FROM Favourites 
         WHERE Favourites.MovieID = Movies.ID AND Favourites.UserID = {user}
+    ) AS IsFavourite,
+    (SELECT Ratings.Rating
+        FROM Ratings 
+        WHERE Ratings.MovieID = Movies.ID AND Ratings.UserID = {user}
     ) AS IsFavourite FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
@@ -238,6 +242,10 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
     (SELECT COUNT(Favourites.MovieID) 
         FROM Favourites 
         WHERE Favourites.MovieID = Movies.ID AND Favourites.UserID = {user}
+    ) AS IsFavourite,
+    (SELECT Ratings.Rating
+        FROM Ratings 
+        WHERE Ratings.MovieID = Movies.ID AND Ratings.UserID = {user}
     ) AS IsFavourite FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings ON Movies.AgeRatingID = AgeRatings.AgeRatingID

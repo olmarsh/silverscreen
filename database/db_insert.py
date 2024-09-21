@@ -75,7 +75,7 @@ def rating_insert(conn, user_id, movie_id, rating):
     '''Insert a rating into the ratings table via user ID and movie ID.'''
 
     # If the rating is valid, write it to the table
-    if float(rating) in (0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5):
+    if float(rating) in (0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5):
         conn.execute(f'''INSERT INTO Ratings (MovieID, UserID, Rating)
         VALUES (
             {movie_id}, {user_id}, {rating}

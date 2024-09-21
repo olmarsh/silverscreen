@@ -94,6 +94,11 @@ def movie():
                                 agerating=movie[5],
                                 agerating_description=movie[8],
                                 id=movie[0],
+                                rating=(movie[9] if movie[9] is not None else 0),
+                                user_rating=(movie[13] if movie[13] is not None else 0),
+                                rating_count=movie[10],
+                                favourite_visible=('visible' if movie[12] == 1 else 'hidden'),
+                                favourite_count=movie[11],
                                 popup_visible=popup_display, popup_message=popup)
         except:  # If the id was invalid, return the error template
             return render_template('error.html', error_statement='404 Not Found'), 404
@@ -113,6 +118,19 @@ def movie():
                     id=movie[0],
                     genre_options=format_options('Genres', movie[4]),
                     agerating_options=format_options('AgeRatings', movie[5]))
+
+@app.route('/send_favourite/', methods=['POST'])
+def handle_favourite():
+    movie_id = request.form['movie_id']
+    print('Favourite', movie_id)
+    return '0'
+
+@app.route('/send_rating/', methods=['POST'])
+def handle_rating():
+    movie_id = request.form['movie_id']
+    rating = request.form['rating']
+    print('Rating', movie_id, rating)
+    return '0'
 
 @app.route('/add')
 def add():
@@ -160,7 +178,6 @@ def handle_delete():
 # Handle when a request to edit or add movie to the database is sent
 @app.route('/handle_edit', methods=['POST'])
 def handle_edit():
-    print(request.form)
     # Get form values
     title = request.form['title']
     release_year = request.form['releaseyear']
@@ -402,7 +419,6 @@ def update_table(results_per_page, read_page, read_order, read_search='',
 
 def format_table_row(row):
     '''Format a row of the movies table to be displayed.'''
-    print(row)
     return f'''<tr><td><a href='/movie?id={row[0]}'>{row[1]}</a></td>
     <td>{row[2]}</td>
     <td>{row[3]}</td>

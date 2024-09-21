@@ -81,11 +81,11 @@ def update_user(conn, edit_id, fields):
 
 def update_rating(conn, user_id, movie_id, value):
     '''Update a rating in the database.'''
-
-    conn.execute(f'''UPDATE Ratings SET
-    rating = '{value}'
-    WHERE MovieID = {movie_id} AND UserID = {user_id};
-    ''')
+    if float(rating) in (0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5):
+        conn.execute(f'''UPDATE Ratings SET
+        rating = '{value}'
+        WHERE MovieID = {movie_id} AND UserID = {user_id};
+        ''')
 
     return True
 
