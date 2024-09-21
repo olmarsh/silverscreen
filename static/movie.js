@@ -1,9 +1,13 @@
 function send_favourite(id) {
     $.post( "/send_favourite", {
         movie_id: id
-    }).done(function() {
-        // Reload the page after the request is successful
-        location.reload();
+    }).done(function(success) {
+        // Reload the table after the request is successful
+        if (success == '0') {
+            location.reload();
+        } else {
+            location.href = '/login';
+        }
     });
 }
 
@@ -11,9 +15,13 @@ function remove_rating(id) {
     $.post( "/send_rating", {
         movie_id: id,
         rating: 0
-    }).done(function() {
-        // Reload the page after the request is successful
-        location.reload();
+    }).done(function(success) {
+        // Reload the table after the request is successful
+        if (success == '0') {
+            location.reload();
+        } else {
+            location.href = '/login';
+        }
     });
 }
 
@@ -56,9 +64,13 @@ $(document).ready(function() {  // Only runs when the document is loaded
         $.post( "/send_rating", {
             movie_id: document.querySelector('meta[name="statistics"]').getAttribute('id'),
             rating: Math.round(calculateRating(event, rating_display)*2)/2
-        }).done(function() {
-            // Reload the page after the request is successful
-            location.reload();
+        }).done(function(success) {
+            // Reload the table after the request is successful
+            if (success == '0') {
+                location.reload();
+            } else {
+                location.href = '/login';
+            }
         });
     })
 });

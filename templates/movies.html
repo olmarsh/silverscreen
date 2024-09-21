@@ -40,9 +40,12 @@
   <div class="order-dropdown">
     <p><i>Order by:</i></p>
     <select id="order-dropdown">
+      <option value="rating-desc">Highest Rated</option>
+      <option value="favourites-desc" selected>Most Favourited</option>
+      <option value="user-favourites">My Favourites First</option>
       <option value="title-asc">Title (A-Z)</option>
       <option value="title-desc">Title (Z-A)</option>
-      <option value="releaseyear-desc" selected>Release Year (newest first)</option>
+      <option value="releaseyear-desc">Release Year (newest first)</option>
       <option value="releaseyear-asc">Release Year (oldest first)</option>
       <option value="runtime-asc">Runtime (shortest first)</option>
       <option value="runtime-desc">Runtime (longest first)</option>

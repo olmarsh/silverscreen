@@ -85,6 +85,9 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC', user=0):
             extra += f' OFFSET {offset}'
         extra += ';'
 
+    if user == None:
+        user = 0
+
     # Select all from table and return them.
     cursor = conn.cursor()
     cursor.execute(f'''SELECT ID, Title, ReleaseYear, Runtime, Genre,
@@ -92,11 +95,11 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC', user=0):
     (SELECT AVG(Ratings.Rating)
         FROM Ratings 
         WHERE Ratings.MovieID = Movies.ID
-    ),
+    ) AS Rating,
     (SELECT COUNT(Ratings.Rating)
         FROM Ratings 
         WHERE Ratings.MovieID = Movies.ID
-    ),
+    ) AS RatingsCount,
     (SELECT COUNT(Favourites.MovieID)
         FROM Favourites
         WHERE Favourites.MovieID = Movies.ID
@@ -108,10 +111,10 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC', user=0):
     (SELECT Ratings.Rating
         FROM Ratings 
         WHERE Ratings.MovieID = Movies.ID AND Ratings.UserID = {user}
-    ) AS IsFavourite FROM Movies
+    ) AS UserRating FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings on Movies.AgeRatingID = AgeRatings.AgeRatingID
-    ORDER BY {order}
+    ORDER BY {order}, Rating DESC
     {extra}''')
     return cursor.fetchall()
 
@@ -217,6 +220,9 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
             extra += f' OFFSET {offset}'
         extra += ';'
 
+    if user == None:
+        user = 0
+
     # Whether to return queries with matches before or after the string
     match_before_string = ''
     if match_before:
@@ -232,11 +238,11 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
     (SELECT AVG(Ratings.Rating)
         FROM Ratings 
         WHERE Ratings.MovieID = Movies.ID
-    ),
+    ) AS Rating,
     (SELECT COUNT(Ratings.Rating)
         FROM Ratings 
         WHERE Ratings.MovieID = Movies.ID
-    ),
+    ) AS RatingCount,
     (SELECT COUNT(Favourites.MovieID)
         FROM Favourites 
         WHERE Favourites.MovieID = Movies.ID
@@ -248,11 +254,11 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
     (SELECT Ratings.Rating
         FROM Ratings 
         WHERE Ratings.MovieID = Movies.ID AND Ratings.UserID = {user}
-    ) AS IsFavourite FROM Movies
+    ) AS UserRating FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
     INNER JOIN AgeRatings ON Movies.AgeRatingID = AgeRatings.AgeRatingID
     WHERE {column} LIKE {match_before_string} '{query}' {match_after_string}
-    ORDER BY {order}
+    ORDER BY {order}, Rating DESC
     {extra}''')
     return cursor.fetchall()
 

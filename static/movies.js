@@ -11,9 +11,13 @@ const socket = io();
 function send_favourite(id) {
     $.post( "/send_favourite", {
         movie_id: id
-    }).done(function() {
+    }).done(function(success) {
         // Reload the table after the request is successful
-        table_request();
+        if (success == '0') {
+            table_request();
+        } else {
+            location.href = '/login';
+        }
     });
 }
 

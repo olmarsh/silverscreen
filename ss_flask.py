@@ -88,7 +88,7 @@ def movie():
             movie = database.db_view.search_movies(conn, 'ID', id, limit=1,
                                                    match_before=False,
                                                    match_after=False,
-                                                   user=current_user.user_id)[0]
+                                                   user=current_user.get_id())[0]
             return render_template('movie.html',
                                 title=movie[1],
                                 releaseyear=movie[2],
@@ -127,16 +127,21 @@ def movie():
 def handle_favourite():
     movie_id = request.form['movie_id']
     conn = sqlite3.connect('silverscreen.db')
+
+    # If the user isn't logged in, send them to the login page
+    if current_user.get_id() == None:
+        return '1'
+    
     conn.execute('PRAGMA foreign_keys = ON;')
 
     # See if a favourite already exists
     existing = database.db_view.search_favourites_ratings(conn, 'Favourites',
-                                               user_id=current_user.user_id,
+                                               user_id=current_user.get_id(),
                                                movie_id=movie_id)
     
     # If there was no favourite, insert one
     if existing == []:
-        database.db_insert.favourite_insert(conn, current_user.user_id, movie_id)
+        database.db_insert.favourite_insert(conn, current_user.get_id(), movie_id)
         conn.commit()
     # If there was a favourite, remove it.
     else:
@@ -152,19 +157,23 @@ def handle_rating():
     movie_id = request.form['movie_id']
     rating = request.form['rating']
 
+    # If the user isn't logged in, send them to the login page
+    if current_user.get_id() == None:
+        return '1'
+
     conn = sqlite3.connect('silverscreen.db')
     conn.execute('PRAGMA foreign_keys = ON;')
 
     # See if a rating already exists
     existing = database.db_view.search_favourites_ratings(conn, 'Ratings',
-                                               user_id=current_user.user_id,
+                                               user_id=current_user.get_id(),
                                                movie_id=movie_id)
     
     print(movie_id)
 
     # If there was no rating, insert one
     if existing == []:
-        database.db_insert.rating_insert(conn, current_user.user_id,
+        database.db_insert.rating_insert(conn, current_user.get_id(),
                                          movie_id=movie_id,
                                          rating=rating)
         conn.commit()
@@ -173,7 +182,7 @@ def handle_rating():
         if rating == '0':
             database.db_delete.delete(conn, 'Ratings', 'RatingID', existing[0][0])
         else:
-            database.db_update.update_rating(conn, user_id=current_user.user_id,
+            database.db_update.update_rating(conn, user_id=current_user.get_id(),
                                             movie_id=movie_id, 
                                             value=rating)
         conn.commit()
@@ -410,6 +419,9 @@ def update_table(results_per_page, read_page, read_order, read_search='',
     elif read_order == 'runtime-desc': order = 'Runtime DESC'
     elif read_order == 'genre-asc': order = 'Genre ASC'
     elif read_order == 'genre-desc': order = 'Genre DESC'
+    elif read_order == 'rating-desc': order = 'Rating DESC'
+    elif read_order == 'favourites-desc': order = 'TotalFavourites DESC'
+    elif read_order == 'user-favourites': order = 'IsFavourite DESC'
 
     # Connect to database and request rows
     conn = sqlite3.connect('silverscreen.db')
@@ -425,7 +437,7 @@ def update_table(results_per_page, read_page, read_order, read_search='',
         movies = database.db_view.view_movies(conn, limit=limit,
                                               offset=(page-1)*limit,
                                               order=order,
-                                              user=current_user.user_id)
+                                              user=current_user.get_id())
     else:
         results_count = database.db_view.count_movies(conn, search_type,
                                                       search, match_before=\
@@ -439,7 +451,7 @@ def update_table(results_per_page, read_page, read_order, read_search='',
                                                 offset=(page-1)*limit,
                                                 order=order,
                                                 match_before=match_before,
-                                                user = current_user.user_id)
+                                                user = current_user.get_id())
 
     # Create table headers
     content = '''
