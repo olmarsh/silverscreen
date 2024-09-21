@@ -44,7 +44,7 @@
       <button class="darkmode-button nav-button" onclick="toggle()">Toggle dark mode</button>
       <br><br><br>
       {% if current_user.is_authenticated %}
-      <span class="user-indicator">Signed in as: {{ current_user.username }}</span>
+      <span class="user-indicator">Signed in as: {{ current_user.username }} {% if current_user.admin == 1 %} 🛡️ {% endif %}</span>
       {% else %}
       <span class="user-indicator">Not signed in</span>
       {% endif %}

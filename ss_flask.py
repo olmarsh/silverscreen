@@ -11,7 +11,7 @@ import database.db_view
 
 # Flask setup
 app = Flask(__name__)
-app.secret_key = 'development   '
+app.secret_key = 'development'
 socketio = SocketIO(app,cors_allowed_origins='*')
 
 login_manager = LoginManager(app)
@@ -108,6 +108,10 @@ def movie():
             return render_template('error.html', error_statement='404 Not Found'), 404
         
     else:  # If the user wants to edit, return the edit template
+        # Do not process request if user is not admin
+        if current_user.get_id() == None or current_user.admin == 0:
+            return render_template('error.html', error_statement='403 Forbidden (Not admin)'), 403
+    
         # Open a connection to the database and view movie
         conn = sqlite3.connect('silverscreen.db')
         conn.execute('PRAGMA foreign_keys = ON;')
@@ -192,12 +196,20 @@ def handle_rating():
 
 @app.route('/add')
 def add():
+    # Do not process request if user is not admin
+    if current_user.get_id() == None or current_user.admin == 0:
+        return render_template('error.html', error_statement='403 Forbidden (Not admin)'), 403
+    
     return render_template('add.html',
                     genre_options=format_options('Genres'),
                     agerating_options=format_options('AgeRatings'))
 
 @app.route('/delete')
 def delete():
+    # Do not process request if user is not admin
+    if current_user.get_id() == None or current_user.admin == 0:
+        return render_template('error.html', error_statement='403 Forbidden (Not admin)'), 403
+    
     id = request.args.get('id')
     conn = sqlite3.connect('silverscreen.db')
     conn.execute('PRAGMA foreign_keys = ON;')
@@ -219,6 +231,10 @@ def delete():
 # Handle a request to delete a movie
 @app.route('/handle_delete', methods=['POST'])
 def handle_delete():
+    # Do not process request if user is not admin
+    if current_user.get_id() == None or current_user.admin == 0:
+        return render_template('error.html', error_statement='403 Forbidden (Not admin)'), 403
+    
     id = request.form['id']
     conn = sqlite3.connect('silverscreen.db')
     conn.execute('PRAGMA foreign_keys = ON;')
@@ -236,6 +252,10 @@ def handle_delete():
 # Handle when a request to edit or add movie to the database is sent
 @app.route('/handle_edit', methods=['POST'])
 def handle_edit():
+    # Do not process request if user is not admin
+    if current_user.get_id() == None or current_user.admin == 0:
+        return render_template('error.html', error_statement='403 Forbidden (Not admin)'), 403
+    
     # Get form values
     title = request.form['title']
     release_year = request.form['releaseyear']
@@ -454,14 +474,18 @@ def update_table(results_per_page, read_page, read_order, read_search='',
                                                 user = current_user.get_id())
 
     # Create table headers
-    content = '''
+    content = f'''
     <tr class="movies-table-headers">
         <th class="movies-table-title">Title</th>
         <th>Release Year</th>
         <th>Runtime (min)</th>
         <th class="movies-table-genre">Genre</th>
         <th>Age Rating</th>
-        <th></th><th></th><th></th>
+        <th></th><th></th>{'<th></th>'
+                           if current_user.is_authenticated
+                           and current_user.admin == 1
+                           else None
+                           }
     </tr>
     '''
     # Format each row and add it to the table content
@@ -493,8 +517,11 @@ def format_table_row(row):
         {row[9] if row[9] is not None else 0}"></div><span style="align-self: flex-end">
         ({row[10]})</span>
     </div></td>
-    <td><a href='/delete?id={row[0]}' class="delete-movie-button">❌</a></td>
-    </tr>'''
+    {'<td><a href=\'/delete?id={row[0]}\' class="delete-movie-button">❌</a></td>'
+    if current_user.is_authenticated
+    and current_user.admin == 1
+    else None
+    }</tr>'''
 
 def format_options(table, selected=None):
     '''Format genre or age rating options for a dropdown'''

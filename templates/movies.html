@@ -83,12 +83,15 @@
     </b></div>
 </div>
 <br>
+
+{% if current_user.is_authenticated and current_user.admin == 1 %}
 <div id="management-tools">
   <h3>Management tools: All movies</h3>
   <p class="management-button"><a href="add">Add a new movie</a></p>
   <p>Delete: Click the ❌ cross to the right of a movie.</p><br>
   <i>Visit a movie page for more options.</i>
 </div>
+{% endif %}
 
 <!-- Popup -->
 <div id="popup-shadow" class="popup-shadow" hidden{{popup_visible}}>

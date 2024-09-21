@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<meta name="statistics" user_rating="{{user_rating}}" average_rating="{{rating}}" id="{{id}}">
 <link rel="stylesheet" href="{{ url_for('static', filename= 'movie.css') }}">
+<meta name="statistics" user_rating="{{user_rating}}" average_rating="{{rating}}" id="{{id}}">
 <!-- Include jquery and socketIO libraries -->
 <script src="{{url_for('static', filename='jquery-3.7.1.min.js')}}"></script>
 <!-- Include script for this page-->
@@ -38,6 +38,7 @@
   <p class="movie-element"><b>Age Rating:</b> {{agerating}} <i>({{agerating_description}})</i></p>
   <p style="text-align: right;"><i>Movie ID: <span id="movie-id">{{id}}</span></i></p>
 </div>
+{% if current_user.is_authenticated and current_user.admin == 1 %}
 <div id="management-tools">
   <h3>Management tools: All movies</h3>
   <p class="management-button"><a href="add">Add a new movie</a></p>
@@ -51,7 +52,7 @@
 </div>
 <br>
 <p>Finished? <a href="/movies">Return to table view</a></p>
-
+{% endif %}
 
 <!-- Popup -->
 <div id="popup-shadow" class="popup-shadow" hidden{{popup_visible}}>
