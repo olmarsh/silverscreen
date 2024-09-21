@@ -84,3 +84,11 @@ body {
 
     margin: 50px;
 }
+
+.bottom-float {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
+    padding:8px;
+}

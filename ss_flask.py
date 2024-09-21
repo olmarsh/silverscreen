@@ -484,7 +484,7 @@ def update_table(results_per_page, read_page, read_order, read_search='',
         <th></th><th></th>{'<th></th>'
                            if current_user.is_authenticated
                            and current_user.admin == 1
-                           else None
+                           else ''
                            }
     </tr>
     '''
@@ -520,7 +520,7 @@ def format_table_row(row):
     {'<td><a href=\'/delete?id={row[0]}\' class="delete-movie-button">❌</a></td>'
     if current_user.is_authenticated
     and current_user.admin == 1
-    else None
+    else ''
     }</tr>'''
 
 def format_options(table, selected=None):
