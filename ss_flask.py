@@ -12,6 +12,7 @@ import database.db_view
 # Flask setup
 app = Flask(__name__)
 app.secret_key = 'development'
+host = '127.0.0.1'
 socketio = SocketIO(app,cors_allowed_origins='*')
 
 login_manager = LoginManager(app)
@@ -552,4 +553,4 @@ def escape_query(inp):
     return ret
 
 if __name__ == '__main__':
-   app.run()
+   app.run(host=host)

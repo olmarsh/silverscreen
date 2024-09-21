@@ -1,6 +1,7 @@
 # Files
 *.db
 *.db-journal
+!silverscreen_example.db
 
 # Directories
 __pycache__/
