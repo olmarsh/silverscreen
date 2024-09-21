@@ -7,6 +7,16 @@ function send_favourite(id) {
     });
 }
 
+function remove_rating(id) {
+    $.post( "/send_rating", {
+        movie_id: id,
+        rating: 0
+    }).done(function() {
+        // Reload the page after the request is successful
+        location.reload();
+    });
+}
+
 // Calculate what the rating should be based on mouse position
 
 function calculateRating(event, element) {

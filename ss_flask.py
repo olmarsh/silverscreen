@@ -4,6 +4,10 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 import sqlite3
 
 import database
+import database.db_delete
+import database.db_insert
+import database.db_update
+import database.db_view
 
 # Flask setup
 app = Flask(__name__)
@@ -122,13 +126,58 @@ def movie():
 @app.route('/send_favourite/', methods=['POST'])
 def handle_favourite():
     movie_id = request.form['movie_id']
-    print('Favourite', movie_id)
+    conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
+
+    # See if a favourite already exists
+    existing = database.db_view.search_favourites_ratings(conn, 'Favourites',
+                                               user_id=current_user.user_id,
+                                               movie_id=movie_id)
+    
+    # If there was no favourite, insert one
+    if existing == []:
+        database.db_insert.favourite_insert(conn, current_user.user_id, movie_id)
+        conn.commit()
+    # If there was a favourite, remove it.
+    else:
+        database.db_delete.delete(conn, 'Favourites',
+                                  match_column='FavouriteID',
+                                  delete_id=existing[0][0])
+        conn.commit()
+
     return '0'
 
 @app.route('/send_rating/', methods=['POST'])
 def handle_rating():
     movie_id = request.form['movie_id']
     rating = request.form['rating']
+
+    conn = sqlite3.connect('silverscreen.db')
+    conn.execute('PRAGMA foreign_keys = ON;')
+
+    # See if a rating already exists
+    existing = database.db_view.search_favourites_ratings(conn, 'Ratings',
+                                               user_id=current_user.user_id,
+                                               movie_id=movie_id)
+    
+    print(movie_id)
+
+    # If there was no rating, insert one
+    if existing == []:
+        database.db_insert.rating_insert(conn, current_user.user_id,
+                                         movie_id=movie_id,
+                                         rating=rating)
+        conn.commit()
+    # If there was a rating, edit it, or delete.
+    else:
+        if rating == '0':
+            database.db_delete.delete(conn, 'Ratings', 'RatingID', existing[0][0])
+        else:
+            database.db_update.update_rating(conn, user_id=current_user.user_id,
+                                            movie_id=movie_id, 
+                                            value=rating)
+        conn.commit()
+
     print('Rating', movie_id, rating)
     return '0'
 
@@ -424,7 +473,8 @@ def format_table_row(row):
     <td>{row[3]}</td>
     <td>{row[6]} {row[4]}</td>
     <td>{row[5]}</td>
-    <td><div class="favourite-movie-button" style="--visibility:
+    <td><div class="favourite-movie-button" onclick="send_favourite('{row[0]}')"
+    style="--visibility:
         {'visible' if row[12] == 1 else 'hidden'};"> ({row[11]})
     </div></td>
     <td><div class="ratings-row"><div class="ratings-display" style="--rating:

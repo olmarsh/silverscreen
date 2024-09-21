@@ -191,6 +191,8 @@ def search_favourites_ratings(conn, table, user_id=None, movie_id=None, limit=0,
         params += 'WHERE '
     if user_id:
         params += f'UserID = \'{user_id}\' '
+    if user_id and movie_id:
+        params += 'AND '
     if movie_id:
         params += f'MovieID = \'{movie_id}\' '
 

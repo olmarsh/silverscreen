@@ -129,6 +129,11 @@ input[type=submit] {
     cursor: pointer;
 }
 
+.delete-rating-button {
+    cursor: pointer;
+    user-select: none;
+}
+
 .ratings-row {
     user-select: none;
     display: flex;

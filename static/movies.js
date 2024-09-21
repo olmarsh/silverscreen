@@ -8,6 +8,15 @@ var search_type = 'Title';
 var last_query = 0;
 const socket = io();
 
+function send_favourite(id) {
+    $.post( "/send_favourite", {
+        movie_id: id
+    }).done(function() {
+        // Reload the table after the request is successful
+        table_request();
+    });
+}
+
 $(document).ready(function() {  // Only runs when the document is loaded
     socket.on("connected", function(text) {  // Logs that the connection was successful and requests table.
         console.log("Connected to server");

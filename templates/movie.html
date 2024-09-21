@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<meta name="statistics" user_rating="{{user_rating}}" average_rating="{{rating}} id="{{id}}">
+<meta name="statistics" user_rating="{{user_rating}}" average_rating="{{rating}}" id="{{id}}">
 <link rel="stylesheet" href="{{ url_for('static', filename= 'movie.css') }}">
 <!-- Include jquery and socketIO libraries -->
 <script src="{{url_for('static', filename='jquery-3.7.1.min.js')}}"></script>
 <!-- Include script for this page-->
-<script src="{{url_for('static', filename='favourite.js')}}"></script>
+<script src="{{url_for('static', filename='movie.js')}}"></script>
 {% endblock %}
 
 {% block header %}
@@ -23,6 +23,9 @@
     <div class="favourite-movie-button" onclick="send_favourite('{{id}}')" style="--visibility: {{favourite_visible}};" onclick=""> ({{favourite_count}})</div>
     <p style="padding: 0px 4px">Your rating:</p>
     <div class="ratings-row"><div class="user-ratings ratings-display" style="--rating: {{user_rating}}" id="rating"></div></div>
+    {% if user_rating > 0 %}
+    <p class="delete-rating-button" onclick="remove_rating('{{id}}')">❌</p>
+    {% endif %}
     <p style="padding: 0px 4px">Average rating:</p>
     <div class="ratings-row"><div class="ratings-display" style="--rating: {{rating}}" id="average-rating"></div>
       <span style="align-self: flex-end">({{rating_count}})</span>
