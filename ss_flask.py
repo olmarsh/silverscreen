@@ -330,8 +330,8 @@ def login():
 @app.route('/handle_login', methods=['POST'])
 def handle_login():
     # Get username and password from form
-    username = request.form['username']
-    password = request.form['password']
+    username = escape_query(request.form['username'])
+    password = escape_query(request.form['password'])
     
     # Authenticate against hash in database
     conn = sqlite3.connect('silverscreen.db')
@@ -364,8 +364,8 @@ def signup():
 @app.route('/handle_signup', methods=['POST'])
 def handle_signup():
     # Get username and password from form
-    username = request.form['username']
-    password = request.form['password']
+    username = escape_query(request.form['username'])
+    password = escape_query(request.form['password'])
     
     # Authenticate against hash in database
     conn = sqlite3.connect('silverscreen.db')

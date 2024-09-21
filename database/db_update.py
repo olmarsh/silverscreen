@@ -46,8 +46,19 @@ def update_user(conn, edit_id, fields):
     '''Update information about a user in the database.'''
 
     for field, value in fields.items():
+        # If the usrename is being updated, ensure it fits requirements
+        if field.lower() == 'username':
+            username = value
+            # Abort if the username is the wrong length
+            if len(username) < 3 or len(username) > 25:
+                raise Exception(f'Username length must be between 3 and 25 characters (Length: {len(username)})')
 
-        # If the password is being updated, make sure it fits requirements.
+            # Abort if the username does not fulfil character requirements
+            if not username.replace('_', '').isalnum():
+                raise Exception(f'Username may only contain alphanumberic characters and underscores')
+
+
+        # If the password is being updated, make sure it fits requirements, and hash it.
         if field.lower() == 'password':
             password = value
 

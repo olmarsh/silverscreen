@@ -102,12 +102,20 @@ def user_insert(conn, username, password):
     '''Hash the user's password and insert a the user into the database.'''
 
     # Abort if the password is the wrong length
-    if len(password) <= 12 or len(password) >= 50:
+    if len(password) < 12 or len(password) > 50:
         raise Exception(f'Password length must be between 12 and 50 characters (Length: {len(password)})')
 
     # Abort if the password does not fulfil character requirements
     if not validate_password(password):
         raise Exception('Password must contain characters of: uppercase, lowercase, number and special')
+
+    # Abort if the username is the wrong length
+    if len(username) < 3 or len(username) > 25:
+        raise Exception(f'Username length must be between 3 and 25 characters (Length: {len(username)})')
+
+    # Abort if the username does not fulfil character requirements
+    if not username.replace('_', '').isalnum():
+        raise Exception(f'Username may only contain alphanumberic characters and underscores')
 
     # Generate salt
     salt = bcrypt.gensalt()

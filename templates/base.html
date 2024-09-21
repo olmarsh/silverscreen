@@ -36,9 +36,9 @@
     <a class="nav-button" href="/">Homepage</a>
     <a class="nav-button" href="/movies">Movies</a>
     {% if current_user.is_authenticated %}
-      <a class="nav-button" href="/logout?redirect=movies">Log out</a>
+      <a class="nav-button" href="/logout?redirect=movies">Logout</a>
     {% else %}
-      <a class="nav-button" href="/login">Log in</a>
+      <a class="nav-button" href="/login">Login</a>
     {% endif %}
     <div class="right-header-section">
       <button class="darkmode-button nav-button" onclick="toggle()">Toggle dark mode</button>
