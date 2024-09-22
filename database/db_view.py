@@ -172,7 +172,7 @@ def search_users(conn, column, query, limit=0, offset=0, order='ID ASC',
 
     cursor = conn.cursor()
     cursor.execute(f'''SELECT ID, Username, Password, Admin FROM Users
-    WHERE {column} LIKE {match_before_string} '{query}' {match_after_string}
+    WHERE {column} LIKE {match_before_string} '{query}' {match_after_string} COLLATE NOCASE
     ORDER BY {order}
     {extra}''')
     return cursor.fetchall()

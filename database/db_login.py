@@ -9,7 +9,7 @@ def authenticate(conn, username, password):
     cursor = conn.cursor()
 
     # Get username and password
-    cursor.execute(f'''SELECT * FROM Users WHERE username = '{username}' ''')
+    cursor.execute(f'''SELECT * FROM Users WHERE username = '{username}' COLLATE NOCASE''')
     user_details = cursor.fetchone()
 
     username = user_details[1];

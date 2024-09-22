@@ -378,6 +378,9 @@ def handle_signup():
         else:
             return redirect(url_for('signup', popup='Failure'))
     except Exception as error:
+        if str(error) == 'UNIQUE constraint failed: Users.Username':
+            return redirect(url_for('signup',
+popup='A user with that name already exists. Please choose a different name'))
         return redirect(url_for('signup', popup=f'Failure: {error}'))
 
 @app.route("/logout")
