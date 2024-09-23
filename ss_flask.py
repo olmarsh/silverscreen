@@ -130,7 +130,7 @@ def movie():
 
 @app.route('/send_favourite/', methods=['POST'])
 def handle_favourite():
-    movie_id = request.form['movie_id']
+    movie_id = escape_query(request.form['movie_id'])
     conn = sqlite3.connect('silverscreen.db')
 
     # If the user isn't logged in, send them to the login page
@@ -159,8 +159,8 @@ def handle_favourite():
 
 @app.route('/send_rating/', methods=['POST'])
 def handle_rating():
-    movie_id = request.form['movie_id']
-    rating = request.form['rating']
+    movie_id = escape_query(request.form['movie_id'])
+    rating = escape_query(request.form['rating'])
 
     # If the user isn't logged in, send them to the login page
     if current_user.get_id() == None:
@@ -236,7 +236,7 @@ def handle_delete():
     if current_user.get_id() == None or current_user.admin == 0:
         return render_template('error.html', error_statement='403 Forbidden (Not admin)'), 403
     
-    id = request.form['id']
+    id = escape_query(request.form['id'])
     conn = sqlite3.connect('silverscreen.db')
     conn.execute('PRAGMA foreign_keys = ON;')
     try:
@@ -258,15 +258,15 @@ def handle_edit():
         return render_template('error.html', error_statement='403 Forbidden (Not admin)'), 403
     
     # Get form values
-    title = request.form['title']
-    release_year = request.form['releaseyear']
-    runtime = request.form['runtime']
-    genre = request.form['genre']
-    age_rating = request.form['agerating']
+    title = escape_query(request.form['title'])
+    release_year = escape_query(request.form['releaseyear'])
+    runtime = escape_query(request.form['runtime'])
+    genre = escape_query(request.form['genre'])
+    age_rating = escape_query(request.form['agerating'])
 
     # If the user wants to edit
     if request.form['action'] == 'edit':
-        movie_id = request.form['id']
+        movie_id = escape_query(request.form['id'])
         # Connect to the table and update the values according to the form
         try:
             conn = sqlite3.connect('silverscreen.db')
@@ -547,11 +547,10 @@ def format_options(table, selected=None):
 
 
 def escape_query(inp):
-    '''Escape all double and single quotes to prevent SQL injection'''
+    '''Escape all single quotes to prevent SQL injection'''
 
     ret = inp
     ret = ret.replace('\'', '\'\'')
-    ret = ret.replace('"', '""')
 
     return ret
 
