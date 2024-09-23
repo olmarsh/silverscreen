@@ -14,8 +14,8 @@
 <form autocomplete="off" action="{{ url_for('handle_delete') }}" method="post">
   <div class="movie-display delete">
     <p class="movie-title">{{title}}</p>
-    <p class="movie-element"><b>Release Year:</b> {{releaseyear}}</p>
-    <p class="movie-element"><b>Runtime:</b> {{runtime}}</p>
+    <p class="movie-element"><b>Release Year:</b> {{releaseyear if not None else 'Unknown'}}</p>
+    <p class="movie-element"><b>Runtime:</b> {{runtime if not None else 'Unknown'}} minutes</p>
     <p class="movie-element"><b>Genre:</b> {{genre_symbol}} {{genre}}</p>
     <p class="movie-element"><b>Age Rating:</b> {{agerating}} <i>({{agerating_description}})</i></p>
     <p style="text-align: right;"><i>Movie ID: {{id}}</i></p>
