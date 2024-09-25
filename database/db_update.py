@@ -18,29 +18,30 @@ def update(conn, edit_id, fields):
                             WHERE Genre = \'{value.title()}\'''')
                 field = 'GenreID'
                 value = cursor.fetchone()[0]
-                # print(f'Read genre id: {value}')
-        except:  # Raise an exception if not found in lookup table
-            raise Exception(f'ssLookupTableError: {value.title()} not a valid genre')
+        except TypeError:  # If not found in lookup table
+            raise Exception(f'ssLookupTableError: {value.title()} not a valid \
+genre')
         try:
             if (field.lower() == 'agerating'):
                 cursor.execute(f'''SELECT * FROM AgeRatings
                             WHERE AgeRating = \'{value.upper()}\'''')
                 field = 'AgeRatingID'
                 value = cursor.fetchone()[0]
-                # print(f'Read age rating id: {value}')
-        except:  # Raise an exception if not found in lookup table
-            raise Exception(f'ssLookupTableError: {value.upper()} not a valid age rating')
-        if value == None or value == "":
+        except TypeError:  # If not found in lookup table
+            raise Exception(f'ssLookupTableError: {value.upper()} not a valid \
+age rating')
+        if value is None or value == "":
             conn.execute(f'''UPDATE Movies SET
             {field} = NULL
             WHERE ID = {edit_id};
             ''')
-        else:  
+        else:
             conn.execute(f'''UPDATE Movies SET
             {field} = '{value}'
             WHERE ID = {edit_id};
             ''')
     return True
+
 
 def update_user(conn, edit_id, fields):
     '''Update information about a user in the database.'''
@@ -51,24 +52,28 @@ def update_user(conn, edit_id, fields):
             username = value
             # Abort if the username is the wrong length
             if len(username) < 3 or len(username) > 25:
-                raise Exception(f'Username length must be between 3 and 25 characters (Length: {len(username)})')
+                raise Exception(f'Username length must be between 3 and 25 \
+characters (Length: {len(username)})')
 
             # Abort if the username does not fulfil character requirements
             if not username.replace('_', '').isalnum():
-                raise Exception(f'Username may only contain alphanumberic characters and underscores')
+                raise Exception('Username may only contain alphanumberic \
+characters and underscores')
 
-
-        # If the password is being updated, make sure it fits requirements, and hash it.
+        # If the password is being updated, make sure it fits requirements,
+        # and hash it.
         if field.lower() == 'password':
             password = value
 
             # Abort if the password is the wrong length
             if len(password) <= 12 or len(password) >= 50:
-                raise Exception(f'Password length must be between 12 and 50 characters (Length: {len(password)})')
+                raise Exception(f'Password length must be between 12 and 50 \
+characters (Length: {len(password)})')
 
             # Abort if the password does not fulfil character requirements
             if not validate_password(password):
-                raise Exception('Password must contain characters of: uppercase, lowercase, number and special')
+                raise Exception('Password must contain characters of: \
+uppercase, lowercase, number and special')
 
             # Generate salt
             salt = bcrypt.gensalt()
@@ -90,6 +95,7 @@ def update_user(conn, edit_id, fields):
 
     return True
 
+
 def update_rating(conn, user_id, movie_id, value):
     '''Update a rating in the database.'''
     if float(value) in (0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5):
@@ -103,11 +109,14 @@ def update_rating(conn, user_id, movie_id, value):
 
 def validate_password(password):
     '''Returns true if a password meets special character requirements.'''
-    
+
     # Set all requirements to false
     lower, upper, num, special = (False,)*4
 
-    special_characters = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~']
+    special_characters = ['!', '"', '#', '$', '%', '&', '\'', '(', ')', '*',
+                          '+', ',', '-', '.', '/', ':', ';', '<', '=', '>',
+                          '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|',
+                          '}', '~']
 
     # If a requirement is met, set it to true
     for i in password:
@@ -120,7 +129,7 @@ def validate_password(password):
         if i in special_characters:
             special = True
 
-    return lower and upper and num and special;
+    return lower and upper and num and special
 
 
 if __name__ == '__main__':
@@ -155,7 +164,8 @@ if __name__ == '__main__':
         print(f'Editing field {field}')
 
         if field.lower() == 'admin':
-            if input('Should this user have admin priveleges? y/N\n> ').lower() == 'y':
+            if input('Should this user have admin priveleges? y/N\n> ')\
+                    .lower() == 'y':
                 value = 1
             else:
                 value = 0

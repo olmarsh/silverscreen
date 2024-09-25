@@ -14,7 +14,7 @@ print('''    ________   ________
       |\\_________\\\\_________\\
       \\|_________\\|_________|
 Silverscreen CLI database manager
-O. Marsh      development version
+O. Marsh          release version
 
 Command line interface to manage the silverscreen movie database
 This command line interface is for DATABASE MANAGEMENT PURPOSES
@@ -22,7 +22,7 @@ and is not intended for user use!
 
 It will only be usable with reasonable training and reading of
 the documentation (provided by HELP)
-      
+
 If you are an END USER, or WEB ADMIN, use the WEB INTERFACE.
 
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -34,6 +34,7 @@ conn = sqlite3.connect('silverscreen.db')
 conn.execute('PRAGMA foreign_keys = ON;')
 print('Connected to database\n')
 
+
 def help():
     '''Read the help file and print it line by line'''
 
@@ -43,7 +44,8 @@ Type  >> q << then enter to quit
 Type  >> g << and a number (i.e. g10) to Goto to a line
 Type  >> j << and a number (i.e. j4, j-4) to Jump up/down lines (+/- allowed)
 Type  >> p << and a number (i.e. p5) to print that many successive lines
---------------------------------------------------------------------------|----''')
+--------------------------------------------------------------------------|----
+'''[0:-1])
     help_file = open('cli_help.txt', 'r')
     help_text = help_file.readlines()
     # Print the entire line except for the last character, which is a newline,
@@ -62,28 +64,30 @@ Type  >> p << and a number (i.e. p5) to print that many successive lines
 
         # Take input for navigation commands
         command = input().lower()
-        if command == '': command = 'n'
+        if command == '':
+            command = 'n'
 
         if command[0] == 'q':  # Manage quitting the help function
             break
         elif command[0] == 'g':  # Manage jumping to a line
             try:
                 line = int(command[1:])-1
-                print('! Goto Line',command[1:])
-            except:
+                print('! Goto Line', command[1:])
+            except TypeError:
                 pass
         elif command[0] == 'j':  # Manage jumping forwards
             try:
                 line = line+int(command[1:])-1
-                print('! Jump',command[1:],'Lines')
-            except:
+                print('! Jump', command[1:], 'Lines')
+            except TypeError:
                 pass
         elif command[0] == 'p':  # Manage printing successive lines
             try:
                 for i in range(int(command[1:])-1):
-                    print(f'{(line+1):03d} {help_text[line][0:-1]:70}', end='|\n')
+                    print(f'{(line+1):03d} {help_text[line][0:-1]:70}',
+                          end='|\n')
                     line += 1  # Move to next line
-            except:
+            except TypeError:
                 pass
         # Limit the line number to within the text file's length
         if line < 0:
@@ -99,7 +103,8 @@ def ninput(prompt, returntype=str):
     ret = input(prompt)
 
     # Return none if the input was blank.
-    if ret == '': return None
+    if ret == '':
+        return None
     # Convert to specified type and return.
     return returntype(ret)
 
@@ -137,7 +142,8 @@ EXIT   - exit the program''')
     elif action == 'create':
         print('Create all tables if they do not exist')
         try:
-            if database.db_create.create_users(conn) and database.db_create.create(conn):
+            if database.db_create.create_users(conn) \
+                    and database.db_create.create(conn):
                 print('Operation completed successfully')
         except Exception as error:
             format_error(error)
@@ -166,7 +172,8 @@ EXIT   - exit the program''')
     elif action == 'insert':
         print('Insert an entry into a table')
         table = input(
-           'What table to input into? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
+           'What table to input into? (Movies, Genres, AgeRatings, Users, \
+            Ratings, Favourites)\n> '
         ).lower()
         try:
             # Use appropriate column names depending on specified table
@@ -175,11 +182,11 @@ EXIT   - exit the program''')
                 if database.db_insert.insert(
                     conn,
                     'Movies',
-                    title = ninput('Movie title:  '),
-                    releaseYear = ninput('Release year: ',int),
-                    ageRating = ninput('Age rating:   '),
-                    runtime = ninput('Runtime:      ', int),
-                    genre = ninput('Genre:        ')
+                    title=ninput('Movie title:  '),
+                    releaseYear=ninput('Release year: ', int),
+                    ageRating=ninput('Age rating:   '),
+                    runtime=ninput('Runtime:      ', int),
+                    genre=ninput('Genre:        ')
                 ):
                     conn.commit()
                     print('Operation completed successfully')
@@ -188,8 +195,8 @@ EXIT   - exit the program''')
                 if database.db_insert.insert(
                     conn,
                     'Genres',
-                    genre = ninput('Genre name:     '),
-                    symbol = ninput('Unicode symbol: ')
+                    genre=ninput('Genre name:     '),
+                    symbol=ninput('Unicode symbol: ')
                 ):
                     conn.commit()
                     print('Operation completed successfully')
@@ -198,18 +205,18 @@ EXIT   - exit the program''')
                 if database.db_insert.insert(
                     conn,
                     'AgeRatings',
-                    ageRating = ninput('Age Rating:  '),
-                    minAge = ninput('Minimum Age: '),
-                    description = ninput('Description: ')
+                    ageRating=ninput('Age Rating:  '),
+                    minAge=ninput('Minimum Age: '),
+                    description=ninput('Description: ')
                 ):
                     conn.commit()
                     print('Operation completed successfully')
             elif table == 'users':
                 print('Add new user')
-                if database.db_insert.user_insert (
+                if database.db_insert.user_insert(
                     conn,
-                    username = ninput('Username: '),
-                    password = ninput('''\nPassword limitations:
+                    username=ninput('Username: '),
+                    password=ninput('''\nPassword limitations:
 12 characters
 Must contain uppercase, lowercase, number and special character\n
 Password: ''')
@@ -218,34 +225,36 @@ Password: ''')
                     print('Operation completed successfully')
             elif table == 'ratings':
                 print('Insert a rating')
-                if database.db_insert.rating_insert (
+                if database.db_insert.rating_insert(
                     conn,
-                    user_id = ninput('User ID: '),
-                    movie_id = ninput('Movie ID: '),
-                    rating = ninput('Rating: ')
+                    user_id=ninput('User ID: '),
+                    movie_id=ninput('Movie ID: '),
+                    rating=ninput('Rating: ')
                 ):
                     conn.commit()
                     print('Operation completed successfully')
             elif table == 'favourites':
                 print('Add new favourite')
-                if database.db_insert.favourite_insert (
+                if database.db_insert.favourite_insert(
                     conn,
-                    user_id = ninput('User ID: '),
-                    movie_id = ninput('Movie ID: ')
+                    user_id=ninput('User ID: '),
+                    movie_id=ninput('Movie ID: ')
                 ):
                     conn.commit()
                     print('Operation completed successfully')
             else:
-                print('That table does not exist / hasn\'t been implemented yet')
+                print('That table does not exist / hasn\'t been implemented \
+yet')
         except Exception as error:
             format_error(error)
 
     elif action == 'delete':
         try:
             table = input(
-                'What table to delete from? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
+                'What table to delete from? (Movies, Genres, AgeRatings, \
+Users, Ratings, Favourites)\n> '
             ).lower()
-            
+
             # Set the column to the correct name for the table.
             column = None
             if table == 'movies' or table == 'users':
@@ -259,14 +268,16 @@ Password: ''')
             elif table == 'favourites':
                 column = 'FavouriteID'
             else:
-                print('That table does not exist / hasn\'t been implemented yet')
+                print('That table does not exist / hasn\'t been implemented \
+yet')
 
             # If the table is valid, delete from it.
-            if table in ('movies', 'genres', 'ageratings', 'users', 'ratings', 'favourites'):
+            if table in ('movies', 'genres', 'ageratings', 'users', 'ratings',
+                         'favourites'):
                 delete_id = input(f'Which {table} ID to delete?\n> ')
                 print('Delete entry if exists')
                 if database.db_delete.delete(conn, table, column, delete_id):
-                    conn.commit();
+                    conn.commit()
                     print('Operation completed successfully')
 
         except Exception as error:
@@ -293,7 +304,8 @@ Password: ''')
 
                 # Attempt to apply them to database.
                 if database.db_update.update(conn, edit_id, {field: value}):
-                    print('Updated if exists\nOperation completed successfully')
+                    print('Updated if exists\nOperation completed successfully'
+                          )
 
             elif table == 'users':
                 # Take all inputs.
@@ -306,7 +318,8 @@ Password: ''')
 
                 # Aid user in choosing between 1 and 0.
                 if field.lower() == 'admin':
-                    if input('Should this user have admin priveleges? y/N\n> ').lower() == 'y':
+                    if input('Should this user have admin priveleges? y/N\n> '
+                             ).lower() == 'y':
                         value = 1
                     else:
                         value = 0
@@ -315,26 +328,32 @@ Password: ''')
                 print(f'Setting {field} to {value}')
 
                 # Attempt to apply inputs to database.
-                if database.db_update.update_user(conn, edit_id, {field: value}):
-                    print('Updated if exists\nOperation completed successfully')
+                if database.db_update.update_user(conn, edit_id,
+                                                  {field: value}):
+                    print('''Updated if exists
+Operation completed successfully''')
                     conn.commit()
-            
+
             elif table == 'ratings':
                 user_id = input('Which user ID to edit rating: ')
                 movie_id = input('Which movie ID to edit favourite: ')
                 rating = input('New rating value: ')
-                if database.db_update.update_rating(conn, user_id, movie_id, rating):
-                    print('Updated if exists\nOperation completed successfully')
+                if database.db_update.update_rating(conn, user_id, movie_id,
+                                                    rating):
+                    print('''Updated if exists
+Operation completed successfully''')
                     conn.commit()
             else:
-                print('That table does not exist / hasn\'t been implemented yet')
+                print('That table does not exist / hasn\'t been implemented \
+yet')
         except Exception as error:
             format_error(error)
 
     elif action == 'view':
         try:
             table = input(
-                'What table to view? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
+                'What table to view? (Movies, Genres, AgeRatings, Users, \
+Ratings, Favourites)\n> '
             ).lower()
 
             # Use appropriate function depending on specified table
@@ -344,10 +363,15 @@ Password: ''')
                 ):
                     print('Operation done successfully')
             elif table in ('genres', 'ageratings', 'users'):
-                if database.db_view.format_general(database.db_view.view_general(conn, table)):
+                if database.db_view.format_general(
+                    database.db_view.view_general(conn, table)
+                ):
                     print('Operation done successfully')
             elif table in ('ratings', 'favourites'):
-                if database.db_view.format_favourites_ratings(database.db_view.view_general(conn, table), table_type=table):
+                if database.db_view.format_favourites_ratings(
+                    database.db_view.view_general(conn, table),
+                    table_type=table
+                ):
                     print('Operation done successfully')
             else:
                 print('Table doesn\'t exist / hasn\'t been implemented yet')
@@ -357,7 +381,8 @@ Password: ''')
     elif action == 'search':
         try:
             table = input(
-                'What table to search? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
+                'What table to search? (Movies, Genres, AgeRatings, Users, \
+Ratings, Favourites)\n> '
             ).lower()
             if table == 'movies':
                 # Take inputs for movies table and search.
@@ -366,24 +391,35 @@ Password: ''')
 > ''')
                 query = input('What is the search query: ')
                 print('\nResults:')
-                if database.db_view.format_movies(database.db_view.search_movies(conn, column, query)):
-                        print('Operation done successfully')
+                if database.db_view.format_movies(
+                    database.db_view.search_movies(conn, column, query)
+                ):
+                    print('Operation done successfully')
             elif table == 'users':
                 column = input('''Which column to search
 (ID, Username, Admin):
 > ''')
                 query = input('What is the search query: ')
                 print('\nResults:')
-                if database.db_view.format_users(database.db_view.search_users(conn, column, query)):
+                if database.db_view.format_users(
+                    database.db_view.search_users(conn, column, query)
+                ):
                     print('Operation done successfully')
 
             # Search for either favourites or ratings
             elif table == 'ratings' or table == 'favourites':
                 # Specify what to search for
-                user_id = ninput(f'Which user ID to view {table} for (blank for all users): ')
-                movie_id = ninput('Which movie ID to search (blank for all movies): ')
+                user_id = ninput(f'Which user ID to view {table} for \
+(blank for all users): ')
+                movie_id = ninput('Which movie ID to search \
+(blank for all movies): ')
                 print('\nResults:')
-                if database.db_view.format_favourites_ratings(database.db_view.search_favourites_ratings(conn, table, user_id, movie_id), table_type=table):
+                if database.db_view.format_favourites_ratings(
+                    database.db_view.search_favourites_ratings(
+                        conn, table, user_id, movie_id
+                    ),
+                    table_type=table
+                ):
                     print('Operation done successfully')
             else:
                 print('Table doesn\'t exist / hasn\'t been implemented yet')
@@ -394,10 +430,11 @@ Password: ''')
         try:
             username = input('Username: ')
             password = input('Password: ')
-            
+
             user = database.db_login.authenticate(conn, username, password)
 
-            # If the hash of the password matched the stored hash, authenticate the user.
+            # If the hash of the password matched the stored hash,
+            # authenticate the user.
             if user:
                 print('Login Successful')
                 print(user[1])
@@ -408,7 +445,7 @@ Password: ''')
 
     elif action == 'exit':
         break
-    
+
     else:
         print('That action does not exist / hasn\'t been implemented yet')
 

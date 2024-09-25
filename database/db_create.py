@@ -2,6 +2,7 @@
 
 import sqlite3
 
+
 def create(conn):
     '''Create silverscreen movie table and lookup tables.'''
 
@@ -62,12 +63,14 @@ def create_users(conn):
 
     conn.execute('''CREATE TABLE IF NOT EXISTS Users (
         ID INTEGER PRIMARY KEY,
-        Username TEXT UNIQUE NOT NULL CHECK (LENGTH(Username) >= 3 AND LENGTH(Username) <= 25),
+        Username TEXT UNIQUE NOT NULL CHECK (LENGTH(Username) >= 3
+        AND LENGTH(Username) <= 25),
         Password TEXT NOT NULL,
         Admin INTEGER NOT NULL DEFAULT 0
     );''')
 
-    return True;
+    return True
+
 
 # If this program is run in terminal, execute its function.
 if __name__ == '__main__':

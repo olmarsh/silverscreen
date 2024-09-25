@@ -6,20 +6,20 @@ import sqlite3
 def format_movies(results):
     '''Format the output from the view_movies or search_movies function.'''
 
-
     # Define line spacings
     formatted_row = '{:<5} {:<25} {:<13} {:<10} {:<16} {:<12} {:<15} {}'
     # Print column headers, then the rest of the rows
     print(formatted_row.format('ID', 'Title', 'Release Year', 'Runtime',
-                               'Genre', 'Age Rating', 'Average Rating', 'Favourites'))
+                               'Genre', 'Age Rating', 'Average Rating',
+                               'Favourites'))
     for row in results:
         # Remove unneccessary results
         cut_row = list(row[0:6])
-        if row[9] == None:
+        if row[9] is None:
             cut_row.append('-')
         else:
             cut_row.append(f'{row[9]} ({row[10]} ratings)')
-        if row[11] == None:
+        if row[11] is None:
             cut_row.append('-')
         else:
             cut_row.append(row[11])
@@ -28,6 +28,7 @@ def format_movies(results):
     # Add newline at bottom
     print('')
     return True
+
 
 def format_users(results):
     '''Format the output from the view_movies or search_movies function.'''
@@ -44,7 +45,7 @@ def format_users(results):
     return True
 
 
-def format_favourites_ratings(results, table_type = 'ratings'):
+def format_favourites_ratings(results, table_type='ratings'):
     '''Format the output from a favourites or ratings search function.'''
 
     # Define line spacings
@@ -85,7 +86,7 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC', user=0):
             extra += f' OFFSET {offset}'
         extra += ';'
 
-    if user == None:
+    if user is None:
         user = 0
 
     # Select all from table and return them.
@@ -93,11 +94,11 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC', user=0):
     cursor.execute(f'''SELECT ID, Title, ReleaseYear, Runtime, Genre,
     AgeRating, Symbol, MinAge, Description,
     (SELECT AVG(Ratings.Rating)
-        FROM Ratings 
+        FROM Ratings
         WHERE Ratings.MovieID = Movies.ID
     ) AS Rating,
     (SELECT COUNT(Ratings.Rating)
-        FROM Ratings 
+        FROM Ratings
         WHERE Ratings.MovieID = Movies.ID
     ) AS RatingsCount,
     (SELECT COUNT(Favourites.MovieID)
@@ -105,11 +106,11 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC', user=0):
         WHERE Favourites.MovieID = Movies.ID
     ) AS TotalFavourites,
     (SELECT COUNT(Favourites.MovieID)
-        FROM Favourites 
+        FROM Favourites
         WHERE Favourites.MovieID = Movies.ID AND Favourites.UserID = {user}
     ) AS IsFavourite,
     (SELECT Ratings.Rating
-        FROM Ratings 
+        FROM Ratings
         WHERE Ratings.MovieID = Movies.ID AND Ratings.UserID = {user}
     ) AS UserRating FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
@@ -119,8 +120,8 @@ def view_movies(conn, limit=0, offset=0, order='ID ASC', user=0):
     return cursor.fetchall()
 
 
-def count_movies(conn, column='Title', query='', match_before = True,
-                 match_after = True):
+def count_movies(conn, column='Title', query='', match_before=True,
+                 match_after=True):
     '''Return the number of entries in the movies table.'''
 
     # Whether to return queries with matches before or after the string
@@ -149,8 +150,9 @@ def view_general(conn, table):
     cursor.execute(f'''SELECT * FROM {table}''')
     return cursor.fetchall()
 
+
 def search_users(conn, column, query, limit=0, offset=0, order='ID ASC',
-                   match_before = True, match_after = True):
+                 match_before=True, match_after=True):
     '''Search for a user in the users table by specified column.'''
 
     # Add extra parameters to query.
@@ -165,20 +167,24 @@ def search_users(conn, column, query, limit=0, offset=0, order='ID ASC',
     match_before_string = ''
     if match_before:
         match_before_string = '\'%\' ||'
-    
+
     match_after_string = ''
     if match_after:
         match_after_string = '|| \'%\''
 
     cursor = conn.cursor()
     cursor.execute(f'''SELECT ID, Username, Password, Admin FROM Users
-    WHERE {column} LIKE {match_before_string} '{query}' {match_after_string} COLLATE NOCASE
+    WHERE {column} LIKE {match_before_string} '{query}' {match_after_string}
+    COLLATE NOCASE
     ORDER BY {order}
     {extra}''')
     return cursor.fetchall()
 
-def search_favourites_ratings(conn, table, user_id=None, movie_id=None, limit=0, offset=0):
-    '''Search for ratings/favourites in the ratings/favourites table by user id, movie id.'''
+
+def search_favourites_ratings(conn, table, user_id=None, movie_id=None,
+                              limit=0, offset=0):
+    '''Search for ratings/favourites in the ratings/favourites table by \
+    user id and movie id.'''
 
     # Add extra parameters to query.
     extra = ''
@@ -199,17 +205,15 @@ def search_favourites_ratings(conn, table, user_id=None, movie_id=None, limit=0,
     if movie_id:
         params += f'MovieID = \'{movie_id}\' '
 
-
     cursor = conn.cursor()
     cursor.execute(f'''SELECT * FROM {table}
     {params}
     {extra}''')
     return cursor.fetchall()
-    
+
 
 def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
-                  match_before = True, match_after = True,
-                  user = 0):
+                  match_before=True, match_after=True, user=0):
     '''Search for a movie in the movies table by specified column.'''
 
     # Add extra parameters to query.
@@ -220,14 +224,14 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
             extra += f' OFFSET {offset}'
         extra += ';'
 
-    if user == None:
+    if user is None:
         user = 0
 
     # Whether to return queries with matches before or after the string
     match_before_string = ''
     if match_before:
         match_before_string = '\'%\' ||'
-    
+
     match_after_string = ''
     if match_after:
         match_after_string = '|| \'%\''
@@ -236,23 +240,23 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
     cursor.execute(f'''SELECT ID, Title, ReleaseYear, Runtime, Genre,
     AgeRating, Symbol, MinAge, Description,
     (SELECT AVG(Ratings.Rating)
-        FROM Ratings 
+        FROM Ratings
         WHERE Ratings.MovieID = Movies.ID
     ) AS Rating,
     (SELECT COUNT(Ratings.Rating)
-        FROM Ratings 
+        FROM Ratings
         WHERE Ratings.MovieID = Movies.ID
     ) AS RatingCount,
     (SELECT COUNT(Favourites.MovieID)
-        FROM Favourites 
+        FROM Favourites
         WHERE Favourites.MovieID = Movies.ID
     ) AS TotalFavourites,
-    (SELECT COUNT(Favourites.MovieID) 
-        FROM Favourites 
+    (SELECT COUNT(Favourites.MovieID)
+        FROM Favourites
         WHERE Favourites.MovieID = Movies.ID AND Favourites.UserID = {user}
     ) AS IsFavourite,
     (SELECT Ratings.Rating
-        FROM Ratings 
+        FROM Ratings
         WHERE Ratings.MovieID = Movies.ID AND Ratings.UserID = {user}
     ) AS UserRating FROM Movies
     INNER JOIN Genres ON Movies.GenreID = Genres.GenreID
@@ -266,13 +270,14 @@ def search_movies(conn, column, query, limit=0, offset=0, order='ID ASC',
 if __name__ == '__main__':
     # Only define the function if it is being run as main.
     def ninput(prompt, returntype=str):
-        '''Normal input function that returns None when a blank string is input. \
+        '''Normal input function, returns None when a blank string is input.
         Return type can also be specified'''
 
         ret = input(prompt)
 
         # Return none if the input was blank.
-        if ret == '': return None
+        if ret == '':
+            return None
         # Convert to specified type and return.
         return returntype(ret)
 
@@ -288,7 +293,8 @@ VIEW   - print all entries from a table''')
     print('')
     if action == 'view':
         table = input(
-            'What table to view? (Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
+            'What table to view? \
+(Movies, Genres, AgeRatings, Users, Ratings, Favourites)\n> '
         ).lower()
 
         # Use appropriate function depending on specified table
@@ -299,7 +305,8 @@ VIEW   - print all entries from a table''')
             if format_general(view_general(conn, table)):
                 print('Operation done successfully')
         elif table in ('ratings', 'favourites'):
-            if format_favourites_ratings(view_general(conn, table), table_type=table):
+            if format_favourites_ratings(view_general(conn, table),
+                                         table_type=table):
                 print('Operation done successfully')
         else:
             print('Table doesn\'t exist / hasn\'t been implemented yet')
@@ -317,7 +324,7 @@ VIEW   - print all entries from a table''')
             query = input('What is the search query: ')
             print('\nResults:')
             if format_movies(search_movies(conn, column, query)):
-                    print('Operation done successfully')
+                print('Operation done successfully')
         if table == 'users':
             column = input('''Which column to search
 (ID, Username, Admin):
@@ -330,10 +337,13 @@ VIEW   - print all entries from a table''')
         # Search for either favourites or ratings
         if table == 'ratings' or table == 'favourites':
             # Specify what to search for
-            user_id = ninput(f'Which user ID to view {table} for (blank for all users): ')
-            movie_id = ninput('Which movie ID to search (blank for all movies): ')
+            user_id = ninput(f'Which user ID to view {table} for \
+(blank for all users): ')
+            movie_id = ninput('Which movie ID to search \
+(blank for all movies): ')
             print('\nResults:')
-            if format_favourites_ratings(search_favourites_ratings(conn, table, user_id, movie_id), table_type=table):
+            if format_favourites_ratings(search_favourites_ratings(
+                    conn, table, user_id, movie_id), table_type=table):
                 print('Operation done successfully')
         else:
             print('Table doesn\'t exist / hasn\'t been implemented yet')

@@ -2,6 +2,7 @@
 
 import sqlite3
 
+
 def populate(conn):
     '''Populate the genres and age ratings table if they are empty.'''
 
@@ -48,8 +49,9 @@ def populate(conn):
     else:
         print('Age ratings table was not empty. Not populating')
 
-    return True;
-    
+    return True
+
+
 # If this program is run in terminal, execute its function.
 if __name__ == '__main__':
     conn = sqlite3.connect('silverscreen.db')

@@ -10,7 +10,8 @@ def import_default_list(conn):
     text = file.readlines()
 
     print('Importing movies from default_films.txt')
-    preserve = input('Preserve movie ID from text file? (y/N/cancel)\n> ').lower()
+    preserve = input('Preserve movie ID from text file? (y/N/cancel)\n> ')\
+        .lower()
 
     if preserve == 'y':
         # For every film, parse it, and insert it into the database.
@@ -20,14 +21,14 @@ def import_default_list(conn):
             if database.db_insert.insert(
                 conn,
                 'Movies',
-                id = parsed_line[0],
-                title = parsed_line[1],
-                releaseYear = parsed_line[2],
-                ageRating = parsed_line[3],
-                runtime = parsed_line[4],
-                genre = parsed_line[5]
+                id=parsed_line[0],
+                title=parsed_line[1],
+                releaseYear=parsed_line[2],
+                ageRating=parsed_line[3],
+                runtime=parsed_line[4],
+                genre=parsed_line[5]
             ):
-                print('Imported', parsed_line[1],'\n')
+                print('Imported', parsed_line[1], '\n')
             conn.commit()
         print('Operation completed successfully')
     elif preserve == 'n':
@@ -38,19 +39,20 @@ def import_default_list(conn):
             if database.db_insert.insert(
                 conn,
                 'Movies',
-                title = parsed_line[1],
-                releaseYear = parsed_line[2],
-                ageRating = parsed_line[3],
-                runtime = parsed_line[4],
-                genre = parsed_line[5]
+                title=parsed_line[1],
+                releaseYear=parsed_line[2],
+                ageRating=parsed_line[3],
+                runtime=parsed_line[4],
+                genre=parsed_line[5]
             ):
-                print('Imported', parsed_line[1],'\n')
+                print('Imported', parsed_line[1], '\n')
         conn.commit()
         print('Operation completed successfully')
     elif preserve == 'c' or preserve == 'cancel':
         print('Cancelled')
     else:
         print('Not a valid input')
+
 
 if __name__ == '__main__':
     import sqlite3
