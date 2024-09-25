@@ -173,7 +173,7 @@ EXIT   - exit the program''')
         print('Insert an entry into a table')
         table = input(
            'What table to input into? (Movies, Genres, AgeRatings, Users, \
-            Ratings, Favourites)\n> '
+Ratings, Favourites)\n> '
         ).lower()
         try:
             # Use appropriate column names depending on specified table
