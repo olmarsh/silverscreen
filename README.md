@@ -3,7 +3,7 @@
 <img src='./static/logo.svg' width=100px>
 </p>
 
-silverscreen is a movie database which stores information about movies. Not only that, it also functions as a web serverand can store user information, with a favourites and ratings system. (Computer Science project for CS Level 2 2024)
+silverscreen is a movie database which stores information about movies. Not only that, it also functions as a web server and can store user information, with a favourites and ratings system. (Computer Science project for CS Level 2 2024)
 
 ### Built in
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
