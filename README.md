@@ -3,7 +3,7 @@
 <img src='./static/logo.svg' width=100px>
 </p>
 
-silverscreen is a movie database which stores information about movies. Not only that, it also functions as a web serverand can store user information, with a favourites and ratings system.
+silverscreen is a movie database which stores information about movies. Not only that, it also functions as a web serverand can store user information, with a favourites and ratings system. (Computer Science project for CS Level 2 2024)
 
 ### Built in
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
@@ -55,7 +55,7 @@ _To create the user_
 Choose `INSERT`, then choose `Users`, and enter the username and password for your new user. This user is then added to the database.
 
 _To give it administrator_
-Choose `UPDATE`, then choose `Users`, and finally `Admin`. Then, type `y` to give the user admin perms.
+Choose `UPDATE`, then choose `Users`. Enter the ID of your user (it should be `1` if it is the first user), and finally `Admin`. Then, type `y` to give the user admin perms.
 ### Run the server!
 Now your database is set up, you can `EXIT` the cli and run `ss_flask.py` from the root directory. This will open a web server on `localhost:5000` or `127.0.0.1:5000`. After this, open your web browser of choice and navigate to one of those pages.
 
